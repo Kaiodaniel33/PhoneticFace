@@ -1,0 +1,640 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>PhoneticFace - Ferramenta de Alfabetização</title>
+    <style>
+        /* ==========================================================================
+           1. VARIÁVEIS GERAIS (Design Tokens & Acessibilidade)
+           ========================================================================== */
+        :root {
+            --cor-bg-principal: #F0F7F4;
+            --cor-bg-secundario: #FFFFFF;
+            --cor-texto-principal: #2C3E50;
+            --cor-texto-secundario: #546E7A;
+            
+            --cor-primaria: #0288D1;
+            --cor-secundaria: #00BCD4;
+            --cor-destaque: #FF5252;
+            --cor-sucesso: #4CAF50;
+            --cor-alerta: #FFB300;
+            --cor-roxo: #9C27B0;
+            
+            --fonte-principal: 'Segoe UI', system-ui, -apple-system, sans-serif;
+            --tamanho-base: 18px; 
+            --borda-raio: 16px;
+            --borda-raio-sm: 8px;
+            --sombra-padrao: 0 8px 16px rgba(0,0,0,0.1);
+            --sombra-hover: 0 12px 24px rgba(0,0,0,0.15);
+            --transicao-padrao: all 0.3s cubic-bezier(0.25, 0.8, 0.25, 1);
+        }
+
+        /* TEMA DE ALTO CONTRASTE */
+        body.alto-contraste {
+            --cor-bg-principal: #121212;
+            --cor-bg-secundario: #000000;
+            --cor-texto-principal: #FFFFFF;
+            --cor-texto-secundario: #E0E0E0;
+            --cor-primaria: #FFEA00;
+            --cor-secundaria: #00E5FF;
+            --cor-destaque: #FF1744;
+            --cor-sucesso: #00E676;
+            --cor-alerta: #FFEA00;
+            --cor-roxo: #D500F9;
+        }
+
+        body.alto-contraste * { border-color: #FFFFFF !important; }
+        body.alto-contraste .btn-tab, body.alto-contraste .btn-letra, body.alto-contraste .bloco { color: #000; font-weight: 900; }
+
+        /* ==========================================================================
+           2. RESET CSS E TIPOGRAFIA BASE (TUDO EM CAIXA ALTA)
+           ========================================================================== */
+        * { margin: 0; padding: 0; box-sizing: border-box; }
+        
+        html { font-size: var(--tamanho-base); scroll-behavior: smooth; }
+        
+        body {
+            font-family: var(--fonte-principal);
+            background-color: var(--cor-bg-principal);
+            color: var(--cor-texto-principal);
+            line-height: 1.6;
+            transition: background-color 0.4s, color 0.4s;
+            overflow-x: hidden;
+            display: flex;
+            flex-direction: column;
+            min-height: 100vh;
+            /* FORÇAR CAIXA ALTA NA APLICAÇÃO INTEIRA */
+            text-transform: uppercase;
+        }
+
+        h1, h2, h3, h4 { line-height: 1.2; margin-bottom: 1rem; font-weight: 900; }
+
+        /* ==========================================================================
+           3. BARRA DE ACESSIBILIDADE
+           ========================================================================== */
+        .barra-acessibilidade {
+            background-color: var(--cor-texto-principal);
+            color: var(--cor-bg-principal);
+            padding: 12px 24px;
+            display: flex; justify-content: space-between; align-items: center;
+            flex-wrap: wrap; gap: 15px; position: sticky; top: 0; z-index: 100;
+        }
+        .controles-acesso { display: flex; gap: 10px; }
+        .btn-acesso {
+            background: transparent; border: 2px solid var(--cor-bg-principal);
+            color: var(--cor-bg-principal); padding: 8px 16px; font-weight: bold;
+            border-radius: var(--borda-raio-sm); cursor: pointer; display: flex; gap: 5px;
+            text-transform: uppercase;
+        }
+        .btn-acesso:hover { background-color: var(--cor-bg-principal); color: var(--cor-texto-principal); }
+
+        /* ==========================================================================
+           4. CABEÇALHO E NAVEGAÇÃO
+           ========================================================================== */
+        header.cabecalho-app {
+            background-color: var(--cor-primaria); color: var(--cor-bg-secundario);
+            padding: 3rem 1rem; text-align: center; border-bottom: 5px solid var(--cor-sucesso);
+        }
+        .cabecalho-app h1 { font-size: 3.5rem; text-shadow: 2px 2px 4px rgba(0,0,0,0.2); }
+        .cabecalho-app p { font-size: 1.4rem; font-weight: 900; }
+        
+        nav.menu-principal { display: flex; justify-content: center; flex-wrap: wrap; gap: 15px; margin-top: 2rem; }
+        .btn-tab {
+            background-color: var(--cor-bg-secundario); color: var(--cor-primaria);
+            border: 4px solid transparent; padding: 15px 30px; font-size: 1.3rem;
+            font-weight: 900; border-radius: var(--borda-raio); cursor: pointer;
+            box-shadow: var(--sombra-padrao); display: flex; align-items: center; gap: 10px;
+            text-transform: uppercase;
+        }
+        .btn-tab.active { background-color: var(--cor-sucesso); color: var(--cor-bg-secundario); transform: scale(1.05); }
+
+        /* ==========================================================================
+           5. ESTRUTURA PRINCIPAL
+           ========================================================================== */
+        main.conteudo-app { flex: 1; width: 100%; max-width: 1200px; margin: 3rem auto; padding: 0 20px; }
+        .aba-conteudo { display: none; animation: slideUp 0.5s ease-out forwards; }
+        .aba-conteudo.active { display: block; }
+        .bloco-instrucao { margin-bottom: 2.5rem; }
+        .btn-instrucao {
+            width: 100%; background-color: var(--cor-alerta); color: #000; border: none;
+            padding: 25px; font-size: 1.6rem; font-weight: 900; border-radius: var(--borda-raio);
+            cursor: pointer; box-shadow: 0 6px 0px rgba(200, 140, 0, 1);
+            display: flex; justify-content: center; align-items: center; gap: 15px; text-transform: uppercase;
+        }
+        .btn-instrucao:active { transform: translateY(6px); box-shadow: none; }
+        .cartao { background-color: var(--cor-bg-secundario); border-radius: var(--borda-raio); padding: 2.5rem; border: 3px solid var(--cor-secundaria); margin-bottom: 2rem; }
+
+        /* ==========================================================================
+           6. ALFABETO E MODAL YOUTUBE
+           ========================================================================== */
+        .grid-alfabeto { display: grid; grid-template-columns: repeat(auto-fill, minmax(130px, 1fr)); gap: 20px; }
+        .btn-letra {
+            background-color: var(--cor-primaria); color: #fff; font-size: 4rem; font-weight: 900;
+            border: none; border-radius: var(--borda-raio); height: 140px; cursor: pointer;
+            box-shadow: 0 8px 0 rgba(0, 100, 180, 1); display: flex; justify-content: center; align-items: center;
+        }
+        .btn-letra:active { transform: translateY(8px); box-shadow: none; }
+
+        .modal-overlay {
+            position: fixed; top: 0; left: 0; width: 100%; height: 100%;
+            background-color: rgba(0, 0, 0, 0.9); display: flex; justify-content: center; align-items: center;
+            z-index: 9999; opacity: 0; visibility: hidden; transition: 0.3s;
+        }
+        .modal-overlay.visivel { opacity: 1; visibility: visible; }
+        .modal-caixa {
+            background-color: var(--cor-bg-secundario); width: 95%; max-width: 700px;
+            border-radius: var(--borda-raio); padding: 2.5rem; text-align: center;
+            border: 6px solid var(--cor-primaria); max-height: 95vh; overflow-y: auto;
+        }
+        .letra-gigante { font-size: 6rem; color: var(--cor-primaria); margin: 0; }
+        .video-wrapper { position: relative; padding-bottom: 56.25%; height: 0; margin: 2rem 0; background-color: #000; border: 4px solid var(--cor-texto-principal); }
+        .video-wrapper iframe { position: absolute; top: 0; left: 0; width: 100%; height: 100%; }
+        .palavra-exemplo span { font-size: 5rem; }
+        .btn-acao {
+            background-color: var(--cor-destaque); color: #fff; border: none; padding: 20px 40px;
+            font-size: 1.5rem; font-weight: 900; border-radius: var(--borda-raio); cursor: pointer; width: 100%;
+            box-shadow: 0 6px 0 rgba(200, 0, 0, 1); text-transform: uppercase;
+        }
+
+        /* ==========================================================================
+           7. SÍLABAS
+           ========================================================================== */
+        .area-silabas { display: flex; flex-direction: column; gap: 30px; }
+        .linha-silaba { display: flex; justify-content: center; align-items: center; flex-wrap: wrap; gap: 20px; font-size: 3rem; font-weight: 900; }
+        .bloco { background-color: var(--cor-primaria); color: #fff; padding: 25px 40px; border-radius: var(--borda-raio); box-shadow: 0 6px 0 rgba(0, 100, 180, 1); }
+        .bloco-resultado { background-color: var(--cor-sucesso); cursor: pointer; box-shadow: 0 8px 0 rgba(0, 150, 0, 1); display: flex; flex-direction: column; align-items: center; border: none;}
+
+        /* ==========================================================================
+           8. ESCRITA E CALIGRAFIA
+           ========================================================================== */
+        .painel-desenho { position: relative; width: 100%; height: 500px; border: 6px dashed var(--cor-primaria); border-radius: var(--borda-raio); background-color: #fff; touch-action: none; overflow: hidden; }
+        #guia-fundo { position: absolute; top: 50%; left: 50%; transform: translate(-50%, -50%); font-size: 25rem; color: rgba(0,0,0,0.04); user-select: none; pointer-events: none; font-weight: 900; }
+        #canvas-caligrafia { position: absolute; top: 0; left: 0; cursor: crosshair; }
+        .ferramentas-canvas { display: flex; flex-wrap: wrap; gap: 10px; margin-bottom: 1.5rem; justify-content: center; max-height: 250px; overflow-y: auto; padding: 10px; border: 2px solid #ccc; border-radius: 10px;}
+        .btn-ferramenta { padding: 15px 20px; font-size: 1.5rem; font-weight: 900; border: none; border-radius: var(--borda-raio); cursor: pointer; color: #fff; background-color: var(--cor-roxo); box-shadow: 0 5px 0 rgba(100, 0, 150, 1); text-transform: uppercase; }
+        .btn-ferramenta:active { transform: translateY(5px); box-shadow: none; }
+
+        /* ==========================================================================
+           9. MEU NOME E DIA A DIA
+           ========================================================================== */
+        .area-digitacao { display: flex; flex-direction: column; gap: 20px; align-items: center; }
+        .input-gigante {
+            width: 100%; max-width: 600px; padding: 25px; font-size: 3rem; text-align: center;
+            border: 5px solid var(--cor-primaria); border-radius: var(--borda-raio); font-weight: 900;
+            text-transform: uppercase; /* FORÇA MAIÚSCULA NO INPUT */
+        }
+        .grid-cards { display: grid; grid-template-columns: repeat(auto-fit, minmax(300px, 1fr)); gap: 30px; }
+        .card-interativo { text-align: center; cursor: pointer; display: flex; flex-direction: column; align-items: center; border-width: 4px; }
+        .icone-card { font-size: 6rem; margin-bottom: 1.5rem; }
+
+        /* ==========================================================================
+           10. RODAPÉ E ANIMAÇÕES
+           ========================================================================== */
+        .rodape-app { background-color: var(--cor-texto-principal); color: var(--cor-bg-secundario); padding: 3rem 20px; margin-top: auto; border-top: 8px solid var(--cor-secundaria); }
+        .container-creditos { max-width: 1200px; margin: 0 auto; display: grid; grid-template-columns: repeat(auto-fit, minmax(300px, 1fr)); gap: 30px; }
+        .coluna-creditos h3 { color: var(--cor-alerta); border-bottom: 2px solid var(--cor-secundaria); padding-bottom: 10px; margin-bottom: 15px; }
+        
+        @keyframes slideUp { from { opacity: 0; transform: translateY(30px); } to { opacity: 1; transform: translateY(0); } }
+        .confete { position: fixed; width: 15px; height: 15px; z-index: 10000; animation: cair 3s linear forwards; }
+        @keyframes cair { to { transform: translateY(100vh) rotate(720deg); opacity: 0; } }
+    </style>
+</head>
+<body>
+
+    <div class="barra-acessibilidade">
+        <div style="font-weight: 900; font-size: 1.2rem;">👁️ FERRAMENTAS DE AJUDA</div>
+        <div class="controles-acesso">
+            <button class="btn-acesso" onclick="AppConfig.alterarTamanhoFonte(1)">A+ AUMENTAR TEXTO</button>
+            <button class="btn-acesso" onclick="AppConfig.alterarTamanhoFonte(-1)">A- DIMINUIR TEXTO</button>
+            <button class="btn-acesso" onclick="AppConfig.alternarAltoContraste()">🌓 ALTO CONTRASTE</button>
+        </div>
+    </div>
+
+    <header class="cabecalho-app">
+        <h1>🗣️ PHONETICFACE</h1>
+        <p>FERRAMENTA TECNOLÓGICA DE APOIO AO DOCENTE NO PROCESSO DE ALFABETIZAÇÃO</p>
+        <nav class="menu-principal">
+            <button class="btn-tab active" data-target="aba-alfabeto">🔤 O ALFABETO</button>
+            <button class="btn-tab" data-target="aba-silabas">🧩 JUNTAR SÍLABAS</button>
+            <button class="btn-tab" data-target="aba-escrever">✏️ DESENHAR LETRAS</button>
+            <button class="btn-tab" data-target="aba-nome">👤 MEU NOME</button>
+            <button class="btn-tab" data-target="aba-dia-a-dia">🛒 VIDA PRÁTICA</button>
+        </nav>
+    </header>
+
+    <main class="conteudo-app">
+        
+        <section id="aba-alfabeto" class="aba-conteudo active">
+            <div class="bloco-instrucao">
+                <button class="btn-instrucao" onclick="Voz.falar('BEM-VINDO AO ALFABETO. TOQUE EM UMA LETRA PARA OUVIR O SOM E VER O VÍDEO.')">
+                    🔊 CLIQUE AQUI PARA OUVIR O QUE FAZER
+                </button>
+            </div>
+            <div id="container-grid-alfabeto" class="grid-alfabeto"></div>
+        </section>
+
+        <section id="aba-silabas" class="aba-conteudo">
+            <div class="bloco-instrucao">
+                <button class="btn-instrucao" onclick="Voz.falar('VAMOS JUNTAR AS LETRAS. TOQUE NO BOTÃO VERDE PARA OUVIR A SÍLABA.')">
+                    🔊 CLIQUE AQUI PARA OUVIR A INSTRUÇÃO
+                </button>
+            </div>
+            <div id="container-silabas" class="area-silabas"></div>
+        </section>
+
+        <section id="aba-escrever" class="aba-conteudo">
+            <div class="bloco-instrucao">
+                <button class="btn-instrucao" onclick="Voz.falar('ESCOLHA UMA LETRA OU SINAL. DESENHE POR CIMA DA LETRA CINZA. QUANDO TERMINAR, EU VOU TE DAR OS PARABÉNS!')">
+                    🔊 CLIQUE AQUI PARA OUVIR A INSTRUÇÃO
+                </button>
+            </div>
+            
+            <div class="cartao">
+                <div class="ferramentas-canvas" id="botoes-desenho"></div>
+                
+                <div class="painel-desenho" id="container-canvas">
+                    <div id="guia-fundo">A</div>
+                    <canvas id="canvas-caligrafia"></canvas>
+                </div>
+            </div>
+        </section>
+
+        <section id="aba-nome" class="aba-conteudo">
+            <div class="bloco-instrucao">
+                <button class="btn-instrucao" onclick="Voz.falar('CLIQUE NA CAIXA BRANCA E DIGITE O SEU NOME. DEPOIS CLIQUE NO BOTÃO VERMELHO.')">
+                    🔊 CLIQUE AQUI PARA OUVIR A INSTRUÇÃO
+                </button>
+            </div>
+            <div class="cartao area-digitacao">
+                <h2>COMO VOCÊ SE CHAMA?</h2>
+                <input type="text" id="input-nome" class="input-gigante" placeholder="DIGITE SEU NOME AQUI..." autocomplete="off">
+                <button class="btn-acao" style="background-color: var(--cor-destaque);" onclick="InteracaoApp.verificarNome()">
+                    ✅ CONFIRMAR NOME
+                </button>
+            </div>
+        </section>
+
+        <section id="aba-dia-a-dia" class="aba-conteudo">
+            <div class="bloco-instrucao">
+                <button class="btn-instrucao" onclick="Voz.falar('TOQUE NOS QUADROS PARA OUVIR O QUE ESTÁ ESCRITO NELES.')">
+                    🔊 CLIQUE AQUI PARA OUVIR A INSTRUÇÃO
+                </button>
+            </div>
+            <div class="grid-cards" id="container-dia-a-dia"></div>
+        </section>
+
+    </main>
+
+    <footer class="rodape-app">
+        <div class="container-creditos">
+            <div class="coluna-creditos">
+                <div style="font-size: 2rem; font-weight: 900; color: var(--cor-secundaria);">🗣️ PHONETICFACE</div>
+                <p>FERRAMENTA TECNOLÓGICA DE APOIO AO DOCENTE NO PROCESSO DE ALFABETIZAÇÃO.</p>
+            </div>
+            <div class="coluna-creditos">
+                <h3>DESENVOLVIMENTO</h3>
+                <p><strong>DESENVOLVIDO POR:</strong> KAIO DANIEL</p>
+                <p><strong>APOIO TÉCNICO:</strong> ELAINE E STEFANY</p>
+                <p><strong>PROFESSOR MONITOR:</strong> FELIPE</p>
+            </div>
+            <div class="coluna-creditos">
+                <h3>INSTITUIÇÃO</h3>
+                <p><strong>C.E. PROF. IVONE SOARES CASTANHARO</strong></p>
+                <p><strong>DIRETORA GERAL:</strong> TANIA SIDNEI</p>
+                <p><strong>COORDENADORES:</strong> MARIDALVA E CIDINEI</p>
+                <p><strong>EQUIPE DOCENTE:</strong> POLIANA, MIRELLA E FELIPE</p>
+            </div>
+        </div>
+    </footer>
+
+    <div id="modal-letras" class="modal-overlay">
+        <div class="modal-caixa">
+            <h2 id="modal-titulo-letra" class="letra-gigante">A</h2>
+            <div class="video-wrapper">
+                <iframe id="video-boca-youtube" src="" frameborder="0" allow="autoplay; encrypted-media" allowfullscreen></iframe>
+            </div>
+            <div class="palavra-exemplo">
+                <span id="modal-icone-palavra">🐝</span>
+                <p id="modal-texto-palavra">ABELHA</p>
+            </div>
+            <button class="btn-acao" onclick="InterfaceModal.fechar()">❌ FECHAR JANELA</button>
+        </div>
+    </div>
+
+    <script>
+        /**
+         * 1. BANCO DE DADOS 
+         * Coloquei um link real de vídeo do YouTube (Mundo Bita) para não dar erro na tela.
+         * Depois os professores podem trocar o 'P3A0_Ie9Oms' pelo ID do vídeo da fonoaudióloga.
+         */
+        const linkVideoReal = 'P3A0_Ie9Oms'; 
+
+        const BancoDados = {
+            alfabeto: [
+                { letra: 'A', palavra: 'ANALISTA', icone: '💻', youtubeId: linkVideoReal },
+                { letra: 'B', palavra: 'BOLA', icone: '⚽', youtubeId: linkVideoReal },
+                { letra: 'C', palavra: 'CASA', icone: '🏠', youtubeId: linkVideoReal },
+                { letra: 'D', palavra: 'DADO', icone: '🎲', youtubeId: linkVideoReal },
+                { letra: 'E', palavra: 'EXPRESSO', icone: '🚌', youtubeId: linkVideoReal },
+                { letra: 'F', palavra: 'FEIJÃO', icone: '🫘', youtubeId: linkVideoReal },
+                { letra: 'G', palavra: 'GATO', icone: '🐈', youtubeId: linkVideoReal },
+                { letra: 'H', palavra: 'HORA', icone: '⌚', youtubeId: linkVideoReal },
+                { letra: 'I', palavra: 'IGREJA', icone: '⛪', youtubeId: linkVideoReal },
+                { letra: 'J', palavra: 'JACARÉ', icone: '🐊', youtubeId: linkVideoReal },
+                { letra: 'K', palavra: 'KAIO', icone: '🧑', youtubeId: linkVideoReal },
+                { letra: 'L', palavra: 'LEÃO', icone: '🦁', youtubeId: linkVideoReal },
+                { letra: 'M', palavra: 'MÚSCULO', icone: '💪', youtubeId: linkVideoReal },
+                { letra: 'N', palavra: 'NAVIO', icone: '🚢', youtubeId: linkVideoReal },
+                { letra: 'O', palavra: 'ÓCULOS', icone: '👓', youtubeId: linkVideoReal },
+                { letra: 'P', palavra: 'PRATO', icone: '🍽️', youtubeId: linkVideoReal },
+                { letra: 'Q', palavra: 'QUEIJO', icone: '🧀', youtubeId: linkVideoReal },
+                { letra: 'R', palavra: 'RATO', icone: '🐀', youtubeId: linkVideoReal },
+                { letra: 'S', palavra: 'SAPO', icone: '🐸', youtubeId: linkVideoReal },
+                { letra: 'T', palavra: 'TÊNIS DE MESA', icone: '🏓', youtubeId: linkVideoReal },
+                { letra: 'U', palavra: 'UVA', icone: '🍇', youtubeId: linkVideoReal },
+                { letra: 'V', palavra: 'VACA', icone: '🐄', youtubeId: linkVideoReal },
+                { letra: 'W', palavra: 'WEB', icone: '🌐', youtubeId: linkVideoReal },
+                { letra: 'X', palavra: 'XÍCARA', icone: '☕', youtubeId: linkVideoReal },
+                { letra: 'Y', palavra: 'YOUTUBE', icone: '▶️', youtubeId: linkVideoReal },
+                { letra: 'Z', palavra: 'ZEBRA', icone: '🦓', youtubeId: linkVideoReal }
+            ],
+            sinaisDesenho: ['A','B','C','D','E','F','G','H','I','J','K','L','M','N','O','P','Q','R','S','T','U','V','W','X','Y','Z','?','~','-'],
+            silabas: [
+                { consoante: 'B', vogal: 'A', palavra: 'BANANA', icone: '🍌' },
+                { consoante: 'M', vogal: 'A', palavra: 'MALA', icone: '🧳' },
+                { consoante: 'C', vogal: 'O', palavra: 'CORAÇÃO', icone: '❤️' },
+                { consoante: 'D', vogal: 'I', palavra: 'DINHEIRO', icone: '💵' },
+                { consoante: 'F', vogal: 'O', palavra: 'FOGO', icone: '🔥' }
+            ],
+            vidaPratica: [
+                { titulo: 'RECEITA MÉDICA', icone: '💊', textoFala: 'ATENÇÃO: TOMAR UM COMPRIMIDO DE DIPIRONA A CADA 8 HORAS.' },
+                { titulo: 'ESCALA DE ÔNIBUS', icone: '🚌', textoFala: 'ÔNIBUS EXPRESSO NORDESTE: SAÍDA PLATAFORMA 4, ÀS 14 HORAS.' },
+                { titulo: 'LISTA DO MERCADO', icone: '🛒', textoFala: 'LISTA: 5 QUILOS DE ARROZ, FEIJÃO E MACARRÃO.' },
+                { titulo: 'TREINO DA ACADEMIA', icone: '🏋️', textoFala: 'FICHA: FAZER 3 SÉRIES DE 10 REPETIÇÕES.' }
+            ]
+        };
+
+        class GerenciadorVoz {
+            constructor() { this.synth = window.speechSynthesis; }
+            falar(texto) {
+                if (!this.synth) return;
+                this.synth.cancel(); 
+                const declaracao = new SpeechSynthesisUtterance(texto);
+                declaracao.lang = 'pt-BR';
+                this.synth.speak(declaracao);
+            }
+            parar() { if (this.synth) this.synth.cancel(); }
+        }
+        const Voz = new GerenciadorVoz();
+
+        class ConfiguracaoAcessibilidade {
+            constructor() { this.tamanhoAtual = 18; this.html = document.documentElement; }
+            alterarTamanhoFonte(inc) {
+                let novo = this.tamanhoAtual + (inc * 2);
+                if (novo >= 14 && novo <= 30) {
+                    this.tamanhoAtual = novo;
+                    this.html.style.fontSize = `${this.tamanhoAtual}px`;
+                    if(document.getElementById('aba-escrever').classList.contains('active')) QuadroInterativo.redimensionar();
+                }
+            }
+            alternarAltoContraste() { document.body.classList.toggle('alto-contraste'); }
+        }
+        const AppConfig = new ConfiguracaoAcessibilidade();
+
+        class GerenciadorModal {
+            constructor() {
+                this.modal = document.getElementById('modal-letras');
+                this.titulo = document.getElementById('modal-titulo-letra');
+                this.icone = document.getElementById('modal-icone-palavra');
+                this.texto = document.getElementById('modal-texto-palavra');
+                this.iframe = document.getElementById('video-boca-youtube');
+            }
+            abrir(item) {
+                Voz.falar(`LETRA ${item.letra}. ${item.letra} DE ${item.palavra}.`);
+                this.titulo.innerText = item.letra;
+                this.icone.innerText = item.icone;
+                this.texto.innerText = item.palavra;
+                this.iframe.src = `https://www.youtube.com/embed/${item.youtubeId}?autoplay=1`;
+                this.modal.classList.add('visivel');
+            }
+            fechar() {
+                this.modal.classList.remove('visivel');
+                Voz.parar();
+                this.iframe.src = ""; 
+            }
+        }
+        const InterfaceModal = new GerenciadorModal();
+
+        /* VALIDAÇÃO SIMULADA DO DESENHO */
+        class CanvasCaligrafia {
+            constructor(idCanvas, idContainer, idGuia) {
+                this.canvas = document.getElementById(idCanvas);
+                this.ctx = this.canvas.getContext('2d');
+                this.container = document.getElementById(idContainer);
+                this.guiaFundo = document.getElementById(idGuia);
+                this.desenhando = false;
+                this.timerValidacao = null;
+                this.vincularEventos();
+            }
+
+            redimensionar() {
+                this.canvas.width = this.container.clientWidth;
+                this.canvas.height = this.container.clientHeight;
+                this.ctx.lineWidth = 25; 
+                this.ctx.lineCap = 'round';
+                this.ctx.strokeStyle = '#0288D1'; 
+            }
+
+            obterCoordenadas(e) {
+                const rect = this.canvas.getBoundingClientRect();
+                if (e.touches && e.touches.length > 0) return { x: e.touches[0].clientX - rect.left, y: e.touches[0].clientY - rect.top };
+                return { x: e.clientX - rect.left, y: e.clientY - rect.top };
+            }
+
+            iniciarTraco(e) {
+                clearTimeout(this.timerValidacao); // Cancela o timer se a pessoa voltar a desenhar
+                this.desenhando = true;
+                e.preventDefault();
+                const pos = this.obterCoordenadas(e);
+                this.ctx.beginPath();
+                this.ctx.moveTo(pos.x, pos.y);
+            }
+
+            desenhar(e) {
+                if (!this.desenhando) return;
+                e.preventDefault();
+                const pos = this.obterCoordenadas(e);
+                this.ctx.lineTo(pos.x, pos.y);
+                this.ctx.stroke();
+                this.ctx.beginPath();
+                this.ctx.moveTo(pos.x, pos.y);
+            }
+
+            finalizarTraco() {
+                this.desenhando = false;
+                this.ctx.beginPath();
+                
+                // SISTEMA QUE FALA PARABÉNS AUTOMATICAMENTE
+                this.timerValidacao = setTimeout(() => {
+                    this.validarDesenho();
+                }, 1500); // Espera 1.5 segundos após a pessoa soltar o dedo
+            }
+
+            validarDesenho() {
+                // Checa se o canvas tem pixels pintados (simplificado)
+                const imageData = this.ctx.getImageData(0, 0, this.canvas.width, this.canvas.height).data;
+                let desenhouAlgo = false;
+                for (let i = 3; i < imageData.length; i += 4) {
+                    if (imageData[i] > 0) { desenhouAlgo = true; break; }
+                }
+
+                if (desenhouAlgo) {
+                    Voz.falar("TÁ CERTO! PARABÉNS! PRÓXIMA LETRA.");
+                    InteracaoApp.gerarConfetes();
+                    setTimeout(() => this.limparSilencioso(), 2000);
+                }
+            }
+
+            limparSilencioso() { this.ctx.clearRect(0, 0, this.canvas.width, this.canvas.height); }
+            
+            limpar() {
+                this.limparSilencioso();
+                Voz.falar("QUADRO APAGADO.");
+            }
+
+            definirGuia(letra) {
+                this.guiaFundo.innerText = letra;
+                this.limparSilencioso();
+                let textoFalar = (letra === '?' || letra === '~' || letra === '-') ? `DESENHE O SINAL ${letra}` : `CONTORNE A LETRA ${letra}`;
+                Voz.falar(textoFalar);
+            }
+
+            vincularEventos() {
+                this.canvas.addEventListener('mousedown', (e) => this.iniciarTraco(e));
+                this.canvas.addEventListener('mousemove', (e) => this.desenhar(e));
+                this.canvas.addEventListener('mouseup', () => this.finalizarTraco());
+                
+                this.canvas.addEventListener('touchstart', (e) => this.iniciarTraco(e), {passive: false});
+                this.canvas.addEventListener('touchmove', (e) => this.desenhar(e), {passive: false});
+                this.canvas.addEventListener('touchend', () => this.finalizarTraco());
+            }
+        }
+        let QuadroInterativo;
+
+        class InteracoesDiversas {
+            static verificarNome() {
+                const input = document.getElementById('input-nome');
+                const nome = input.value.trim().toUpperCase();
+                if (nome.length > 0) {
+                    Voz.falar(`MUITO BEM, ${nome}! QUE NOME LINDO. PARABÉNS! TUDO CERTO.`);
+                    this.gerarConfetes();
+                } else {
+                    Voz.falar("POR FAVOR, DIGITE O SEU NOME NA CAIXA BRANCA.");
+                }
+            }
+
+            static gerarConfetes() {
+                const cores = ['#FF5252', '#00BCD4', '#4CAF50', '#FFEA00', '#D500F9'];
+                for (let i = 0; i < 50; i++) {
+                    const confete = document.createElement('div');
+                    confete.className = 'confete';
+                    confete.style.left = Math.random() * 100 + 'vw';
+                    confete.style.backgroundColor = cores[Math.floor(Math.random() * cores.length)];
+                    confete.style.animationDuration = (Math.random() * 2 + 2) + 's';
+                    document.body.appendChild(confete);
+                    setTimeout(() => confete.remove(), 4000);
+                }
+            }
+        }
+        const InteracaoApp = InteracoesDiversas;
+
+        class ConstrutorInterface {
+            static renderizarAlfabeto() {
+                const container = document.getElementById('container-grid-alfabeto');
+                BancoDados.alfabeto.forEach(item => {
+                    const btn = document.createElement('button');
+                    btn.className = 'btn-letra';
+                    btn.innerText = item.letra;
+                    btn.onclick = () => InterfaceModal.abrir(item);
+                    container.appendChild(btn);
+                });
+            }
+
+            static renderizarSilabas() {
+                const container = document.getElementById('container-silabas');
+                BancoDados.silabas.forEach(item => {
+                    const silaba = item.consoante + item.vogal;
+                    const cartao = document.createElement('div');
+                    cartao.className = 'cartao linha-silaba';
+                    cartao.innerHTML = `<div class="bloco">${item.consoante}</div><div>➕</div><div class="bloco">${item.vogal}</div><div>🟰</div><button class="bloco bloco-resultado" onclick="Voz.falar('${silaba}. ${silaba} DE ${item.palavra}.')"><span>${silaba}</span><span style="font-size: 2.5rem;">${item.icone}</span></button>`;
+                    container.appendChild(cartao);
+                });
+            }
+
+            static renderizarBotoesDesenho() {
+                const container = document.getElementById('botoes-desenho');
+                BancoDados.sinaisDesenho.forEach(sinal => {
+                    const btn = document.createElement('button');
+                    btn.className = 'btn-ferramenta';
+                    btn.innerText = sinal;
+                    btn.onclick = () => QuadroInterativo.definirGuia(sinal);
+                    container.appendChild(btn);
+                });
+                const btnApagar = document.createElement('button');
+                btnApagar.className = 'btn-ferramenta';
+                btnApagar.style.backgroundColor = 'var(--cor-destaque)';
+                btnApagar.innerText = '🗑️ APAGAR';
+                btnApagar.onclick = () => QuadroInterativo.limpar();
+                container.appendChild(btnApagar);
+            }
+
+            static renderizarVidaPratica() {
+                const container = document.getElementById('container-dia-a-dia');
+                BancoDados.vidaPratica.forEach(item => {
+                    const card = document.createElement('div');
+                    card.className = 'cartao card-interativo';
+                    card.onclick = () => Voz.falar(item.textoFala);
+                    card.innerHTML = `<span class="icone-card">${item.icone}</span><h2>${item.titulo}</h2>`;
+                    container.appendChild(card);
+                });
+            }
+
+            static configurarNavegacaoAbas() {
+                const botoes = document.querySelectorAll('.btn-tab');
+                const conteudos = document.querySelectorAll('.aba-conteudo');
+                botoes.forEach(btn => {
+                    btn.addEventListener('click', (e) => {
+                        Voz.parar(); 
+                        botoes.forEach(b => b.classList.remove('active'));
+                        e.currentTarget.classList.add('active');
+                        const alvo = e.currentTarget.getAttribute('data-target');
+                        conteudos.forEach(c => {
+                            c.classList.remove('active');
+                            if (c.id === alvo) {
+                                c.classList.add('active');
+                                if(alvo === 'aba-escrever') setTimeout(() => QuadroInterativo.redimensionar(), 50);
+                            }
+                        });
+                    });
+                });
+            }
+        }
+
+        window.onload = () => {
+            ConstrutorInterface.renderizarAlfabeto();
+            ConstrutorInterface.renderizarSilabas();
+            ConstrutorInterface.renderizarVidaPratica();
+            ConstrutorInterface.configurarNavegacaoAbas();
+            
+            QuadroInterativo = new CanvasCaligrafia('canvas-caligrafia', 'container-canvas', 'guia-fundo');
+            ConstrutorInterface.renderizarBotoesDesenho();
+            QuadroInterativo.redimensionar(); 
+            
+            window.addEventListener('resize', () => {
+                if(document.getElementById('aba-escrever').classList.contains('active')) QuadroInterativo.redimensionar();
+            });
+        };
+    </script>
+</body>
+</html>
