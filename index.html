@@ -2,7 +2,7 @@
 <html lang="pt-BR">
 <head>
     <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
     <title>PhoneticFace - Ferramenta de Alfabetização</title>
     <style>
         /* ==========================================================================
@@ -64,8 +64,7 @@
             display: flex;
             flex-direction: column;
             min-height: 100vh;
-            /* FORÇAR CAIXA ALTA NA APLICAÇÃO INTEIRA */
-            text-transform: uppercase;
+            text-transform: uppercase; /* FORÇAR CAIXA ALTA */
         }
 
         h1, h2, h3, h4 { line-height: 1.2; margin-bottom: 1rem; font-weight: 900; }
@@ -148,7 +147,7 @@
             border: 6px solid var(--cor-primaria); max-height: 95vh; overflow-y: auto;
         }
         .letra-gigante { font-size: 6rem; color: var(--cor-primaria); margin: 0; }
-        .video-wrapper { position: relative; padding-bottom: 56.25%; height: 0; margin: 2rem 0; background-color: #000; border: 4px solid var(--cor-texto-principal); }
+        .video-wrapper { position: relative; padding-bottom: 56.25%; height: 0; margin: 2rem 0; background-color: #000; border: 4px solid var(--cor-texto-principal); border-radius: var(--borda-raio-sm); overflow: hidden;}
         .video-wrapper iframe { position: absolute; top: 0; left: 0; width: 100%; height: 100%; }
         .palavra-exemplo span { font-size: 5rem; }
         .btn-acao {
@@ -158,17 +157,21 @@
         }
 
         /* ==========================================================================
-           7. SÍLABAS
+           7. SÍLABAS E VIDA PRÁTICA
            ========================================================================== */
         .area-silabas { display: flex; flex-direction: column; gap: 30px; }
         .linha-silaba { display: flex; justify-content: center; align-items: center; flex-wrap: wrap; gap: 20px; font-size: 3rem; font-weight: 900; }
         .bloco { background-color: var(--cor-primaria); color: #fff; padding: 25px 40px; border-radius: var(--borda-raio); box-shadow: 0 6px 0 rgba(0, 100, 180, 1); }
         .bloco-resultado { background-color: var(--cor-sucesso); cursor: pointer; box-shadow: 0 8px 0 rgba(0, 150, 0, 1); display: flex; flex-direction: column; align-items: center; border: none;}
+        
+        .grid-cards { display: grid; grid-template-columns: repeat(auto-fit, minmax(280px, 1fr)); gap: 30px; }
+        .card-interativo { text-align: center; cursor: pointer; display: flex; flex-direction: column; align-items: center; border-width: 4px; }
+        .icone-card { font-size: 6rem; margin-bottom: 1.5rem; }
 
         /* ==========================================================================
            8. ESCRITA E CALIGRAFIA
            ========================================================================== */
-        .painel-desenho { position: relative; width: 100%; height: 500px; border: 6px dashed var(--cor-primaria); border-radius: var(--borda-raio); background-color: #fff; touch-action: none; overflow: hidden; }
+        .painel-desenho { position: relative; width: 100%; height: 50vh; min-height: 400px; border: 6px dashed var(--cor-primaria); border-radius: var(--borda-raio); background-color: #fff; touch-action: none; overflow: hidden; }
         #guia-fundo { position: absolute; top: 50%; left: 50%; transform: translate(-50%, -50%); font-size: 25rem; color: rgba(0,0,0,0.04); user-select: none; pointer-events: none; font-weight: 900; }
         #canvas-caligrafia { position: absolute; top: 0; left: 0; cursor: crosshair; }
         .ferramentas-canvas { display: flex; flex-wrap: wrap; gap: 10px; margin-bottom: 1.5rem; justify-content: center; max-height: 250px; overflow-y: auto; padding: 10px; border: 2px solid #ccc; border-radius: 10px;}
@@ -176,17 +179,14 @@
         .btn-ferramenta:active { transform: translateY(5px); box-shadow: none; }
 
         /* ==========================================================================
-           9. MEU NOME E DIA A DIA
+           9. MEU NOME
            ========================================================================== */
         .area-digitacao { display: flex; flex-direction: column; gap: 20px; align-items: center; }
         .input-gigante {
             width: 100%; max-width: 600px; padding: 25px; font-size: 3rem; text-align: center;
             border: 5px solid var(--cor-primaria); border-radius: var(--borda-raio); font-weight: 900;
-            text-transform: uppercase; /* FORÇA MAIÚSCULA NO INPUT */
+            text-transform: uppercase;
         }
-        .grid-cards { display: grid; grid-template-columns: repeat(auto-fit, minmax(300px, 1fr)); gap: 30px; }
-        .card-interativo { text-align: center; cursor: pointer; display: flex; flex-direction: column; align-items: center; border-width: 4px; }
-        .icone-card { font-size: 6rem; margin-bottom: 1.5rem; }
 
         /* ==========================================================================
            10. RODAPÉ E ANIMAÇÕES
@@ -198,6 +198,45 @@
         @keyframes slideUp { from { opacity: 0; transform: translateY(30px); } to { opacity: 1; transform: translateY(0); } }
         .confete { position: fixed; width: 15px; height: 15px; z-index: 10000; animation: cair 3s linear forwards; }
         @keyframes cair { to { transform: translateY(100vh) rotate(720deg); opacity: 0; } }
+
+        /* ==========================================================================
+           11. RESPONSIVIDADE (CELULARES E TABLETS)
+           ========================================================================== */
+        @media (max-width: 768px) {
+            html { font-size: 16px; }
+            
+            .barra-acessibilidade { flex-direction: column; text-align: center; justify-content: center; }
+            .controles-acesso { justify-content: center; flex-wrap: wrap; }
+            
+            .cabecalho-app h1 { font-size: 2.2rem; display: flex; flex-direction: column; gap: 10px; }
+            .cabecalho-app p { font-size: 1.1rem; }
+            
+            nav.menu-principal { flex-direction: column; gap: 10px; }
+            .btn-tab { width: 100%; justify-content: center; font-size: 1.2rem; padding: 15px; }
+            
+            .btn-instrucao { font-size: 1.2rem; padding: 15px; flex-direction: column; text-align: center; }
+            
+            /* Ajuste perfeito para o grid de letras caber no celular sem quebrar */
+            .grid-alfabeto { grid-template-columns: repeat(auto-fill, minmax(85px, 1fr)); gap: 10px; }
+            .btn-letra { font-size: 3rem; height: 100px; border-radius: 10px; }
+            
+            .linha-silaba { font-size: 2rem; gap: 10px; }
+            .bloco { padding: 15px 20px; border-radius: 10px; }
+            .sinal-matematico { font-size: 2rem; }
+            
+            .painel-desenho { height: 60vh; min-height: 300px; border-width: 4px; }
+            #guia-fundo { font-size: 15rem; }
+            .btn-ferramenta { font-size: 1.1rem; padding: 10px; flex: 1 1 20%; max-width: 80px; }
+            
+            .input-gigante { font-size: 2rem; padding: 15px; }
+            
+            .modal-caixa { width: 95%; padding: 1.5rem; }
+            .letra-gigante { font-size: 4rem; }
+            .palavra-exemplo span { font-size: 3.5rem; }
+            .palavra-exemplo p { font-size: 2rem; }
+            
+            .container-creditos { grid-template-columns: 1fr; text-align: center; }
+        }
     </style>
 </head>
 <body>
@@ -323,11 +362,6 @@
     </div>
 
     <script>
-        /**
-         * 1. BANCO DE DADOS 
-         * Coloquei um link real de vídeo do YouTube (Mundo Bita) para não dar erro na tela.
-         * Depois os professores podem trocar o 'P3A0_Ie9Oms' pelo ID do vídeo da fonoaudióloga.
-         */
         const linkVideoReal = 'P3A0_Ie9Oms'; 
 
         const BancoDados = {
@@ -426,7 +460,6 @@
         }
         const InterfaceModal = new GerenciadorModal();
 
-        /* VALIDAÇÃO SIMULADA DO DESENHO */
         class CanvasCaligrafia {
             constructor(idCanvas, idContainer, idGuia) {
                 this.canvas = document.getElementById(idCanvas);
@@ -453,7 +486,7 @@
             }
 
             iniciarTraco(e) {
-                clearTimeout(this.timerValidacao); // Cancela o timer se a pessoa voltar a desenhar
+                clearTimeout(this.timerValidacao); 
                 this.desenhando = true;
                 e.preventDefault();
                 const pos = this.obterCoordenadas(e);
@@ -475,14 +508,12 @@
                 this.desenhando = false;
                 this.ctx.beginPath();
                 
-                // SISTEMA QUE FALA PARABÉNS AUTOMATICAMENTE
                 this.timerValidacao = setTimeout(() => {
                     this.validarDesenho();
-                }, 1500); // Espera 1.5 segundos após a pessoa soltar o dedo
+                }, 1500); 
             }
 
             validarDesenho() {
-                // Checa se o canvas tem pixels pintados (simplificado)
                 const imageData = this.ctx.getImageData(0, 0, this.canvas.width, this.canvas.height).data;
                 let desenhouAlgo = false;
                 for (let i = 3; i < imageData.length; i += 4) {
@@ -567,7 +598,7 @@
                     const silaba = item.consoante + item.vogal;
                     const cartao = document.createElement('div');
                     cartao.className = 'cartao linha-silaba';
-                    cartao.innerHTML = `<div class="bloco">${item.consoante}</div><div>➕</div><div class="bloco">${item.vogal}</div><div>🟰</div><button class="bloco bloco-resultado" onclick="Voz.falar('${silaba}. ${silaba} DE ${item.palavra}.')"><span>${silaba}</span><span style="font-size: 2.5rem;">${item.icone}</span></button>`;
+                    cartao.innerHTML = `<div class="bloco">${item.consoante}</div><div class="sinal-matematico">➕</div><div class="bloco">${item.vogal}</div><div class="sinal-matematico">🟰</div><button class="bloco bloco-resultado" onclick="Voz.falar('${silaba}. ${silaba} DE ${item.palavra}.')"><span>${silaba}</span><span style="font-size: 2.5rem;">${item.icone}</span></button>`;
                     container.appendChild(cartao);
                 });
             }
