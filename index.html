@@ -22,33 +22,39 @@
             --cor-roxo: #9C27B0;
             
             --fonte-principal: 'Segoe UI', system-ui, -apple-system, sans-serif;
-            --tamanho-base: 18px; 
+            --tamanho-base: 100%;
             --borda-raio: 16px;
             --borda-raio-sm: 8px;
             --sombra-padrao: 0 8px 16px rgba(0,0,0,0.1);
-            --sombra-hover: 0 12px 24px rgba(0,0,0,0.15);
-            --transicao-padrao: all 0.3s cubic-bezier(0.25, 0.8, 0.25, 1);
         }
 
         /* TEMA DE ALTO CONTRASTE */
         body.alto-contraste {
-            --cor-bg-principal: #121212;
+            --cor-bg-principal: #000000;
             --cor-bg-secundario: #000000;
-            --cor-texto-principal: #FFFFFF;
-            --cor-texto-secundario: #E0E0E0;
-            --cor-primaria: #FFEA00;
-            --cor-secundaria: #00E5FF;
-            --cor-destaque: #FF1744;
-            --cor-sucesso: #00E676;
-            --cor-alerta: #FFEA00;
-            --cor-roxo: #D500F9;
+            --cor-texto-principal: #FFFF00;
+            --cor-texto-secundario: #FFFF00;
+            --cor-primaria: #000000;
+            --cor-secundaria: #FFFF00;
+            --cor-destaque: #000000;
+            --cor-sucesso: #000000;
+            --cor-alerta: #000000;
+            --cor-roxo: #000000;
         }
 
-        body.alto-contraste * { border-color: #FFFFFF !important; }
-        body.alto-contraste .btn-tab, body.alto-contraste .btn-letra, body.alto-contraste .bloco { color: #000; font-weight: 900; }
+        body.alto-contraste * { 
+            border-color: #FFFF00 !important; 
+            color: #FFFF00 !important; 
+            background-color: #000000 !important; 
+        }
+        
+        body.alto-contraste .btn-tab.active { 
+            background-color: #FFFF00 !important; 
+            color: #000000 !important; 
+        }
 
         /* ==========================================================================
-           2. RESET CSS E TIPOGRAFIA BASE (TUDO EM CAIXA ALTA)
+           2. RESET CSS E TIPOGRAFIA BASE
            ========================================================================== */
         * { margin: 0; padding: 0; box-sizing: border-box; }
         
@@ -64,13 +70,14 @@
             display: flex;
             flex-direction: column;
             min-height: 100vh;
-            text-transform: uppercase; /* FORÇAR CAIXA ALTA */
+            text-transform: uppercase;
         }
 
         h1, h2, h3, h4 { line-height: 1.2; margin-bottom: 1rem; font-weight: 900; }
+        input { text-transform: uppercase; font-family: inherit; }
 
         /* ==========================================================================
-           3. BARRA DE ACESSIBILIDADE
+           3. BARRA DE ACESSIBILIDADE E NAVEGAÇÃO
            ========================================================================== */
         .barra-acessibilidade {
             background-color: var(--cor-texto-principal);
@@ -88,9 +95,6 @@
         }
         .btn-acesso:hover { background-color: var(--cor-bg-principal); color: var(--cor-texto-principal); }
 
-        /* ==========================================================================
-           4. CABEÇALHO E NAVEGAÇÃO
-           ========================================================================== */
         header.cabecalho-app {
             background-color: var(--cor-primaria); color: var(--cor-bg-secundario);
             padding: 3rem 1rem; text-align: center; border-bottom: 5px solid var(--cor-sucesso);
@@ -98,18 +102,17 @@
         .cabecalho-app h1 { font-size: 3.5rem; text-shadow: 2px 2px 4px rgba(0,0,0,0.2); }
         .cabecalho-app p { font-size: 1.4rem; font-weight: 900; }
         
-        nav.menu-principal { display: flex; justify-content: center; flex-wrap: wrap; gap: 15px; margin-top: 2rem; }
+        nav.menu-principal { display: flex; justify-content: center; flex-wrap: wrap; gap: 10px; margin-top: 2rem; }
         .btn-tab {
             background-color: var(--cor-bg-secundario); color: var(--cor-primaria);
-            border: 4px solid transparent; padding: 15px 30px; font-size: 1.3rem;
+            border: 4px solid transparent; padding: 10px 20px; font-size: 1.1rem;
             font-weight: 900; border-radius: var(--borda-raio); cursor: pointer;
-            box-shadow: var(--sombra-padrao); display: flex; align-items: center; gap: 10px;
-            text-transform: uppercase;
+            box-shadow: var(--sombra-padrao); display: flex; align-items: center; gap: 5px;
         }
         .btn-tab.active { background-color: var(--cor-sucesso); color: var(--cor-bg-secundario); transform: scale(1.05); }
 
         /* ==========================================================================
-           5. ESTRUTURA PRINCIPAL
+           4. ESTRUTURA PRINCIPAL
            ========================================================================== */
         main.conteudo-app { flex: 1; width: 100%; max-width: 1200px; margin: 3rem auto; padding: 0 20px; }
         .aba-conteudo { display: none; animation: slideUp 0.5s ease-out forwards; }
@@ -123,9 +126,12 @@
         }
         .btn-instrucao:active { transform: translateY(6px); box-shadow: none; }
         .cartao { background-color: var(--cor-bg-secundario); border-radius: var(--borda-raio); padding: 2.5rem; border: 3px solid var(--cor-secundaria); margin-bottom: 2rem; }
+        
+        .flex-center { display: flex; flex-wrap: wrap; gap: 15px; justify-content: center; align-items: center; }
+        .btn-grande { font-size: 2.5rem; font-weight: 900; padding: 15px 30px; border-radius: var(--borda-raio); border: none; cursor: pointer; color: white; }
 
         /* ==========================================================================
-           6. ALFABETO E MODAL YOUTUBE
+           5. ALFABETO E MODAL YOUTUBE
            ========================================================================== */
         .grid-alfabeto { display: grid; grid-template-columns: repeat(auto-fill, minmax(130px, 1fr)); gap: 20px; }
         .btn-letra {
@@ -157,7 +163,7 @@
         }
 
         /* ==========================================================================
-           7. SÍLABAS E VIDA PRÁTICA
+           6. SÍLABAS, PALAVRAS E VIDA PRÁTICA
            ========================================================================== */
         .area-silabas { display: flex; flex-direction: column; gap: 30px; }
         .linha-silaba { display: flex; justify-content: center; align-items: center; flex-wrap: wrap; gap: 20px; font-size: 3rem; font-weight: 900; }
@@ -167,9 +173,11 @@
         .grid-cards { display: grid; grid-template-columns: repeat(auto-fit, minmax(280px, 1fr)); gap: 30px; }
         .card-interativo { text-align: center; cursor: pointer; display: flex; flex-direction: column; align-items: center; border-width: 4px; }
         .icone-card { font-size: 6rem; margin-bottom: 1.5rem; }
+        
+        .slot-silaba { width: 100px; height: 100px; border: 4px dashed var(--cor-primaria); border-radius: var(--borda-raio); display: flex; justify-content: center; align-items: center; font-size: 3rem; font-weight: bold; background: #eee;}
 
         /* ==========================================================================
-           8. ESCRITA E CALIGRAFIA
+           7. ESCRITA E CALIGRAFIA
            ========================================================================== */
         .painel-desenho { position: relative; width: 100%; height: 50vh; min-height: 400px; border: 6px dashed var(--cor-primaria); border-radius: var(--borda-raio); background-color: #fff; touch-action: none; overflow: hidden; }
         #guia-fundo { position: absolute; top: 50%; left: 50%; transform: translate(-50%, -50%); font-size: 25rem; color: rgba(0,0,0,0.04); user-select: none; pointer-events: none; font-weight: 900; }
@@ -179,18 +187,11 @@
         .btn-ferramenta:active { transform: translateY(5px); box-shadow: none; }
 
         /* ==========================================================================
-           9. MEU NOME
+           8. MEU NOME E RODAPÉ
            ========================================================================== */
         .area-digitacao { display: flex; flex-direction: column; gap: 20px; align-items: center; }
-        .input-gigante {
-            width: 100%; max-width: 600px; padding: 25px; font-size: 3rem; text-align: center;
-            border: 5px solid var(--cor-primaria); border-radius: var(--borda-raio); font-weight: 900;
-            text-transform: uppercase;
-        }
+        .input-gigante { width: 100%; max-width: 600px; padding: 25px; font-size: 3rem; text-align: center; border: 5px solid var(--cor-primaria); border-radius: var(--borda-raio); font-weight: 900; text-transform: uppercase; }
 
-        /* ==========================================================================
-           10. RODAPÉ E ANIMAÇÕES
-           ========================================================================== */
         .rodape-app { background-color: var(--cor-texto-principal); color: var(--cor-bg-secundario); padding: 3rem 20px; margin-top: auto; border-top: 8px solid var(--cor-secundaria); }
         .container-creditos { max-width: 1200px; margin: 0 auto; display: grid; grid-template-columns: repeat(auto-fit, minmax(300px, 1fr)); gap: 30px; }
         .coluna-creditos h3 { color: var(--cor-alerta); border-bottom: 2px solid var(--cor-secundaria); padding-bottom: 10px; margin-bottom: 15px; }
@@ -199,43 +200,24 @@
         .confete { position: fixed; width: 15px; height: 15px; z-index: 10000; animation: cair 3s linear forwards; }
         @keyframes cair { to { transform: translateY(100vh) rotate(720deg); opacity: 0; } }
 
-        /* ==========================================================================
-           11. RESPONSIVIDADE (CELULARES E TABLETS)
-           ========================================================================== */
         @media (max-width: 768px) {
-            html { font-size: 16px; }
-            
+            html { font-size: 80%; }
             .barra-acessibilidade { flex-direction: column; text-align: center; justify-content: center; }
             .controles-acesso { justify-content: center; flex-wrap: wrap; }
-            
             .cabecalho-app h1 { font-size: 2.2rem; display: flex; flex-direction: column; gap: 10px; }
             .cabecalho-app p { font-size: 1.1rem; }
-            
             nav.menu-principal { flex-direction: column; gap: 10px; }
             .btn-tab { width: 100%; justify-content: center; font-size: 1.2rem; padding: 15px; }
-            
-            .btn-instrucao { font-size: 1.2rem; padding: 15px; flex-direction: column; text-align: center; }
-            
-            /* Ajuste perfeito para o grid de letras caber no celular sem quebrar */
             .grid-alfabeto { grid-template-columns: repeat(auto-fill, minmax(85px, 1fr)); gap: 10px; }
             .btn-letra { font-size: 3rem; height: 100px; border-radius: 10px; }
-            
             .linha-silaba { font-size: 2rem; gap: 10px; }
             .bloco { padding: 15px 20px; border-radius: 10px; }
-            .sinal-matematico { font-size: 2rem; }
-            
             .painel-desenho { height: 60vh; min-height: 300px; border-width: 4px; }
             #guia-fundo { font-size: 15rem; }
             .btn-ferramenta { font-size: 1.1rem; padding: 10px; flex: 1 1 20%; max-width: 80px; }
-            
             .input-gigante { font-size: 2rem; padding: 15px; }
-            
-            .modal-caixa { width: 95%; padding: 1.5rem; }
-            .letra-gigante { font-size: 4rem; }
-            .palavra-exemplo span { font-size: 3.5rem; }
-            .palavra-exemplo p { font-size: 2rem; }
-            
             .container-creditos { grid-template-columns: 1fr; text-align: center; }
+            .slot-silaba { width: 60px; height: 60px; font-size: 2rem; }
         }
     </style>
 </head>
@@ -244,8 +226,8 @@
     <div class="barra-acessibilidade">
         <div style="font-weight: 900; font-size: 1.2rem;">👁️ FERRAMENTAS DE AJUDA</div>
         <div class="controles-acesso">
-            <button class="btn-acesso" onclick="AppConfig.alterarTamanhoFonte(1)">A+ AUMENTAR TEXTO</button>
-            <button class="btn-acesso" onclick="AppConfig.alterarTamanhoFonte(-1)">A- DIMINUIR TEXTO</button>
+            <button class="btn-acesso" onclick="AppConfig.alterarTamanhoFonte(10)">A+ AUMENTAR TEXTO</button>
+            <button class="btn-acesso" onclick="AppConfig.alterarTamanhoFonte(-10)">A- DIMINUIR TEXTO</button>
             <button class="btn-acesso" onclick="AppConfig.alternarAltoContraste()">🌓 ALTO CONTRASTE</button>
         </div>
     </div>
@@ -254,11 +236,16 @@
         <h1>🗣️ PHONETICFACE</h1>
         <p>FERRAMENTA TECNOLÓGICA DE APOIO AO DOCENTE NO PROCESSO DE ALFABETIZAÇÃO</p>
         <nav class="menu-principal">
-            <button class="btn-tab active" data-target="aba-alfabeto">🔤 O ALFABETO</button>
-            <button class="btn-tab" data-target="aba-silabas">🧩 JUNTAR SÍLABAS</button>
-            <button class="btn-tab" data-target="aba-escrever">✏️ DESENHAR LETRAS</button>
-            <button class="btn-tab" data-target="aba-nome">👤 MEU NOME</button>
-            <button class="btn-tab" data-target="aba-dia-a-dia">🛒 VIDA PRÁTICA</button>
+            <button class="btn-tab active" data-target="aba-alfabeto">1. O ALFABETO</button>
+            <button class="btn-tab" data-target="aba-vogais">2. VOGAIS/CONS.</button>
+            <button class="btn-tab" data-target="aba-iniciais">3. INICIAIS</button>
+            <button class="btn-tab" data-target="aba-familias">4. FAMÍLIAS</button>
+            <button class="btn-tab" data-target="aba-silabas">5. JUNTAR SÍLABAS</button>
+            <button class="btn-tab" data-target="aba-palavras">6. PALAVRAS</button>
+            <button class="btn-tab" data-target="aba-escrever">7. DESENHAR LETRAS</button>
+            <button class="btn-tab" data-target="aba-cores">8. CORES</button>
+            <button class="btn-tab" data-target="aba-nome">9. MEU NOME</button>
+            <button class="btn-tab" data-target="aba-dia-a-dia">10. VIDA PRÁTICA</button>
         </nav>
     </header>
 
@@ -273,6 +260,49 @@
             <div id="container-grid-alfabeto" class="grid-alfabeto"></div>
         </section>
 
+        <section id="aba-vogais" class="aba-conteudo">
+            <div class="bloco-instrucao">
+                <button class="btn-instrucao" onclick="Voz.falar('VAMOS CONHECER AS VOGAIS E AS CONSOANTES. TOQUE NAS LETRAS.')">
+                    🔊 CLIQUE AQUI PARA OUVIR A INSTRUÇÃO
+                </button>
+            </div>
+            <div class="cartao">
+                <h2 style="text-align: center;">VOGAIS</h2>
+                <div class="flex-center" id="box-vogais" style="border: 4px dashed var(--cor-secundaria); padding: 20px; border-radius: var(--borda-raio); margin-bottom: 20px;"></div>
+                <h2 style="text-align: center;">CONSOANTES</h2>
+                <div class="flex-center" id="box-consoantes" style="border: 4px dashed var(--cor-secundaria); padding: 20px; border-radius: var(--borda-raio);"></div>
+            </div>
+        </section>
+
+        <section id="aba-iniciais" class="aba-conteudo">
+            <div class="bloco-instrucao">
+                <button class="btn-instrucao" onclick="Voz.falar('OLHE A IMAGEM. COM QUAL LETRA COMEÇA O NOME DELA?')">
+                    🔊 CLIQUE AQUI PARA OUVIR A INSTRUÇÃO
+                </button>
+            </div>
+            <div class="cartao" style="text-align: center;">
+                <h2 id="titulo-inicial">COM QUE LETRA COMEÇA?</h2>
+                <h3 id="nome-inicial-dica" style="font-size: 3.5rem; color: var(--cor-primaria); letter-spacing: 10px; margin-top: 15px; background: #eee; padding: 10px; border-radius: var(--borda-raio); display: inline-block;">_ V I Ã O</h3>
+                <div id="imagem-inicial" style="font-size: 8rem; margin: 10px 0;">✈️</div>
+                <div id="opcoes-iniciais" class="flex-center"></div>
+            </div>
+        </section>
+
+        <section id="aba-familias" class="aba-conteudo">
+            <div class="bloco-instrucao">
+                <button class="btn-instrucao" onclick="Voz.falar('ESCOLHA UMA CONSOANTE PARA VER A FAMÍLIA DELA.')">
+                    🔊 CLIQUE AQUI PARA OUVIR A INSTRUÇÃO
+                </button>
+            </div>
+            <div class="cartao">
+                <h2 style="text-align: center;">ESCOLHA A CONSOANTE:</h2>
+                <div class="flex-center" id="botoes-familias"></div>
+                <hr style="margin: 30px 0; border: 2px solid #ccc;">
+                <h2 id="titulo-familia-atual" style="text-align: center;">FAMÍLIA:</h2>
+                <div class="flex-center" id="resultado-familia"></div>
+            </div>
+        </section>
+
         <section id="aba-silabas" class="aba-conteudo">
             <div class="bloco-instrucao">
                 <button class="btn-instrucao" onclick="Voz.falar('VAMOS JUNTAR AS LETRAS. TOQUE NO BOTÃO VERDE PARA OUVIR A SÍLABA.')">
@@ -282,21 +312,42 @@
             <div id="container-silabas" class="area-silabas"></div>
         </section>
 
-        <section id="aba-escrever" class="aba-conteudo">
+        <section id="aba-palavras" class="aba-conteudo">
             <div class="bloco-instrucao">
-                <button class="btn-instrucao" onclick="Voz.falar('ESCOLHA UMA LETRA OU SINAL. DESENHE POR CIMA DA LETRA CINZA. QUANDO TERMINAR, EU VOU TE DAR OS PARABÉNS!')">
+                <button class="btn-instrucao" onclick="Voz.falar('TOQUE NAS SÍLABAS ABAIXO NA ORDEM CERTA PARA FORMAR A PALAVRA.')">
                     🔊 CLIQUE AQUI PARA OUVIR A INSTRUÇÃO
                 </button>
             </div>
-            
+            <div class="cartao" style="text-align: center;">
+                <h2 id="dica-palavra" style="font-size: 4rem; color: var(--cor-primaria);">BONECA</h2>
+                <div id="slots-palavra" class="flex-center" style="margin: 30px 0;"></div>
+                <div id="silabas-soltas" class="flex-center"></div>
+                <button class="btn-acao" style="margin-top: 40px; width: auto;" onclick="InteracaoApp.proximaPalavra()">🔄 PRÓXIMA PALAVRA</button>
+            </div>
+        </section>
+
+        <section id="aba-escrever" class="aba-conteudo">
+            <div class="bloco-instrucao">
+                <button class="btn-instrucao" onclick="Voz.falar('ESCOLHA UMA LETRA OU SINAL. DESENHE POR CIMA DA LETRA CINZA. SE FIZER CERTINHO, EU VOU TE DAR OS PARABÉNS!')">
+                    🔊 CLIQUE AQUI PARA OUVIR A INSTRUÇÃO
+                </button>
+            </div>
             <div class="cartao">
                 <div class="ferramentas-canvas" id="botoes-desenho"></div>
-                
                 <div class="painel-desenho" id="container-canvas">
                     <div id="guia-fundo">A</div>
                     <canvas id="canvas-caligrafia"></canvas>
                 </div>
             </div>
+        </section>
+
+        <section id="aba-cores" class="aba-conteudo">
+            <div class="bloco-instrucao">
+                <button class="btn-instrucao" onclick="Voz.falar('TOQUE NAS CORES PARA OUVIR O NOME DELAS.')">
+                    🔊 CLIQUE AQUI PARA OUVIR A INSTRUÇÃO
+                </button>
+            </div>
+            <div class="grid-alfabeto" id="container-cores" style="grid-template-columns: repeat(auto-fill, minmax(150px, 1fr));"></div>
         </section>
 
         <section id="aba-nome" class="aba-conteudo">
@@ -330,6 +381,7 @@
             <div class="coluna-creditos">
                 <div style="font-size: 2rem; font-weight: 900; color: var(--cor-secundaria);">🗣️ PHONETICFACE</div>
                 <p>FERRAMENTA TECNOLÓGICA DE APOIO AO DOCENTE NO PROCESSO DE ALFABETIZAÇÃO.</p>
+                <p style="margin-top: 10px;"><strong>PROJETO DO NÚCLEO - DESAFIO EPT 2026</strong></p>
             </div>
             <div class="coluna-creditos">
                 <h3>DESENVOLVIMENTO</h3>
@@ -342,7 +394,7 @@
                 <p><strong>C.E. PROF. IVONE SOARES CASTANHARO</strong></p>
                 <p><strong>DIRETORA GERAL:</strong> TANIA SIDNEI</p>
                 <p><strong>COORDENADORES:</strong> MARIDALVA E CIDINEI</p>
-                <p><strong>EQUIPE DOCENTE:</strong> POLIANA, MIRELLA E FELIPE</p>
+                <p><strong>EQUIPE DOCENTE:</strong> POLIANA, MIRELLA E MARIA EDUARDA</p>
             </div>
         </div>
     </footer>
@@ -366,44 +418,133 @@
 
         const BancoDados = {
             alfabeto: [
-                { letra: 'A', palavra: 'ANALISTA', icone: '💻', youtubeId: linkVideoReal },
-                { letra: 'B', palavra: 'BOLA', icone: '⚽', youtubeId: linkVideoReal },
-                { letra: 'C', palavra: 'CASA', icone: '🏠', youtubeId: linkVideoReal },
-                { letra: 'D', palavra: 'DADO', icone: '🎲', youtubeId: linkVideoReal },
-                { letra: 'E', palavra: 'EXPRESSO', icone: '🚌', youtubeId: linkVideoReal },
-                { letra: 'F', palavra: 'FEIJÃO', icone: '🫘', youtubeId: linkVideoReal },
-                { letra: 'G', palavra: 'GATO', icone: '🐈', youtubeId: linkVideoReal },
-                { letra: 'H', palavra: 'HORA', icone: '⌚', youtubeId: linkVideoReal },
-                { letra: 'I', palavra: 'IGREJA', icone: '⛪', youtubeId: linkVideoReal },
-                { letra: 'J', palavra: 'JACARÉ', icone: '🐊', youtubeId: linkVideoReal },
-                { letra: 'K', palavra: 'KAIO', icone: '🧑', youtubeId: linkVideoReal },
-                { letra: 'L', palavra: 'LEÃO', icone: '🦁', youtubeId: linkVideoReal },
-                { letra: 'M', palavra: 'MÚSCULO', icone: '💪', youtubeId: linkVideoReal },
-                { letra: 'N', palavra: 'NAVIO', icone: '🚢', youtubeId: linkVideoReal },
-                { letra: 'O', palavra: 'ÓCULOS', icone: '👓', youtubeId: linkVideoReal },
-                { letra: 'P', palavra: 'PRATO', icone: '🍽️', youtubeId: linkVideoReal },
-                { letra: 'Q', palavra: 'QUEIJO', icone: '🧀', youtubeId: linkVideoReal },
-                { letra: 'R', palavra: 'RATO', icone: '🐀', youtubeId: linkVideoReal },
-                { letra: 'S', palavra: 'SAPO', icone: '🐸', youtubeId: linkVideoReal },
-                { letra: 'T', palavra: 'TÊNIS DE MESA', icone: '🏓', youtubeId: linkVideoReal },
-                { letra: 'U', palavra: 'UVA', icone: '🍇', youtubeId: linkVideoReal },
-                { letra: 'V', palavra: 'VACA', icone: '🐄', youtubeId: linkVideoReal },
-                { letra: 'W', palavra: 'WEB', icone: '🌐', youtubeId: linkVideoReal },
-                { letra: 'X', palavra: 'XÍCARA', icone: '☕', youtubeId: linkVideoReal },
-                { letra: 'Y', palavra: 'YOUTUBE', icone: '▶️', youtubeId: linkVideoReal },
-                { letra: 'Z', palavra: 'ZEBRA', icone: '🦓', youtubeId: linkVideoReal }
+                { letra: 'A', palavra: 'ABELHA', icone: '🐝', youtubeId: linkVideoReal }, { letra: 'B', palavra: 'BOLA', icone: '⚽', youtubeId: linkVideoReal },
+                { letra: 'C', palavra: 'CASA', icone: '🏠', youtubeId: linkVideoReal }, { letra: 'D', palavra: 'DADO', icone: '🎲', youtubeId: linkVideoReal },
+                { letra: 'E', palavra: 'ELEFANTE', icone: '🐘', youtubeId: linkVideoReal }, { letra: 'F', palavra: 'FACA', icone: '🔪', youtubeId: linkVideoReal },
+                { letra: 'G', palavra: 'GATO', icone: '🐈', youtubeId: linkVideoReal }, { letra: 'H', palavra: 'HORA', icone: '⌚', youtubeId: linkVideoReal },
+                { letra: 'I', palavra: 'IGREJA', icone: '⛪', youtubeId: linkVideoReal }, { letra: 'J', palavra: 'JACARÉ', icone: '🐊', youtubeId: linkVideoReal },
+                { letra: 'K', palavra: 'KIWI', icone: '🥝', youtubeId: linkVideoReal }, { letra: 'L', palavra: 'LÁPIS', icone: '✏️', youtubeId: linkVideoReal },
+                { letra: 'M', palavra: 'MALA', icone: '🧳', youtubeId: linkVideoReal }, { letra: 'N', palavra: 'NAVIO', icone: '🚢', youtubeId: linkVideoReal },
+                { letra: 'O', palavra: 'ÓCULOS', icone: '👓', youtubeId: linkVideoReal }, { letra: 'P', palavra: 'PATO', icone: '🦆', youtubeId: linkVideoReal },
+                { letra: 'Q', palavra: 'QUEIJO', icone: '🧀', youtubeId: linkVideoReal }, { letra: 'R', palavra: 'RATO', icone: '🐀', youtubeId: linkVideoReal },
+                { letra: 'S', palavra: 'SAPO', icone: '🐸', youtubeId: linkVideoReal }, { letra: 'T', palavra: 'TATU', icone: '🦔', youtubeId: linkVideoReal },
+                { letra: 'U', palavra: 'UVA', icone: '🍇', youtubeId: linkVideoReal }, { letra: 'V', palavra: 'VACA', icone: '🐄', youtubeId: linkVideoReal },
+                { letra: 'W', palavra: 'WEB', icone: '🌐', youtubeId: linkVideoReal }, { letra: 'X', palavra: 'XÍCARA', icone: '☕', youtubeId: linkVideoReal },
+                { letra: 'Y', palavra: 'YOUTUBE', icone: '▶️', youtubeId: linkVideoReal }, { letra: 'Z', palavra: 'ZEBRA', icone: '🦓', youtubeId: linkVideoReal }
             ],
+            vogais: ['A','E','I','O','U'],
+            consoantes: ['B','C','D','F','G','H','J','K','L','M','N','P','Q','R','S','T','V','W','X','Y','Z'],
             sinaisDesenho: ['A','B','C','D','E','F','G','H','I','J','K','L','M','N','O','P','Q','R','S','T','U','V','W','X','Y','Z','?','~','-'],
+            
+            // LISTA GIGANTE DE INICIAIS (~100 itens)
+            iniciais: [
+                { img: '✈️', nome: 'AVIÃO', certa: 'A', ops: ['A','E','O'] }, { img: '🐘', nome: 'ELEFANTE', certa: 'E', ops: ['I','E','U'] },
+                { img: '⛪', nome: 'IGREJA', certa: 'I', ops: ['A','I','O'] }, { img: '👁️', nome: 'OLHO', certa: 'O', ops: ['U','A','O'] },
+                { img: '🍇', nome: 'UVA', certa: 'U', ops: ['E','U','I'] }, { img: '🐎', nome: 'CAVALO', certa: 'C', ops: ['B','C','D'] },
+                { img: '🍌', nome: 'BANANA', certa: 'B', ops: ['P','B','D'] }, { img: '🚗', nome: 'CARRO', certa: 'C', ops: ['C','K','S'] },
+                { img: '🐕', nome: 'CACHORRO', certa: 'C', ops: ['S','X','C'] }, { img: '🐈', nome: 'GATO', certa: 'G', ops: ['J','G','C'] },
+                { img: '🦁', nome: 'LEÃO', certa: 'L', ops: ['M','L','N'] }, { img: '🍎', nome: 'MAÇÃ', certa: 'M', ops: ['N','M','P'] },
+                { img: '🍉', nome: 'MELANCIA', certa: 'M', ops: ['L','M','N'] }, { img: '🍓', nome: 'MORANGO', certa: 'M', ops: ['M','N','B'] },
+                { img: '🍍', nome: 'ABACAXI', certa: 'A', ops: ['A','O','E'] }, { img: '⚽', nome: 'BOLA', certa: 'B', ops: ['D','B','P'] },
+                { img: '🏠', nome: 'CASA', certa: 'C', ops: ['S','C','K'] }, { img: '🐒', nome: 'MACACO', certa: 'M', ops: ['N','M','L'] },
+                { img: '🥘', nome: 'PANELA', certa: 'P', ops: ['B','P','D'] }, { img: '🍅', nome: 'TOMATE', certa: 'T', ops: ['T','D','P'] },
+                { img: '🦉', nome: 'CORUJA', certa: 'C', ops: ['K','C','S'] }, { img: '🐸', nome: 'SAPO', certa: 'S', ops: ['Z','S','C'] },
+                { img: '🦋', nome: 'BORBOLETA', certa: 'B', ops: ['P','D','B'] }, { img: '🐢', nome: 'TARTARUGA', certa: 'T', ops: ['T','D','F'] },
+                { img: '🐷', nome: 'PORCO', certa: 'P', ops: ['B','P','Q'] }, { img: '🐔', nome: 'GALINHA', certa: 'G', ops: ['J','G','C'] },
+                { img: '🦆', nome: 'PATO', certa: 'P', ops: ['B','P','T'] }, { img: '🐟', nome: 'PEIXE', certa: 'P', ops: ['P','B','F'] },
+                { img: '🐝', nome: 'ABELHA', certa: 'A', ops: ['E','A','O'] }, { img: '🐞', nome: 'JOANINHA', certa: 'J', ops: ['G','J','Z'] },
+                { img: '🌲', nome: 'ÁRVORE', certa: 'A', ops: ['E','I','A'] }, { img: '🌻', nome: 'FLOR', certa: 'F', ops: ['V','F','P'] },
+                { img: '☀️', nome: 'SOL', certa: 'S', ops: ['C','Z','S'] }, { img: '🌙', nome: 'LUA', certa: 'L', ops: ['L','M','U'] },
+                { img: '⭐', nome: 'ESTRELA', certa: 'E', ops: ['A','E','I'] }, { img: '☁️', nome: 'NUVEM', certa: 'N', ops: ['M','N','V'] },
+                { img: '🌧️', nome: 'CHUVA', certa: 'C', ops: ['X','C','S'] }, { img: '❄️', nome: 'NEVE', certa: 'N', ops: ['M','N','L'] },
+                { img: '🔥', nome: 'FOGO', certa: 'F', ops: ['V','F','T'] }, { img: '💧', nome: 'ÁGUA', certa: 'A', ops: ['O','A','E'] },
+                { img: '🍞', nome: 'PÃO', certa: 'P', ops: ['B','P','D'] }, { img: '🧀', nome: 'QUEIJO', certa: 'Q', ops: ['C','K','Q'] },
+                { img: '🥚', nome: 'OVO', certa: 'O', ops: ['U','O','A'] }, { img: '🍔', nome: 'HAMBÚRGUER', certa: 'H', ops: ['A','H','R'] },
+                { img: '🍕', nome: 'PIZZA', certa: 'P', ops: ['B','P','D'] }, { img: '🍦', nome: 'SORVETE', certa: 'S', ops: ['C','S','Z'] },
+                { img: '🍩', nome: 'ROSQUINHA', certa: 'R', ops: ['H','R','L'] }, { img: '🎂', nome: 'BOLO', certa: 'B', ops: ['P','B','D'] },
+                { img: '🍫', nome: 'CHOCOLATE', certa: 'C', ops: ['X','C','S'] }, { img: '🍬', nome: 'BALA', certa: 'B', ops: ['P','B','D'] },
+                { img: '☕', nome: 'CAFÉ', certa: 'C', ops: ['K','C','Q'] }, { img: '🥛', nome: 'LEITE', certa: 'L', ops: ['L','M','N'] },
+                { img: '🍼', nome: 'MAMADEIRA', certa: 'M', ops: ['N','M','P'] }, { img: '🥄', nome: 'COLHER', certa: 'C', ops: ['K','C','S'] },
+                { img: '🔪', nome: 'FACA', certa: 'F', ops: ['V','F','P'] }, { img: '🍽️', nome: 'PRATO', certa: 'P', ops: ['B','P','T'] },
+                { img: '🪑', nome: 'CADEIRA', certa: 'C', ops: ['K','C','S'] }, { img: '🛌', nome: 'CAMA', certa: 'C', ops: ['K','C','S'] },
+                { img: '🚪', nome: 'PORTA', certa: 'P', ops: ['B','P','D'] }, { img: '🪟', nome: 'JANELA', certa: 'J', ops: ['G','J','Z'] },
+                { img: '🚿', nome: 'CHUVEIRO', certa: 'C', ops: ['X','C','S'] }, { img: '🧼', nome: 'SABONETE', certa: 'S', ops: ['Z','S','C'] },
+                { img: '🧻', nome: 'PAPEL', certa: 'P', ops: ['B','P','D'] }, { img: '🧹', nome: 'VASSOURA', certa: 'V', ops: ['F','V','B'] },
+                { img: '🗑️', nome: 'LIXO', certa: 'L', ops: ['L','M','N'] }, { img: '🔑', nome: 'CHAVE', certa: 'C', ops: ['X','C','S'] },
+                { img: '📱', nome: 'CELULAR', certa: 'C', ops: ['S','C','Z'] }, { img: '💻', nome: 'COMPUTADOR', certa: 'C', ops: ['K','C','S'] },
+                { img: '📺', nome: 'TELEVISÃO', certa: 'T', ops: ['D','T','P'] }, { img: '📷', nome: 'CÂMERA', certa: 'C', ops: ['K','C','S'] },
+                { img: '📖', nome: 'LIVRO', certa: 'L', ops: ['L','M','N'] }, { img: '✏️', nome: 'LÁPIS', certa: 'L', ops: ['L','M','N'] },
+                { img: '🎒', nome: 'MOCHILA', certa: 'M', ops: ['N','M','L'] }, { img: '✂️', nome: 'TESOURA', certa: 'T', ops: ['D','T','Z'] },
+                { img: '🚗', nome: 'CARRO', certa: 'C', ops: ['K','C','S'] }, { img: '🚌', nome: 'ÔNIBUS', certa: 'O', ops: ['U','O','A'] },
+                { img: '🚑', nome: 'AMBULÂNCIA', certa: 'A', ops: ['E','A','O'] }, { img: '🚓', nome: 'POLÍCIA', certa: 'P', ops: ['B','P','D'] },
+                { img: '🚒', nome: 'BOMBEIRO', certa: 'B', ops: ['P','B','D'] }, { img: '🚲', nome: 'BICICLETA', certa: 'B', ops: ['P','B','D'] },
+                { img: '🛵', nome: 'MOTO', certa: 'M', ops: ['N','M','L'] }, { img: '🚁', nome: 'HELICÓPTERO', certa: 'H', ops: ['R','H','A'] },
+                { img: '🚀', nome: 'FOGUETE', certa: 'F', ops: ['V','F','P'] }, { img: '🛸', nome: 'DISCO', certa: 'D', ops: ['T','D','B'] },
+                { img: '⛵', nome: 'BARCO', certa: 'B', ops: ['P','B','D'] }, { img: '⚓', nome: 'ÂNCORA', certa: 'A', ops: ['E','A','O'] },
+                { img: '🚦', nome: 'SEMÁFORO', certa: 'S', ops: ['C','S','Z'] }, { img: '⛽', nome: 'POSTO', certa: 'P', ops: ['B','P','D'] },
+                { img: '🎡', nome: 'RODA', certa: 'R', ops: ['H','R','L'] }, { img: '🎢', nome: 'MONTANHA', certa: 'M', ops: ['N','M','L'] }
+            ],
+
             silabas: [
-                { consoante: 'B', vogal: 'A', palavra: 'BANANA', icone: '🍌' },
-                { consoante: 'M', vogal: 'A', palavra: 'MALA', icone: '🧳' },
-                { consoante: 'C', vogal: 'O', palavra: 'CORAÇÃO', icone: '❤️' },
-                { consoante: 'D', vogal: 'I', palavra: 'DINHEIRO', icone: '💵' },
+                { consoante: 'B', vogal: 'A', palavra: 'BANANA', icone: '🍌' }, { consoante: 'M', vogal: 'A', palavra: 'MALA', icone: '🧳' },
+                { consoante: 'C', vogal: 'O', palavra: 'COPO', icone: '🥛' }, { consoante: 'D', vogal: 'I', palavra: 'DINHEIRO', icone: '💵' },
                 { consoante: 'F', vogal: 'O', palavra: 'FOGO', icone: '🔥' }
             ],
+
+            // LISTA GIGANTE DE PALAVRAS DIVIDIDAS EM SÍLABAS (~100 itens)
+            palavrasJogo: [
+                { p: 'BONECA', s: ['BO','NE','CA'] }, { p: 'BULE', s: ['BU','LE'] }, { p: 'CASA', s: ['CA','SA'] },
+                { p: 'BOLA', s: ['BO','LA'] }, { p: 'MACACO', s: ['MA','CA','CO'] }, { p: 'PANELA', s: ['PA','NE','LA'] },
+                { p: 'TOMATE', s: ['TO','MA','TE'] }, { p: 'CAVALO', s: ['CA','VA','LO'] }, { p: 'ABACATE', s: ['A','BA','CA','TE'] },
+                { p: 'BANANA', s: ['BA','NA','NA'] }, { p: 'GATO', s: ['GA','TO'] }, { p: 'PATO', s: ['PA','TO'] },
+                { p: 'SATO', s: ['SA','TO'] }, { p: 'RATO', s: ['RA','TO'] }, { p: 'MATO', s: ['MA','TO'] },
+                { p: 'LATA', s: ['LA','TA'] }, { p: 'FADA', s: ['FA','DA'] }, { p: 'MALA', s: ['MA','LA'] },
+                { p: 'BOCA', s: ['BO','CA'] }, { p: 'DADO', s: ['DA','DO'] }, { p: 'FOCA', s: ['FO','CA'] },
+                { p: 'LEÃO', s: ['LE','ÃO'] }, { p: 'MÃO', s: ['MÃO'] }, { p: 'PÃO', s: ['PÃO'] },
+                { p: 'CÃO', s: ['CÃO'] }, { p: 'PEIXE', s: ['PEI','XE'] }, { p: 'LIXO', s: ['LI','XO'] },
+                { p: 'RODA', s: ['RO','DA'] }, { p: 'FOTO', s: ['FO','TO'] }, { p: 'LOBO', s: ['LO','BO'] },
+                { p: 'BOLO', s: ['BO','LO'] }, { p: 'SELO', s: ['SE','LO'] }, { p: 'GELO', s: ['GE','LO'] },
+                { p: 'MESA', s: ['ME','SA'] }, { p: 'PESO', s: ['PE','SO'] }, { p: 'VASO', s: ['VA','SO'] },
+                { p: 'SOPA', s: ['SO','PA'] }, { p: 'MAPA', s: ['MA','PA'] }, { p: 'CAPA', s: ['CA','PA'] },
+                { p: 'LUVA', s: ['LU','VA'] }, { p: 'UVA', s: ['U','VA'] }, { p: 'OVO', s: ['O','VO'] },
+                { p: 'AVE', s: ['A','VE'] }, { p: 'NAVE', s: ['NA','VE'] }, { p: 'NEVE', s: ['NE','VE'] },
+                { p: 'VACA', s: ['VA','CA'] }, { p: 'FACA', s: ['FA','CA'] }, { p: 'MACA', s: ['MA','CA'] },
+                { p: 'TELA', s: ['TE','LA'] }, { p: 'VELA', s: ['VE','LA'] }, { p: 'BELO', s: ['BE','LO'] },
+                { p: 'PELO', s: ['PE','LO'] }, { p: 'GALO', s: ['GA','LO'] }, { p: 'COLA', s: ['CO','LA'] },
+                { p: 'MOLA', s: ['MO','LA'] }, { p: 'SOLA', s: ['SO','LA'] }, { p: 'BOTA', s: ['BO','TA'] },
+                { p: 'GOTA', s: ['GO','TA'] }, { p: 'MOTO', s: ['MO','TO'] }, { p: 'TATU', s: ['TA','TU'] },
+                { p: 'TUBO', s: ['TU','BO'] }, { p: 'CUBO', s: ['CU','BO'] }, { p: 'SUCO', s: ['SU','CO'] },
+                { p: 'BICO', s: ['BI','CO'] }, { p: 'MICO', s: ['MI','CO'] }, { p: 'RICO', s: ['RI','CO'] },
+                { p: 'TIO', s: ['TI','O'] }, { p: 'RIO', s: ['RI','O'] }, { p: 'FIO', s: ['FI','O'] },
+                { p: 'PIPA', s: ['PI','PA'] }, { p: 'LUPA', s: ['LU','PA'] }, { p: 'PULO', s: ['PU','LO'] },
+                { p: 'BULO', s: ['BU','LO'] }, { p: 'MULO', s: ['MU','LO'] }, { p: 'NOME', s: ['NO','ME'] },
+                { p: 'FOME', s: ['FO','ME'] }, { p: 'TIME', s: ['TI','ME'] }, { p: 'LIME', s: ['LI','ME'] },
+                { p: 'CIME', s: ['CI','ME'] }, { p: 'CAMA', s: ['CA','MA'] }, { p: 'DAMA', s: ['DA','MA'] },
+                { p: 'LAMA', s: ['LA','MA'] }, { p: 'RAMA', s: ['RA','MA'] }, { p: 'REMO', s: ['RE','MO'] },
+                { p: 'DOMO', s: ['DO','MO'] }, { p: 'COMO', s: ['CO','MO'] }, { p: 'TOMO', s: ['TO','MO'] },
+                { p: 'SOMO', s: ['SO','MO'] }, { p: 'POMO', s: ['PO','MO'] }, { p: 'NOVO', s: ['NO','VO'] },
+                { p: 'POVO', s: ['PO','VO'] }, { p: 'COVO', s: ['CO','VO'] }, { p: 'CAVO', s: ['CA','VO'] },
+                { p: 'LAVO', s: ['LA','VO'] }, { p: 'FAVO', s: ['FA','VO'] }, { p: 'CRAVO', s: ['CRA','VO'] },
+                { p: 'BRAVO', s: ['BRA','VO'] }, { p: 'GRAVO', s: ['GRA','VO'] }, { p: 'TRAVO', s: ['TRA','VO'] },
+                { p: 'BARCO', s: ['BAR','CO'] }, { p: 'MARCO', s: ['MAR','CO'] }, { p: 'PORCO', s: ['POR','CO'] }
+            ],
+
+            // LISTA EXPANDIDA DE CORES (18 Cores)
+            cores: [
+                { n: 'AZUL', c: '#2196F3', txt: '#FFF' }, { n: 'VERMELHO', c: '#F44336', txt: '#FFF' },
+                { n: 'AMARELO', c: '#FFEB3B', txt: '#000' }, { n: 'VERDE', c: '#4CAF50', txt: '#FFF' },
+                { n: 'LARANJA', c: '#FF9800', txt: '#000' }, { n: 'ROXO', c: '#9C27B0', txt: '#FFF' },
+                { n: 'MARROM', c: '#795548', txt: '#FFF' }, { n: 'PRETO', c: '#000000', txt: '#FFF' },
+                { n: 'BRANCO', c: '#FFFFFF', txt: '#000' }, { n: 'ROSA', c: '#E91E63', txt: '#FFF' },
+                { n: 'CINZA', c: '#9E9E9E', txt: '#000' }, { n: 'AZUL CLARO', c: '#03A9F4', txt: '#000' },
+                { n: 'VERDE ESCURO', c: '#1B5E20', txt: '#FFF' }, { n: 'BEGE', c: '#F5F5DC', txt: '#000' },
+                { n: 'LILÁS', c: '#E1BEE7', txt: '#000' }, { n: 'OURO', c: '#FFD700', txt: '#000' },
+                { n: 'PRATA', c: '#C0C0C0', txt: '#000' }, { n: 'CIANO', c: '#00BCD4', txt: '#000' }
+            ],
+
             vidaPratica: [
                 { titulo: 'RECEITA MÉDICA', icone: '💊', textoFala: 'ATENÇÃO: TOMAR UM COMPRIMIDO DE DIPIRONA A CADA 8 HORAS.' },
-                { titulo: 'ESCALA DE ÔNIBUS', icone: '🚌', textoFala: 'ÔNIBUS EXPRESSO NORDESTE: SAÍDA PLATAFORMA 4, ÀS 14 HORAS.' },
+                { titulo: 'LETREIRO DE ÔNIBUS', icone: '🚌', textoFala: 'EXPRESSO' },
                 { titulo: 'LISTA DO MERCADO', icone: '🛒', textoFala: 'LISTA: 5 QUILOS DE ARROZ, FEIJÃO E MACARRÃO.' },
                 { titulo: 'TREINO DA ACADEMIA', icone: '🏋️', textoFala: 'FICHA: FAZER 3 SÉRIES DE 10 REPETIÇÕES.' }
             ]
@@ -414,7 +555,7 @@
             falar(texto) {
                 if (!this.synth) return;
                 this.synth.cancel(); 
-                const declaracao = new SpeechSynthesisUtterance(texto);
+                const declaracao = new SpeechSynthesisUtterance(texto.toUpperCase());
                 declaracao.lang = 'pt-BR';
                 this.synth.speak(declaracao);
             }
@@ -423,16 +564,19 @@
         const Voz = new GerenciadorVoz();
 
         class ConfiguracaoAcessibilidade {
-            constructor() { this.tamanhoAtual = 18; this.html = document.documentElement; }
+            constructor() { this.tamanhoAtual = 100; this.html = document.documentElement; }
             alterarTamanhoFonte(inc) {
-                let novo = this.tamanhoAtual + (inc * 2);
-                if (novo >= 14 && novo <= 30) {
+                let novo = this.tamanhoAtual + inc;
+                if (novo >= 80 && novo <= 150) {
                     this.tamanhoAtual = novo;
-                    this.html.style.fontSize = `${this.tamanhoAtual}px`;
+                    this.html.style.fontSize = `${this.tamanhoAtual}%`;
                     if(document.getElementById('aba-escrever').classList.contains('active')) QuadroInterativo.redimensionar();
                 }
             }
-            alternarAltoContraste() { document.body.classList.toggle('alto-contraste'); }
+            alternarAltoContraste() { 
+                document.body.classList.toggle('alto-contraste'); 
+                Voz.falar("MODO DE ALTO CONTRASTE ALTERADO");
+            }
         }
         const AppConfig = new ConfiguracaoAcessibilidade();
 
@@ -463,7 +607,7 @@
         class CanvasCaligrafia {
             constructor(idCanvas, idContainer, idGuia) {
                 this.canvas = document.getElementById(idCanvas);
-                this.ctx = this.canvas.getContext('2d');
+                this.ctx = this.canvas.getContext('2d', { willReadFrequently: true });
                 this.container = document.getElementById(idContainer);
                 this.guiaFundo = document.getElementById(idGuia);
                 this.desenhando = false;
@@ -507,7 +651,6 @@
             finalizarTraco() {
                 this.desenhando = false;
                 this.ctx.beginPath();
-                
                 this.timerValidacao = setTimeout(() => {
                     this.validarDesenho();
                 }, 1500); 
@@ -515,15 +658,26 @@
 
             validarDesenho() {
                 const imageData = this.ctx.getImageData(0, 0, this.canvas.width, this.canvas.height).data;
-                let desenhouAlgo = false;
+                let marcados = 0;
                 for (let i = 3; i < imageData.length; i += 4) {
-                    if (imageData[i] > 0) { desenhouAlgo = true; break; }
+                    if (imageData[i] > 50) { marcados++; }
                 }
 
-                if (desenhouAlgo) {
-                    Voz.falar("TÁ CERTO! PARABÉNS! PRÓXIMA LETRA.");
+                const totalPixels = this.canvas.width * this.canvas.height;
+                const proporcao = marcados / totalPixels;
+
+                if (proporcao === 0) return; 
+
+                if (proporcao < 0.003) {
+                    Voz.falar("ISSO PARECE APENAS UM RISCO. ERRADO, TENTE NOVAMENTE.");
+                    this.limparSilencioso();
+                } else if (proporcao > 0.18) {
+                    Voz.falar("VOCÊ RABISCOU MUITO. ERRADO, TENTE NOVAMENTE.");
+                    this.limparSilencioso();
+                } else {
+                    Voz.falar("TÁ CERTO! PARABÉNS PELO DESENHO.");
                     InteracaoApp.gerarConfetes();
-                    setTimeout(() => this.limparSilencioso(), 2000);
+                    setTimeout(() => this.limparSilencioso(), 3000);
                 }
             }
 
@@ -554,6 +708,11 @@
         let QuadroInterativo;
 
         class InteracoesDiversas {
+            static idInicial = 0;
+            static idPalavra = 0;
+            static palavraAtual = null;
+            static silabasPreenchidas = 0;
+
             static verificarNome() {
                 const input = document.getElementById('input-nome');
                 const nome = input.value.trim().toUpperCase();
@@ -577,6 +736,88 @@
                     setTimeout(() => confete.remove(), 4000);
                 }
             }
+
+            // Lógica Jogo das Iniciais - AGORA MOSTRA O NOME COM A 1ª LETRA FALTANDO
+            static carregarInicial() {
+                let item = BancoDados.iniciais[this.idInicial];
+                document.getElementById('imagem-inicial').innerText = item.img;
+                
+                // Formata o nome para esconder a primeira letra (Ex: "_ V I Ã O")
+                let nomeDica = "_ " + item.nome.substring(1).split('').join(' ');
+                document.getElementById('nome-inicial-dica').innerText = nomeDica;
+
+                const ct = document.getElementById('opcoes-iniciais');
+                ct.innerHTML = '';
+                item.ops.forEach(op => {
+                    let b = document.createElement('button'); 
+                    b.className='btn-grande'; 
+                    b.style.backgroundColor='var(--cor-secundaria)'; 
+                    b.innerText = op;
+                    b.onclick = () => {
+                        if(op === item.certa) {
+                            // Preenche o nome na tela quando acerta
+                            document.getElementById('nome-inicial-dica').innerText = item.nome.split('').join(' ');
+                            Voz.falar(`MUITO BEM! ${item.nome} COMEÇA COM A LETRA ${item.certa}.`);
+                            this.gerarConfetes();
+                            this.idInicial = (this.idInicial + 1) % BancoDados.iniciais.length;
+                            setTimeout(() => this.carregarInicial(), 3000);
+                        } else {
+                            Voz.falar("NÃO É ESSA LETRA. TENTE OUTRA!");
+                        }
+                    };
+                    ct.appendChild(b);
+                });
+            }
+
+            static carregarPalavra() {
+                this.palavraAtual = BancoDados.palavrasJogo[this.idPalavra];
+                this.silabasPreenchidas = 0;
+                document.getElementById('dica-palavra').innerText = this.palavraAtual.p;
+                
+                const slots = document.getElementById('slots-palavra');
+                slots.innerHTML = '';
+                this.palavraAtual.s.forEach((silaba, i) => {
+                    let slot = document.createElement('div'); 
+                    slot.className = 'slot-silaba'; 
+                    slot.id = `slot-${i}`;
+                    slots.appendChild(slot);
+                });
+
+                const soltas = document.getElementById('silabas-soltas');
+                soltas.innerHTML = '';
+                let embaralhadas = [...this.palavraAtual.s].sort(() => Math.random() - 0.5);
+                embaralhadas.forEach(silaba => {
+                    let b = document.createElement('button'); 
+                    b.className='btn-grande'; 
+                    b.style.backgroundColor='var(--cor-secundaria)'; 
+                    b.innerText = silaba;
+                    b.onclick = (e) => {
+                        let silabaCorreta = this.palavraAtual.s[this.silabasPreenchidas];
+                        if(silaba === silabaCorreta) {
+                            Voz.falar(silaba);
+                            document.getElementById(`slot-${this.silabasPreenchidas}`).innerText = silaba;
+                            document.getElementById(`slot-${this.silabasPreenchidas}`).style.backgroundColor = 'var(--cor-sucesso)';
+                            document.getElementById(`slot-${this.silabasPreenchidas}`).style.color = 'white';
+                            e.target.style.visibility = 'hidden';
+                            this.silabasPreenchidas++;
+                            if(this.silabasPreenchidas === this.palavraAtual.s.length) {
+                                setTimeout(() => {
+                                    Voz.falar(`PARABÉNS! VOCÊ ESCREVEU ${this.palavraAtual.p}.`);
+                                    this.gerarConfetes();
+                                }, 1000);
+                            }
+                        } else {
+                            Voz.falar("ESSA NÃO É A PRÓXIMA SÍLABA. TENTE OUTRA.");
+                        }
+                    };
+                    soltas.appendChild(b);
+                });
+            }
+
+            static proximaPalavra() {
+                this.idPalavra = (this.idPalavra + 1) % BancoDados.palavrasJogo.length;
+                this.carregarPalavra();
+            }
         }
         const InteracaoApp = InteracoesDiversas;
 
@@ -589,6 +830,39 @@
                     btn.innerText = item.letra;
                     btn.onclick = () => InterfaceModal.abrir(item);
                     container.appendChild(btn);
+                });
+            }
+
+            static renderizarVogaisConsoantes() {
+                const v = document.getElementById('box-vogais');
+                const c = document.getElementById('box-consoantes');
+                BancoDados.vogais.forEach(l => {
+                    let b = document.createElement('button'); b.className='btn-grande'; b.style.backgroundColor='var(--cor-destaque)'; b.innerText=l;
+                    b.onclick = () => Voz.falar(l); v.appendChild(b);
+                });
+                BancoDados.consoantes.forEach(l => {
+                    let b = document.createElement('button'); b.className='btn-letra'; b.style.width='80px'; b.innerText=l;
+                    b.onclick = () => Voz.falar(l); c.appendChild(b);
+                });
+            }
+
+            static renderizarFamilias() {
+                const bts = document.getElementById('botoes-familias');
+                BancoDados.consoantes.forEach(c => {
+                    let b = document.createElement('button'); b.className='btn-letra'; b.style.width='60px'; b.innerText=c;
+                    b.onclick = () => {
+                        document.getElementById('titulo-familia-atual').innerText = `FAMÍLIA DO ${c}:`;
+                        const res = document.getElementById('resultado-familia');
+                        res.innerHTML = '';
+                        BancoDados.vogais.forEach(v => {
+                            let f = c+v;
+                            let btnF = document.createElement('button'); btnF.className='btn-grande'; btnF.style.backgroundColor='var(--cor-sucesso)'; btnF.innerText=f;
+                            btnF.onclick = () => Voz.falar(f);
+                            res.appendChild(btnF);
+                        });
+                        Voz.falar(`FAMÍLIA DO ${c}.`);
+                    };
+                    bts.appendChild(b);
                 });
             }
 
@@ -618,6 +892,21 @@
                 btnApagar.innerText = '🗑️ APAGAR';
                 btnApagar.onclick = () => QuadroInterativo.limpar();
                 container.appendChild(btnApagar);
+            }
+
+            static renderizarCores() {
+                const ct = document.getElementById('container-cores');
+                BancoDados.cores.forEach(c => {
+                    let btn = document.createElement('button');
+                    btn.className = 'btn-letra';
+                    btn.innerText = c.n;
+                    btn.style.backgroundColor = c.c;
+                    btn.style.color = c.txt;
+                    btn.style.fontSize = '1.5rem';
+                    btn.style.border = '4px solid rgba(0,0,0,0.1)';
+                    btn.onclick = () => Voz.falar(c.n);
+                    ct.appendChild(btn);
+                });
             }
 
             static renderizarVidaPratica() {
@@ -654,9 +943,19 @@
 
         window.onload = () => {
             ConstrutorInterface.renderizarAlfabeto();
+            ConstrutorInterface.renderizarVogaisConsoantes();
+            ConstrutorInterface.renderizarFamilias();
             ConstrutorInterface.renderizarSilabas();
+            ConstrutorInterface.renderizarCores();
             ConstrutorInterface.renderizarVidaPratica();
             ConstrutorInterface.configurarNavegacaoAbas();
+            
+            // Randomiza as palavras e as iniciais logo no início
+            BancoDados.iniciais.sort(() => Math.random() - 0.5);
+            BancoDados.palavrasJogo.sort(() => Math.random() - 0.5);
+            
+            InteracaoApp.carregarInicial();
+            InteracaoApp.carregarPalavra();
             
             QuadroInterativo = new CanvasCaligrafia('canvas-caligrafia', 'container-canvas', 'guia-fundo');
             ConstrutorInterface.renderizarBotoesDesenho();
