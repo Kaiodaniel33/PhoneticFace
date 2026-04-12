@@ -203,8 +203,9 @@
         .modal-overlay { position: fixed; top: 0; left: 0; width: 100%; height: 100%; background-color: rgba(28, 40, 51, 0.95); display: flex; justify-content: center; align-items: center; z-index: 9999; opacity: 0; visibility: hidden; transition: 0.3s; backdrop-filter: blur(5px); }
         .modal-overlay.visivel { opacity: 1; visibility: visible; }
         .modal-caixa { background-color: var(--cor-bg-secundario); width: 95%; max-width: 700px; border-radius: 30px; padding: 3rem; text-align: center; box-shadow: 0 25px 50px rgba(0,0,0,0.3); max-height: 95vh; overflow-y: auto; }
+        
         .video-wrapper { position: relative; padding-bottom: 56.25%; height: 0; margin: 2rem 0; background-color: #000; border-radius: 20px; overflow: hidden; box-shadow: 0 10px 20px rgba(0,0,0,0.2);}
-        .video-wrapper iframe { position: absolute; top: 0; left: 0; width: 100%; height: 100%; }
+        .video-wrapper iframe { position: absolute; top: 0; left: 0; width: 100%; height: 100%; max-width: 100%; }
 
         @keyframes fadeIn { from { opacity: 0; transform: translateY(20px); } to { opacity: 1; transform: translateY(0); } }
         .confete { position: fixed; width: 15px; height: 15px; z-index: 10000; animation: cair 3s linear forwards; border-radius: 3px; }
@@ -425,10 +426,21 @@
 
     <div id="modal-letras" class="modal-overlay">
         <div class="modal-caixa">
-            <h2 id="modal-titulo-letra" style="font-size: 7rem; color: var(--cor-primaria); margin: 0; line-height: 1;">A</h2>
+            <h1 id="letra-display" style="font-size: 7rem; color: var(--cor-primaria); margin: 0; line-height: 1;">A</h1>
+            
             <div class="video-wrapper">
-                <iframe id="video-boca-youtube" src="" frameborder="0" allow="autoplay; encrypted-media" allowfullscreen></iframe>
+                <iframe id="player-youtube" 
+                    width="560" 
+                    height="315" 
+                    src="" 
+                    title="YouTube video player" 
+                    frameborder="0" 
+                    allow="accelerometer; clipboard-write; encrypted-media; gyroscope; picture-in-picture; web-share" 
+                    referrerpolicy="strict-origin-when-cross-origin" 
+                    allowfullscreen>
+                </iframe>
             </div>
+
             <div style="display: flex; align-items: center; justify-content: center; gap: 20px; margin-bottom: 30px;">
                 <span id="modal-icone-palavra" style="font-size: 6rem; text-shadow: 0 5px 15px rgba(0,0,0,0.2);">🐝</span>
                 <p id="modal-texto-palavra" style="font-size: 4rem; font-weight: 900; color: var(--cor-texto-principal);">ABELHA</p>
@@ -442,7 +454,7 @@
 
         const BancoDados = {
             alfabeto: [
-                { letra: 'A', palavra: 'ABELHA', icone: '🐝', youtubeId: linkVideoReal }, { letra: 'B', palavra: 'BOLA', icone: '⚽', youtubeId: linkVideoReal },
+                { letra: 'A', palavra: 'ABELHA', icone: '🐝', youtubeId: 'PBo0Ibxc4Cc' }, { letra: 'B', palavra: 'BOLA', icone: '⚽', youtubeId: linkVideoReal },
                 { letra: 'C', palavra: 'CASA', icone: '🏠', youtubeId: linkVideoReal }, { letra: 'D', palavra: 'DADO', icone: '🎲', youtubeId: linkVideoReal },
                 { letra: 'E', palavra: 'ELEFANTE', icone: '🐘', youtubeId: linkVideoReal }, { letra: 'F', palavra: 'FACA', icone: '🔪', youtubeId: linkVideoReal },
                 { letra: 'G', palavra: 'GATO', icone: '🐈', youtubeId: linkVideoReal }, { letra: 'H', palavra: 'HORA', icone: '⌚', youtubeId: linkVideoReal },
@@ -570,7 +582,6 @@
                 { titulo: 'TREINO DA ACADEMIA', icone: '🏋️', textoFala: 'FICHA DE TREINO: FAZER 3 SÉRIES DE 10 REPETIÇÕES.' }
             ],
 
-            // NOVA LISTA DE ANIMAIS (20 Itens)
             animais: [
                 { nome: 'CACHORRO', icone: '🐕', desc: 'O CACHORRO FAZ AU AU E É O NOSSO MELHOR AMIGO.' },
                 { nome: 'GATO', icone: '🐈', desc: 'O GATO FAZ MIAU E ADORA DORMIR NO SOFÁ.' },
@@ -628,19 +639,25 @@
         class GerenciadorModal {
             constructor() {
                 this.modal = document.getElementById('modal-letras');
-                this.titulo = document.getElementById('modal-titulo-letra');
+                this.titulo = document.getElementById('letra-display'); 
                 this.icone = document.getElementById('modal-icone-palavra');
                 this.texto = document.getElementById('modal-texto-palavra');
-                this.iframe = document.getElementById('video-boca-youtube');
+                this.iframe = document.getElementById('player-youtube'); 
             }
-            abrir(item) {
+
+            mostrarVideo(item) {
                 Voz.falar(`LETRA ${item.letra}. ${item.letra} DE ${item.palavra}.`);
-                this.titulo.innerText = item.letra;
+                
+                this.titulo.innerText = item.letra.toUpperCase();
                 this.icone.innerText = item.icone;
                 this.texto.innerText = item.palavra;
-                this.iframe.src = `https://www.youtube.com/embed/${item.youtubeId}?autoplay=1`;
+                
+                // REMOVIDO O AUTOPLAY PARA NÃO DAR ERRO NO NAVEGADOR
+                this.iframe.src = "https://www.youtube.com/embed/" + item.youtubeId;
+                
                 this.modal.classList.add('visivel');
             }
+
             fechar() {
                 this.modal.classList.remove('visivel');
                 Voz.parar();
@@ -871,7 +888,9 @@
                     const btn = document.createElement('button');
                     btn.className = 'btn-letra';
                     btn.innerText = item.letra;
-                    btn.onclick = () => InterfaceModal.abrir(item);
+                    
+                    btn.onclick = () => InterfaceModal.mostrarVideo(item);
+                    
                     container.appendChild(btn);
                 });
             }
@@ -967,7 +986,6 @@
                 });
             }
 
-            // Renderiza a nova Aba 11
             static renderizarAnimais() {
                 const container = document.getElementById('container-animais');
                 BancoDados.animais.forEach(animal => {
