@@ -32,7 +32,7 @@
         }
 
         /* ==========================================================================
-           TEMA DE ALTO CONTRASTE (Corrigido para não bagunçar o layout)
+           TEMA DE ALTO CONTRASTE 
            ========================================================================== */
         body.alto-contraste {
             background: #000000 !important;
@@ -136,7 +136,7 @@
         }
 
         .logo-container img {
-            max-height: 90px; /* Um pouco menor para ficar elegante ao lado do texto */
+            max-height: 90px;
             border-radius: 15px; 
             box-shadow: 0 8px 15px rgba(0,0,0,0.2); 
             background-color: #FFF;
@@ -146,9 +146,8 @@
         .cabecalho-app h1 { font-size: 3.5rem; text-shadow: 2px 4px 8px rgba(0,0,0,0.2); margin: 0;}
         .cabecalho-app p { font-size: 1.2rem; font-weight: 800; opacity: 0.9; }
 
-        /* Menu de Navegação */
         .menu-toggle {
-            display: none; /* Escondido no PC */
+            display: none; 
             background-color: #FFF;
             color: var(--cor-primaria); padding: 12px 20px; font-size: 1.2rem;
             font-weight: bold; border-radius: 12px; cursor: pointer;
@@ -243,7 +242,7 @@
         .slot-silaba { width: 90px; height: 90px; border: 4px dashed #B0BEC5; border-radius: 15px; display: flex; justify-content: center; align-items: center; font-size: 2.5rem; font-weight: bold; background: #F8F9FA;}
 
         /* ==========================================================================
-           6. CALIGRAFIA E MODAL (CORRIGIDO PARA ENCAIXAR EM 100% DE ZOOM)
+           6. CALIGRAFIA E MODAL 
            ========================================================================== */
         .painel-desenho { position: relative; width: 100%; height: 50vh; min-height: 400px; border: 6px dashed var(--cor-primaria); border-radius: var(--borda-raio); background-color: #fff; touch-action: none; overflow: hidden; box-shadow: inset 0 0 20px rgba(0,0,0,0.05);}
         #guia-fundo { position: absolute; top: 50%; left: 50%; transform: translate(-50%, -50%); font-size: 20rem; color: rgba(0,0,0,0.04); user-select: none; pointer-events: none; font-weight: 900; }
@@ -257,37 +256,32 @@
         .modal-overlay { position: fixed; top: 0; left: 0; width: 100%; height: 100%; background-color: rgba(28, 40, 51, 0.95); display: flex; justify-content: center; align-items: center; z-index: 9999; opacity: 0; visibility: hidden; transition: 0.3s; backdrop-filter: blur(5px); }
         .modal-overlay.visivel { opacity: 1; visibility: visible; }
         
-        /* Modal corrigido para nunca ultrapassar a tela */
         .modal-caixa { 
             background-color: var(--cor-bg-secundario); 
-            width: 95%; max-width: 650px; /* Mais estreito para caber melhor */
+            width: 95%; max-width: 650px; 
             border-radius: 25px; 
             padding: 1.5rem; 
             text-align: center; 
             box-shadow: 0 25px 50px rgba(0,0,0,0.3); 
-            max-height: 90vh; /* Se adapta a altura da tela */
+            max-height: 90vh; 
             display: flex;
             flex-direction: column;
             justify-content: space-between;
             align-items: center;
         }
         
-        /* Vídeo usando aspect-ratio (Encaixa perfeito sempre!) */
         .video-wrapper { 
             width: 100%; 
-            aspect-ratio: 16 / 9; /* Mantém a proporção HD */
+            aspect-ratio: 16 / 9; 
             background-color: #000; 
             border-radius: 15px; 
             overflow: hidden; 
             box-shadow: 0 10px 20px rgba(0,0,0,0.2);
             margin: 10px 0;
-            flex-shrink: 0; /* Impede o vídeo de esmagar demais, mas respeita o tamanho */
+            flex-shrink: 0; 
         }
-        .video-wrapper iframe { 
-            width: 100%; height: 100%; border: none; 
-        }
+        .video-wrapper iframe { width: 100%; height: 100%; border: none; }
 
-        /* Textos do Modal Ajustados */
         #letra-display { font-size: 4rem; color: var(--cor-primaria); margin: 0; line-height: 1; flex-shrink: 0;}
         .modal-info-palavra { display: flex; align-items: center; justify-content: center; gap: 15px; margin: 10px 0; flex-shrink: 0;}
         #modal-icone-palavra { font-size: 3.5rem; text-shadow: 0 5px 15px rgba(0,0,0,0.2); }
@@ -313,7 +307,7 @@
             .barra-acessibilidade { padding: 8px 10px; justify-content: center;}
             .btn-acesso { padding: 8px 10px; font-size: 0.85rem;}
             
-            .menu-toggle { display: block; } /* Mostra o botão hambúrguer */
+            .menu-toggle { display: block; } 
             nav.menu-principal { 
                 display: none; 
                 flex-direction: column; width: 100%; padding: 10px;
@@ -335,7 +329,6 @@
             .slot-silaba { width: 70px; height: 70px; font-size: 2rem; }
             .icone-card { font-size: 5rem; }
             
-            /* Modal menor no celular para não bugar */
             .modal-caixa { padding: 1rem; }
             #letra-display { font-size: 3rem; }
             #modal-texto-palavra { font-size: 2rem; }
@@ -507,7 +500,7 @@
 
         <section id="aba-animais" class="aba-conteudo">
             <div class="bloco-instrucao">
-                <button class="btn-instrucao" onclick="Voz.falar('VAMOS CONHECER OS ANIMAIS! TOQUE NAS CARTAS PARA SABER MAIS SOBRE ELES.')">
+                <button class="btn-instrucao" onclick="Voz.falar('VAMOS CONHECER OS ANIMAIS! TOQUE NAS CARTAS PARA OUVIR O NOME DELES.')">
                     🔊 CLIQUE AQUI PARA OUVIR A INSTRUÇÃO
                 </button>
             </div>
@@ -574,7 +567,6 @@
     </div>
 
     <script>
-        // Função do menu responsivo mobile
         function toggleMenuMobile() {
             document.getElementById('menu-principal').classList.toggle('aberto');
         }
@@ -678,27 +670,28 @@
                 { titulo: 'TREINO DA ACADEMIA', icone: '🏋️', textoFala: 'FICHA DE TREINO: FAZER 3 SÉRIES DE 10 REPETIÇÕES.' }
             ],
 
+            // TEXTOS LIMPADOS PARA CONTER APENAS O NOME DO ANIMAL
             animais: [
-                { nome: 'CACHORRO', icone: '🐕', desc: 'O CACHORRO FAZ AU AU E É O NOSSO MELHOR AMIGO.' },
-                { nome: 'GATO', icone: '🐈', desc: 'O GATO FAZ MIAU E ADORA DORMIR NO SOFÁ.' },
-                { nome: 'VACA', icone: '🐄', desc: 'A VACA MORA NO SÍTIO, DÁ LEITE E FAZ MÚÚÚ.' },
-                { nome: 'CAVALO', icone: '🐎', desc: 'O CAVALO É MUITO FORTE E CORRE BEM RÁPIDO.' },
-                { nome: 'PORCO', icone: '🐷', desc: 'O PORQUINHO GOSTA DE BRINCAR NA LAMA E FAZ OINC OINC.' },
-                { nome: 'GALINHA', icone: '🐔', desc: 'A GALINHA BOTA OVOS E FAZ COCÓRICÓ.' },
-                { nome: 'PATO', icone: '🦆', desc: 'O PATO ADORA NADAR NA LAGOA E FAZ QUÁ QUÁ.' },
-                { nome: 'OVELHA', icone: '🐑', desc: 'A OVELHA TEM A LÃ BEM MACIA E FAZ BÉÉÉ.' },
-                { nome: 'LEÃO', icone: '🦁', desc: 'O LEÃO TEM UMA JUBA GRANDE E É O REI DA FLORESTA.' },
-                { nome: 'ELEFANTE', icone: '🐘', desc: 'O ELEFANTE É UM ANIMAL GIGANTE E TEM UMA TROMBA COMPRIDA.' },
-                { nome: 'MACACO', icone: '🐒', desc: 'O MACACO GOSTA DE PULAR DE GALHO EM GALHO E COMER BANANA.' },
-                { nome: 'URSO', icone: '🐻', desc: 'O URSO É GRANDE E FORTE, E ADORA COMER MEL.' },
-                { nome: 'SAPO', icone: '🐸', desc: 'O SAPO PULA BEM ALTO E MORA NA BEIRA DA LAGOA.' },
-                { nome: 'PEIXE', icone: '🐟', desc: 'O PEIXE VIVE E NADA DEBAIXO D\'ÁGUA.' },
-                { nome: 'PAPAGAIO', icone: '🦜', desc: 'O PAPAGAIO É UM PÁSSARO MUITO COLORIDO E SABE FALAR.' },
-                { nome: 'COBRA', icone: '🐍', desc: 'A COBRA NÃO TEM PERNAS E RASTEJA PELO CHÃO.' },
-                { nome: 'TARTARUGA', icone: '🐢', desc: 'A TARTARUGA ANDA BEM DEVAGAR E TEM UM CASCO DURO.' },
-                { nome: 'COELHO', icone: '🐇', desc: 'O COELHO PULA BEM RÁPIDO E ADORA COMER CENOURA.' },
-                { nome: 'ABELHA', icone: '🐝', desc: 'A ABELHA VOA NAS FLORES E FAZ UM MEL DOCINHO.' },
-                { nome: 'BORBOLETA', icone: '🦋', desc: 'A BORBOLETA TEM ASAS LINDAS E MUITO COLORIDAS.' }
+                { nome: 'CACHORRO', icone: '🐕' },
+                { nome: 'GATO', icone: '🐈' },
+                { nome: 'VACA', icone: '🐄' },
+                { nome: 'CAVALO', icone: '🐎' },
+                { nome: 'PORCO', icone: '🐷' },
+                { nome: 'GALINHA', icone: '🐔' },
+                { nome: 'PATO', icone: '🦆' },
+                { nome: 'OVELHA', icone: '🐑' },
+                { nome: 'LEÃO', icone: '🦁' },
+                { nome: 'ELEFANTE', icone: '🐘' },
+                { nome: 'MACACO', icone: '🐒' },
+                { nome: 'URSO', icone: '🐻' },
+                { nome: 'SAPO', icone: '🐸' },
+                { nome: 'PEIXE', icone: '🐟' },
+                { nome: 'PAPAGAIO', icone: '🦜' },
+                { nome: 'COBRA', icone: '🐍' },
+                { nome: 'TARTARUGA', icone: '🐢' },
+                { nome: 'COELHO', icone: '🐇' },
+                { nome: 'ABELHA', icone: '🐝' },
+                { nome: 'BORBOLETA', icone: '🦋' }
             ]
         };
 
@@ -727,7 +720,6 @@
             }
             alternarAltoContraste() { 
                 document.body.classList.toggle('alto-contraste'); 
-                // VOZ REMOVIDA DAQUI! Agora ele não fala mais nada ao mudar a cor.
             }
         }
         const AppConfig = new ConfiguracaoAcessibilidade();
@@ -1076,12 +1068,13 @@
                 });
             }
 
+            // RENDERIZADOR DE ANIMAIS ATUALIZADO: Fala apenas o nome do animal.
             static renderizarAnimais() {
                 const container = document.getElementById('container-animais');
                 BancoDados.animais.forEach(animal => {
                     const card = document.createElement('div');
                     card.className = 'card-interativo';
-                    card.onclick = () => Voz.falar(animal.desc);
+                    card.onclick = () => Voz.falar(animal.nome); // <- Modificado para falar APENAS o nome
                     card.innerHTML = `<span class="icone-card">${animal.icone}</span><h2 style="font-size: 2rem; color: var(--cor-primaria);">${animal.nome}</h2>`;
                     container.appendChild(card);
                 });
