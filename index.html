@@ -14,14 +14,14 @@
             --cor-texto-principal: #2C3E50;
             --cor-texto-secundario: #546E7A;
             
-            --cor-primaria: #008B8B; /* Ciano escuro puxado da logo */
-            --cor-primaria-escura: #006666;
-            --cor-secundaria: #F39C12; /* Laranja/Amarelo puxado da logo */
-            --cor-destaque: #E74C3C;
-            --cor-sucesso: #2ECC71;
-            --cor-sucesso-escuro: #27AE60;
-            --cor-alerta: #F1C40F;
-            --cor-roxo: #9B59B6;
+            --cor-primaria: #007AFF; /* Azul original e bonitinho */
+            --cor-primaria-escura: #0056b3;
+            --cor-secundaria: #00BCD4; /* Ciano para o gradiente */
+            --cor-destaque: #FF3B30;
+            --cor-sucesso: #34C759;
+            --cor-sucesso-escuro: #248A3D;
+            --cor-alerta: #FFCC00;
+            --cor-roxo: #AF52DE;
             
             --fonte-principal: system-ui, -apple-system, 'Segoe UI', Roboto, Helvetica, Arial, sans-serif;
             --tamanho-base: 100%;
@@ -52,7 +52,6 @@
             text-shadow: none !important;
         }
         body.alto-contraste .btn-tab.active { background-color: #FFFF00 !important; color: #000000 !important; }
-        body.alto-contraste .logo-img { filter: invert(1) sepia(1) saturate(5) hue-rotate(175deg); } /* Adapta a logo */
 
         /* ==========================================================================
            2. RESET CSS E TIPOGRAFIA BASE
@@ -76,7 +75,7 @@
         input { text-transform: uppercase; font-family: inherit; }
 
         /* ==========================================================================
-           3. CABEÇALHO E MENU RESPONSIVO (HAMBÚRGUER)
+           3. CABEÇALHO COM LOGO AO LADO DO TÍTULO E MENU RESPONSIVO
            ========================================================================== */
         .barra-acessibilidade {
             background-color: #1C2833; color: #FFF; padding: 12px 24px;
@@ -92,31 +91,43 @@
         }
         .btn-acesso:hover { background-color: #FFF; color: #1C2833; }
 
+        /* Cabeçalho Azulzinho Bonitinho de volta! */
         header.cabecalho-app {
-            background: #FFFFFF; /* Fundo branco para a logo brilhar */
-            color: var(--cor-texto-principal); 
-            padding: 2rem 1rem; text-align: center; 
-            border-bottom: 6px solid var(--cor-primaria);
-            box-shadow: 0 10px 20px rgba(0,0,0,0.05);
+            background: linear-gradient(135deg, var(--cor-primaria) 0%, var(--cor-secundaria) 100%);
+            color: #FFF; padding: 3rem 1rem 2rem; text-align: center; 
+            border-bottom: 6px solid var(--cor-sucesso);
+            box-shadow: 0 10px 20px rgba(0,122,255,0.2);
             position: relative;
         }
         
-        .logo-container img {
-            max-width: 100%;
-            height: auto;
-            max-height: 180px; /* Tamanho ideal para a logo */
-            margin-bottom: 1rem;
-            object-fit: contain;
+        .logo-container {
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            gap: 25px;
+            flex-wrap: wrap;
+            margin-bottom: 1.5rem;
         }
+
+        .logo-container img {
+            max-height: 110px;
+            border-radius: 20px; /* Deixa a logo quadrada com cantos arredondados */
+            box-shadow: 0 8px 15px rgba(0,0,0,0.2); /* Sombra elegante */
+            background-color: #FFF;
+            padding: 5px;
+        }
+        
+        .cabecalho-app h1 { font-size: 3.8rem; text-shadow: 2px 4px 8px rgba(0,0,0,0.2); margin: 0;}
+        .cabecalho-app p { font-size: 1.4rem; font-weight: 800; opacity: 0.9; }
 
         /* Menu de Navegação */
         .menu-toggle {
             display: none; /* Escondido no PC */
-            background-color: var(--cor-primaria);
-            color: white; padding: 15px 25px; font-size: 1.5rem;
+            background-color: #FFF;
+            color: var(--cor-primaria); padding: 15px 25px; font-size: 1.5rem;
             font-weight: bold; border-radius: 15px; cursor: pointer;
             margin: 20px auto 0; width: fit-content;
-            box-shadow: 0 5px 0 var(--cor-primaria-escura);
+            box-shadow: 0 5px 0 rgba(0,0,0,0.1);
         }
         .menu-toggle:active { transform: translateY(5px); box-shadow: none; }
 
@@ -125,16 +136,15 @@
             margin-top: 2rem; max-width: 1400px; margin-left: auto; margin-right: auto;
         }
         .btn-tab {
-            background-color: #F8F9FA; color: var(--cor-texto-principal);
-            border: 2px solid #E0E0E0; padding: 12px 24px; font-size: 1.1rem;
+            background-color: rgba(255,255,255,0.15); color: #FFF;
+            border: 2px solid rgba(255,255,255,0.3); padding: 12px 24px; font-size: 1.1rem;
             font-weight: 800; border-radius: 30px; cursor: pointer;
-            transition: all 0.3s cubic-bezier(0.25, 0.8, 0.25, 1);
+            backdrop-filter: blur(5px); transition: all 0.3s cubic-bezier(0.25, 0.8, 0.25, 1);
         }
-        .btn-tab:hover { background-color: #EAECEE; transform: translateY(-2px); }
+        .btn-tab:hover { background-color: rgba(255,255,255,0.3); transform: translateY(-2px); }
         .btn-tab.active { 
-            background-color: var(--cor-primaria); color: #FFF; 
-            border-color: var(--cor-primaria); transform: scale(1.05); 
-            box-shadow: 0 8px 15px rgba(0, 139, 139, 0.3); 
+            background-color: var(--cor-sucesso); color: #FFF; border-color: var(--cor-sucesso); 
+            transform: scale(1.05); box-shadow: 0 8px 15px rgba(52, 199, 89, 0.4); 
         }
 
         /* ==========================================================================
@@ -146,13 +156,13 @@
         
         .bloco-instrucao { margin-bottom: 2.5rem; }
         .btn-instrucao {
-            width: 100%; background: linear-gradient(90deg, var(--cor-secundaria) 0%, #F1C40F 100%); color: #000; 
+            width: 100%; background: linear-gradient(90deg, #FFD60A 0%, #FF9F0A 100%); color: #000; 
             border: none; padding: 25px; font-size: 1.6rem; font-weight: 900; border-radius: var(--borda-raio);
-            cursor: pointer; box-shadow: 0 8px 0px #D68910, 0 15px 20px rgba(0,0,0,0.1);
+            cursor: pointer; box-shadow: 0 8px 0px #D08A00, 0 15px 20px rgba(0,0,0,0.1);
             display: flex; justify-content: center; align-items: center; gap: 15px;
             transition: transform 0.1s;
         }
-        .btn-instrucao:active { transform: translateY(8px); box-shadow: 0 0px 0px #D68910; }
+        .btn-instrucao:active { transform: translateY(8px); box-shadow: 0 0px 0px #D08A00; }
         
         .cartao { 
             background-color: var(--cor-bg-secundario); border-radius: var(--borda-raio); 
@@ -172,6 +182,8 @@
            5. ESTILOS DE JOGOS E ALFABETO
            ========================================================================== */
         .grid-alfabeto { display: grid; grid-template-columns: repeat(auto-fill, minmax(130px, 1fr)); gap: 20px; }
+        .grid-numeros { display: grid; grid-template-columns: repeat(auto-fill, minmax(100px, 1fr)); gap: 15px; } /* Menorzinho para caber os 100 */
+        
         .btn-letra {
             background-color: var(--cor-primaria); color: #fff; font-size: 4rem; font-weight: 900;
             border: none; border-radius: 20px; height: 140px; cursor: pointer;
@@ -183,7 +195,7 @@
         .btn-acao {
             background-color: var(--cor-destaque); color: #fff; border: none; padding: 20px 40px;
             font-size: 1.5rem; font-weight: 900; border-radius: 20px; cursor: pointer; width: 100%;
-            box-shadow: 0 8px 0 #C0392B; text-transform: uppercase; transition: transform 0.1s;
+            box-shadow: 0 8px 0 #C93427; text-transform: uppercase; transition: transform 0.1s;
         }
         .btn-acao:active { transform: translateY(8px); box-shadow: none; }
 
@@ -211,7 +223,7 @@
         #guia-fundo { position: absolute; top: 50%; left: 50%; transform: translate(-50%, -50%); font-size: 25rem; color: rgba(0,0,0,0.04); user-select: none; pointer-events: none; font-weight: 900; }
         #canvas-caligrafia { position: absolute; top: 0; left: 0; cursor: crosshair; }
         .ferramentas-canvas { display: flex; flex-wrap: wrap; gap: 12px; margin-bottom: 2rem; justify-content: center; max-height: 250px; overflow-y: auto; padding: 15px; border: 2px solid #EEE; border-radius: 20px; background: #FAFAFA;}
-        .btn-ferramenta { padding: 15px 25px; font-size: 1.5rem; font-weight: 900; border: none; border-radius: 15px; cursor: pointer; color: #fff; background-color: var(--cor-roxo); box-shadow: 0 6px 0 #8E44AD; }
+        .btn-ferramenta { padding: 15px 25px; font-size: 1.5rem; font-weight: 900; border: none; border-radius: 15px; cursor: pointer; color: #fff; background-color: var(--cor-roxo); box-shadow: 0 6px 0 #853BB0; }
         .btn-ferramenta:active { transform: translateY(6px); box-shadow: none; }
 
         .input-gigante { width: 100%; max-width: 600px; padding: 25px; font-size: 3rem; text-align: center; border: 4px solid var(--cor-primaria); border-radius: 20px; font-weight: 900; background: #F8F9FA; box-shadow: inset 0 4px 10px rgba(0,0,0,0.05); }
@@ -242,13 +254,16 @@
             html { font-size: 80%; }
             .menu-toggle { display: block; } /* Mostra o botão hambúrguer */
             nav.menu-principal { 
-                display: none; /* Esconde abas por padrão no mobile */
+                display: none; 
                 flex-direction: column; width: 100%; padding: 10px;
-                background: #FFF; border-radius: 20px; box-shadow: 0 10px 20px rgba(0,0,0,0.1);
+                background: var(--cor-bg-secundario); border-radius: 20px; box-shadow: 0 10px 20px rgba(0,0,0,0.1);
             }
-            nav.menu-principal.aberto { display: flex; } /* Classe para abrir o menu */
-            .btn-tab { width: 100%; font-size: 1.4rem; padding: 15px; border-radius: 15px; border-color: transparent;}
+            nav.menu-principal.aberto { display: flex; }
+            .btn-tab { width: 100%; font-size: 1.4rem; padding: 15px; border-radius: 15px; border-color: transparent; color: #333; background: #F8F9FA;}
+            .btn-tab.active { color: #FFF; background: var(--cor-sucesso); }
             
+            .cabecalho-app h1 { font-size: 2.5rem; }
+            .logo-container img { max-height: 80px; }
             .cartao { padding: 1.5rem; }
             .btn-letra { font-size: 3rem; height: 100px; border-radius: 15px; }
             .linha-silaba { font-size: 2rem; }
@@ -258,7 +273,6 @@
             .input-gigante { font-size: 2rem; padding: 15px; }
             .slot-silaba { width: 70px; height: 70px; font-size: 2rem; }
             .icone-card { font-size: 5rem; }
-            .logo-container img { max-height: 120px; }
         }
     </style>
 </head>
@@ -276,7 +290,9 @@
     <header class="cabecalho-app">
         <div class="logo-container">
             <img src="kaiologoteste.jpg" alt="PhoneticFace Logo" class="logo-img">
+            <h1>🗣️ PHONETICFACE</h1>
         </div>
+        <p>FERRAMENTA TECNOLÓGICA DE APOIO À ALFABETIZAÇÃO</p>
         
         <div class="menu-toggle" onclick="toggleMenuMobile()">☰ MENU DE OPÇÕES</div>
         
@@ -291,7 +307,8 @@
             <button class="btn-tab" data-target="aba-cores">8. CORES</button>
             <button class="btn-tab" data-target="aba-nome">9. MEU NOME</button>
             <button class="btn-tab" data-target="aba-dia-a-dia">10. DIA A DIA</button>
-            <button class="btn-tab" data-target="aba-animais" style="background-color: var(--cor-roxo); color: white; border-color: var(--cor-roxo);">11. ANIMAIS</button>
+            <button class="btn-tab" data-target="aba-animais">11. ANIMAIS</button>
+            <button class="btn-tab" data-target="aba-numeros" style="background-color: var(--cor-roxo); color: white; border-color: var(--cor-roxo);">12. NÚMEROS</button>
         </nav>
     </header>
 
@@ -405,7 +422,7 @@
             <div class="cartao area-digitacao" style="text-align: center;">
                 <h2 style="font-size: 3rem; color: var(--cor-primaria);">COMO VOCÊ SE CHAMA?</h2>
                 <input type="text" id="input-nome" class="input-gigante" placeholder="DIGITE AQUI..." autocomplete="off">
-                <button class="btn-acao" style="background-color: var(--cor-destaque); box-shadow: 0 8px 0 #C0392B; font-size: 2rem; margin-top: 20px;" onclick="InteracaoApp.verificarNome()">
+                <button class="btn-acao" style="background-color: var(--cor-destaque); box-shadow: 0 8px 0 #C93427; font-size: 2rem; margin-top: 20px;" onclick="InteracaoApp.verificarNome()">
                     ✅ CONFIRMAR NOME
                 </button>
             </div>
@@ -427,6 +444,18 @@
                 </button>
             </div>
             <div class="grid-cards" id="container-animais"></div>
+        </section>
+
+        <section id="aba-numeros" class="aba-conteudo">
+            <div class="bloco-instrucao">
+                <button class="btn-instrucao" onclick="Voz.falar('TOQUE EM QUALQUER NÚMERO PARA OUVIR O NOME DELE.')">
+                    🔊 CLIQUE AQUI PARA OUVIR A INSTRUÇÃO
+                </button>
+            </div>
+            <div class="cartao">
+                <h2 style="text-align: center; color: var(--cor-primaria); margin-bottom: 30px;">NÚMEROS DE 1 A 100</h2>
+                <div class="grid-numeros" id="container-numeros"></div>
+            </div>
         </section>
 
     </main>
@@ -486,7 +515,6 @@
         }
 
         const BancoDados = {
-            // LINKS ATUALIZADOS O-Z E FORÇANDO HD COM "?vq=hd1080&autoplay=1"
             alfabeto: [
                 { letra: 'A', palavra: 'ABELHA', icone: '🐝', youtubeId: 'PBo0Ibxc4Cc' }, 
                 { letra: 'B', palavra: 'BOLA', icone: '⚽', youtubeId: 'EaVbTrivnXY' },
@@ -519,7 +547,6 @@
             consoantes: ['B','C','D','F','G','H','J','K','L','M','N','P','Q','R','S','T','V','W','X','Y','Z'],
             sinaisDesenho: ['A','B','C','D','E','F','G','H','I','J','K','L','M','N','O','P','Q','R','S','T','U','V','W','X','Y','Z','?','~','-'],
             
-            // MAIS PALAVRAS ADICIONADAS
             iniciais: [
                 { img: '✈️', nome: 'AVIÃO', certa: 'A', ops: ['A','E','O'] }, { img: '🐘', nome: 'ELEFANTE', certa: 'E', ops: ['I','E','U'] },
                 { img: '⛪', nome: 'IGREJA', certa: 'I', ops: ['A','I','O'] }, { img: '👁️', nome: 'OLHO', certa: 'O', ops: ['U','A','O'] },
@@ -544,7 +571,6 @@
                 { consoante: 'F', vogal: 'O', palavra: 'FOGO', icone: '🔥' }, { consoante: 'C', vogal: 'A', palavra: 'CARTAGO', icone: '🗺️' }
             ],
 
-            // ADICIONADO CARTAGO E MAIS PALAVRAS PARA MEXER
             palavrasJogo: [
                 { p: 'CARTAGO', s: ['CAR','TA','GO'] }, { p: 'BRASIL', s: ['BRA','SIL'] }, { p: 'ESCOLA', s: ['ES','CO','LA'] },
                 { p: 'BONECA', s: ['BO','NE','CA'] }, { p: 'BULE', s: ['BU','LE'] }, { p: 'CASA', s: ['CA','SA'] },
@@ -651,8 +677,6 @@
             }
 
             mostrarVideo(item) {
-                // VOZ REMOVIDA DAQUI CONFORME SOLICITADO (NÃO FALA MAIS "LETRA A DE ABELHA")
-                
                 this.titulo.innerText = item.letra.toUpperCase();
                 this.icone.innerText = item.icone;
                 this.texto.innerText = item.palavra;
@@ -687,7 +711,7 @@
                 this.canvas.height = this.container.clientHeight;
                 this.ctx.lineWidth = 25; 
                 this.ctx.lineCap = 'round';
-                this.ctx.strokeStyle = '#008B8B'; // Cor primária puxada da logo
+                this.ctx.strokeStyle = '#007AFF';
             }
 
             obterCoordenadas(e) {
@@ -893,9 +917,7 @@
                     const btn = document.createElement('button');
                     btn.className = 'btn-letra';
                     btn.innerText = item.letra;
-                    
                     btn.onclick = () => InterfaceModal.mostrarVideo(item);
-                    
                     container.appendChild(btn);
                 });
             }
@@ -1001,6 +1023,23 @@
                     container.appendChild(card);
                 });
             }
+            
+            // MÉTODO NOVO DA ENGENHARIA DE SOFTWARE PARA GERAR OS NÚMEROS DE 1 A 100
+            static renderizarNumeros() {
+                const container = document.getElementById('container-numeros');
+                for (let i = 1; i <= 100; i++) {
+                    const btn = document.createElement('button');
+                    btn.className = 'btn-letra';
+                    btn.style.height = '80px'; // Um pouco menor para caber melhor
+                    btn.style.fontSize = '2.5rem';
+                    btn.innerText = i;
+                    
+                    // Acessibilidade: O navegador vai ler o número em português automaticamente
+                    btn.onclick = () => Voz.falar(i.toString());
+                    
+                    container.appendChild(btn);
+                }
+            }
 
             static configurarNavegacaoAbas() {
                 const botoes = document.querySelectorAll('.btn-tab');
@@ -1018,7 +1057,6 @@
                                 if(alvo === 'aba-escrever') setTimeout(() => QuadroInterativo.redimensionar(), 50);
                             }
                         });
-                        // Se estiver no celular, fecha o menu automaticamente ao clicar na aba
                         if (window.innerWidth <= 768) {
                             document.getElementById('menu-principal').classList.remove('aberto');
                         }
@@ -1035,6 +1073,7 @@
             ConstrutorInterface.renderizarCores();
             ConstrutorInterface.renderizarVidaPratica();
             ConstrutorInterface.renderizarAnimais();
+            ConstrutorInterface.renderizarNumeros(); // CHAMA A FUNÇÃO DOS NÚMEROS AQUI
             ConstrutorInterface.configurarNavegacaoAbas();
             
             BancoDados.iniciais.sort(() => Math.random() - 0.5);
