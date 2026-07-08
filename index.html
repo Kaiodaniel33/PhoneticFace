@@ -3,7 +3,10 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
-    <title>PhoneticFace - Alfabetização Fônica EJA</title>
+    <meta name="description" content="PhoneticFace: aplicativo de apoio à alfabetização fônica de jovens e adultos (EJA), alinhado ao Programa Brasil Alfabetizado.">
+    <meta name="theme-color" content="#007AFF">
+    <link rel="icon" href="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 100 100'%3E%3Crect width='100' height='100' rx='22' fill='%23007AFF'/%3E%3Ctext x='50' y='68' font-size='58' font-family='system-ui,sans-serif' font-weight='900' fill='white' text-anchor='middle'%3EPf%3C/text%3E%3C/svg%3E">
+    <title>PhoneticFace — Alfabetização Fônica EJA</title>
     <style>
         /* ==========================================================================
            1. VARIÁVEIS GERAIS (Design Profissional & Acessibilidade)
@@ -84,6 +87,29 @@
            2. RESET CSS E TIPOGRAFIA BASE
            ========================================================================== */
         * { margin: 0; padding: 0; box-sizing: border-box; }
+
+        button:focus-visible,
+        input:focus-visible,
+        [tabindex]:focus-visible {
+            outline: 4px solid var(--cor-alerta);
+            outline-offset: 3px;
+        }
+
+        .apenas-leitor-tela {
+            position: absolute; width: 1px; height: 1px; padding: 0; margin: -1px;
+            overflow: hidden; clip: rect(0,0,0,0); white-space: nowrap; border: 0;
+        }
+
+        .sinal-matematico { font-size: 2rem; font-weight: 900; }
+
+        @media (prefers-reduced-motion: reduce) {
+            *, *::before, *::after {
+                animation-duration: 0.01ms !important;
+                animation-iteration-count: 1 !important;
+                transition-duration: 0.01ms !important;
+                scroll-behavior: auto !important;
+            }
+        }
         html { font-size: var(--tamanho-base); scroll-behavior: smooth; }
         body {
             font-family: var(--fonte-principal);
@@ -135,12 +161,13 @@
             margin-bottom: 1rem;
         }
 
-        .logo-container img {
+        .logo-container .logo-img {
             max-height: 90px;
-            border-radius: 15px; 
-            box-shadow: 0 8px 15px rgba(0,0,0,0.2); 
+            border-radius: 15px;
+            box-shadow: 0 8px 15px rgba(0,0,0,0.2);
             background-color: #FFF;
             padding: 5px;
+            flex-shrink: 0;
         }
         
         .cabecalho-app h1 { font-size: 3.5rem; text-shadow: 2px 4px 8px rgba(0,0,0,0.2); margin: 0;}
@@ -318,7 +345,7 @@
             .btn-tab.active { color: #FFF; background: var(--cor-sucesso); }
             
             .cabecalho-app h1 { font-size: 2.5rem; }
-            .logo-container img { max-height: 70px; }
+            .logo-container .logo-img { max-height: 70px; }
             .cartao { padding: 1.5rem; }
             .btn-letra { font-size: 3rem; height: 100px; border-radius: 12px; }
             .linha-silaba { font-size: 2rem; }
@@ -339,43 +366,46 @@
 </head>
 <body>
 
-    <div class="barra-acessibilidade">
-        <div style="font-weight: 900; font-size: 1rem; letter-spacing: 1px;">👁️ AJUDA E ACESSIBILIDADE</div>
+    <div class="barra-acessibilidade" role="region" aria-label="Ferramentas de acessibilidade">
+        <div style="font-weight: 900; font-size: 1rem; letter-spacing: 1px;" aria-hidden="true">👁️ AJUDA E ACESSIBILIDADE</div>
         <div class="controles-acesso">
-            <button class="btn-acesso" onclick="AppConfig.alterarTamanhoFonte(10)">A+ AUMENTAR</button>
-            <button class="btn-acesso" onclick="AppConfig.alterarTamanhoFonte(-10)">A- DIMINUIR</button>
-            <button class="btn-acesso" onclick="AppConfig.alternarAltoContraste()">🌓 ALTO CONTRASTE</button>
+            <button class="btn-acesso" onclick="AppConfig.alterarTamanhoFonte(10)" aria-label="Aumentar tamanho do texto">A+ AUMENTAR</button>
+            <button class="btn-acesso" onclick="AppConfig.alterarTamanhoFonte(-10)" aria-label="Diminuir tamanho do texto">A- DIMINUIR</button>
+            <button class="btn-acesso" onclick="AppConfig.alternarAltoContraste()" aria-pressed="false" aria-label="Ativar ou desativar alto contraste">🌓 ALTO CONTRASTE</button>
         </div>
     </div>
 
     <header class="cabecalho-app">
         <div class="logo-container">
-            <img src="kaiologoteste.jpg" alt="PhoneticFace Logo" class="logo-img" onerror="this.style.display='none'">
+            <img src="kaiologoteste.jpg" alt="Logotipo PhoneticFace" class="logo-img" id="logo-principal"
+                 onerror="this.onerror=null; this.src='data:image/svg+xml,%3Csvg xmlns=%27http://www.w3.org/2000/svg%27 viewBox=%270 0 100 100%27%3E%3Crect width=%27100%27 height=%27100%27 rx=%2722%27 fill=%27%23FFFFFF%27/%3E%3Ctext x=%2750%27 y=%2770%27 font-size=%2758%27 font-family=%27system-ui,sans-serif%27 font-weight=%27900%27 fill=%27%23007AFF%27 text-anchor=%27middle%27%3EPf%3C/text%3E%3C/svg%3E';">
             <h1>PHONETICFACE</h1>
         </div>
         <p>METODOLOGIA FÔNICA DE APOIO À ALFABETIZAÇÃO DE JOVENS E ADULTOS</p>
         
-        <div class="menu-toggle" onclick="toggleMenuMobile()">☰ MENU DE OPÇÕES</div>
-        
-        <nav class="menu-principal" id="menu-principal">
-            <button class="btn-tab active" data-target="aba-alfabeto">1. SONS DAS LETRAS</button>
-            <button class="btn-tab" data-target="aba-vogais">2. VOGAIS/CONS.</button>
-            <button class="btn-tab" data-target="aba-iniciais">3. SOM INICIAL</button>
-            <button class="btn-tab" data-target="aba-familias">4. UNINDO SONS</button>
-            <button class="btn-tab" data-target="aba-silabas">5. FORMAR SÍLABAS</button>
-            <button class="btn-tab" data-target="aba-palavras">6. FORMAR PALAVRAS</button>
-            <button class="btn-tab" data-target="aba-escrever">7. TRAÇADO</button>
-            <button class="btn-tab" data-target="aba-cores">8. CORES</button>
-            <button class="btn-tab" data-target="aba-nome">9. MEU NOME</button>
-            <button class="btn-tab" data-target="aba-dia-a-dia">10. LEITURA PRÁTICA</button>
-            <button class="btn-tab" data-target="aba-animais">11. VOCABULÁRIO</button>
-            <button class="btn-tab" data-target="aba-numeros" style="background-color: var(--cor-roxo); color: white; border-color: var(--cor-roxo);">12. NÚMEROS</button>
+        <button class="menu-toggle" onclick="toggleMenuMobile()" aria-expanded="false" aria-controls="menu-principal">☰ MENU DE OPÇÕES</button>
+
+        <nav class="menu-principal" id="menu-principal" role="tablist" aria-label="Módulos de aprendizagem">
+            <button class="btn-tab active" role="tab" aria-selected="true" aria-controls="aba-alfabeto" id="tab-aba-alfabeto" data-target="aba-alfabeto">1. SONS DAS LETRAS</button>
+            <button class="btn-tab" role="tab" aria-selected="false" aria-controls="aba-vogais" id="tab-aba-vogais" data-target="aba-vogais">2. VOGAIS/CONS.</button>
+            <button class="btn-tab" role="tab" aria-selected="false" aria-controls="aba-iniciais" id="tab-aba-iniciais" data-target="aba-iniciais">3. SOM INICIAL</button>
+            <button class="btn-tab" role="tab" aria-selected="false" aria-controls="aba-familias" id="tab-aba-familias" data-target="aba-familias">4. UNINDO SONS</button>
+            <button class="btn-tab" role="tab" aria-selected="false" aria-controls="aba-silabas" id="tab-aba-silabas" data-target="aba-silabas">5. FORMAR SÍLABAS</button>
+            <button class="btn-tab" role="tab" aria-selected="false" aria-controls="aba-palavras" id="tab-aba-palavras" data-target="aba-palavras">6. FORMAR PALAVRAS</button>
+            <button class="btn-tab" role="tab" aria-selected="false" aria-controls="aba-escrever" id="tab-aba-escrever" data-target="aba-escrever">7. TRAÇADO</button>
+            <button class="btn-tab" role="tab" aria-selected="false" aria-controls="aba-cores" id="tab-aba-cores" data-target="aba-cores">8. CORES</button>
+            <button class="btn-tab" role="tab" aria-selected="false" aria-controls="aba-nome" id="tab-aba-nome" data-target="aba-nome">9. MEU NOME</button>
+            <button class="btn-tab" role="tab" aria-selected="false" aria-controls="aba-dia-a-dia" id="tab-aba-dia-a-dia" data-target="aba-dia-a-dia">10. LEITURA PRÁTICA</button>
+            <button class="btn-tab" role="tab" aria-selected="false" aria-controls="aba-animais" id="tab-aba-animais" data-target="aba-animais">11. VOCABULÁRIO</button>
+            <button class="btn-tab" role="tab" aria-selected="false" aria-controls="aba-numeros" id="tab-aba-numeros" data-target="aba-numeros">12. NÚMEROS</button>
+            <!-- Novo botão EQUIPE destacado em Roxo -->
+            <button class="btn-tab" role="tab" aria-selected="false" aria-controls="aba-equipe" id="tab-aba-equipe" data-target="aba-equipe" style="background-color: var(--cor-roxo); color: white; border-color: var(--cor-roxo);">13. EQUIPE</button>
         </nav>
     </header>
 
     <main class="conteudo-app">
         
-        <section id="aba-alfabeto" class="aba-conteudo active">
+        <section id="aba-alfabeto" class="aba-conteudo active" role="tabpanel" aria-labelledby="tab-aba-alfabeto" tabindex="0">
             <div class="bloco-instrucao">
                 <button class="btn-instrucao" onclick="Voz.falar('BEM-VINDO. TOQUE EM UMA LETRA PARA CONHECER O SEU SOM E VER O VÍDEO.')">
                     🔊 CLIQUE AQUI PARA OUVIR A INSTRUÇÃO
@@ -384,21 +414,21 @@
             <div id="container-grid-alfabeto" class="grid-alfabeto"></div>
         </section>
 
-        <section id="aba-vogais" class="aba-conteudo">
+        <section id="aba-vogais" class="aba-conteudo" role="tabpanel" aria-labelledby="tab-aba-vogais" tabindex="0">
             <div class="bloco-instrucao">
                 <button class="btn-instrucao" onclick="Voz.falar('VAMOS CONHECER OS SONS DAS VOGAIS E DAS CONSOANTES. TOQUE NAS LETRAS.')">
                     🔊 CLIQUE AQUI PARA OUVIR A INSTRUÇÃO
                 </button>
             </div>
             <div class="cartao">
-                <h2 style="text-align: center; color: var(--cor-primaria);">SOMS DAS VOGAIS</h2>
+                <h2 style="text-align: center; color: var(--cor-primaria);">SONS DAS VOGAIS</h2>
                 <div class="flex-center" id="box-vogais" style="border: 4px dashed var(--cor-secundaria); padding: 25px; border-radius: var(--borda-raio); margin-bottom: 30px; background: #F8F9FA;"></div>
-                <h2 style="text-align: center; color: var(--cor-primaria);">SOMS DAS CONSOANTES</h2>
+                <h2 style="text-align: center; color: var(--cor-primaria);">SONS DAS CONSOANTES</h2>
                 <div class="flex-center" id="box-consoantes" style="border: 4px dashed var(--cor-secundaria); padding: 25px; border-radius: var(--borda-raio); background: #F8F9FA;"></div>
             </div>
         </section>
 
-        <section id="aba-iniciais" class="aba-conteudo">
+        <section id="aba-iniciais" class="aba-conteudo" role="tabpanel" aria-labelledby="tab-aba-iniciais" tabindex="0">
             <div class="bloco-instrucao">
                 <button class="btn-instrucao" onclick="Voz.falar('OUÇA A PALAVRA. QUAL É A PRIMEIRA LETRA QUE REPRESENTA O SOM INICIAL?')">
                     🔊 CLIQUE AQUI PARA OUVIR A INSTRUÇÃO
@@ -406,13 +436,13 @@
             </div>
             <div class="cartao" style="text-align: center;">
                 <h2 id="titulo-inicial">IDENTIFIQUE O PRIMEIRO SOM</h2>
-                <h3 id="nome-inicial-dica" style="font-size: 3.5rem; color: var(--cor-primaria); letter-spacing: 10px; margin-top: 20px; background: #F8F9FA; padding: 15px 30px; border-radius: var(--borda-raio); display: inline-block; box-shadow: inset 0 4px 8px rgba(0,0,0,0.05);">_ V I Ã O</h3>
+                <h3 id="nome-inicial-dica" aria-live="polite" style="font-size: 3.5rem; color: var(--cor-primaria); letter-spacing: 10px; margin-top: 20px; background: #F8F9FA; padding: 15px 30px; border-radius: var(--borda-raio); display: inline-block; box-shadow: inset 0 4px 8px rgba(0,0,0,0.05);">_ V I Ã O</h3>
                 <div id="imagem-inicial" style="font-size: 8rem; margin: 15px 0; text-shadow: 0 10px 20px rgba(0,0,0,0.1);">✈️</div>
                 <div id="opcoes-iniciais" class="flex-center"></div>
             </div>
         </section>
 
-        <section id="aba-familias" class="aba-conteudo">
+        <section id="aba-familias" class="aba-conteudo" role="tabpanel" aria-labelledby="tab-aba-familias" tabindex="0">
             <div class="bloco-instrucao">
                 <button class="btn-instrucao" onclick="Voz.falar('VAMOS APRENDER A UNIR OS SONS. ESCOLHA UMA CONSOANTE PARA VER COMO ELA SE JUNTA COM AS VOGAIS.')">
                     🔊 CLIQUE AQUI PARA OUVIR A INSTRUÇÃO
@@ -427,7 +457,7 @@
             </div>
         </section>
 
-        <section id="aba-silabas" class="aba-conteudo">
+        <section id="aba-silabas" class="aba-conteudo" role="tabpanel" aria-labelledby="tab-aba-silabas" tabindex="0">
             <div class="bloco-instrucao">
                 <button class="btn-instrucao" onclick="Voz.falar('AQUI VEMOS O SOM DA CONSOANTE MAIS O SOM DA VOGAL FORMANDO UMA SÍLABA. TOQUE NO BOTÃO VERDE PARA OUVIR.')">
                     🔊 CLIQUE AQUI PARA OUVIR A INSTRUÇÃO
@@ -436,7 +466,7 @@
             <div id="container-silabas" class="area-silabas"></div>
         </section>
 
-        <section id="aba-palavras" class="aba-conteudo">
+        <section id="aba-palavras" class="aba-conteudo" role="tabpanel" aria-labelledby="tab-aba-palavras" tabindex="0">
             <div class="bloco-instrucao">
                 <button class="btn-instrucao" onclick="Voz.falar('AGORA VAMOS JUNTAR AS SÍLABAS PARA FORMAR PALAVRAS COMPLETAS. TOQUE NA ORDEM CERTA.')">
                     🔊 CLIQUE AQUI PARA OUVIR A INSTRUÇÃO
@@ -450,7 +480,7 @@
             </div>
         </section>
 
-        <section id="aba-escrever" class="aba-conteudo">
+        <section id="aba-escrever" class="aba-conteudo" role="tabpanel" aria-labelledby="tab-aba-escrever" tabindex="0">
             <div class="bloco-instrucao">
                 <button class="btn-instrucao" onclick="Voz.falar('VAMOS TREINAR O TRAÇADO. ESCOLHA UMA LETRA E ACOMPANHE O DESENHO COM O DEDO OU MOUSE.')">
                     🔊 CLIQUE AQUI PARA OUVIR A INSTRUÇÃO
@@ -465,7 +495,7 @@
             </div>
         </section>
 
-        <section id="aba-cores" class="aba-conteudo">
+        <section id="aba-cores" class="aba-conteudo" role="tabpanel" aria-labelledby="tab-aba-cores" tabindex="0">
             <div class="bloco-instrucao">
                 <button class="btn-instrucao" onclick="Voz.falar('TOQUE NAS CORES PARA OUVIR O NOME DELAS.')">
                     🔊 CLIQUE AQUI PARA OUVIR A INSTRUÇÃO
@@ -474,7 +504,7 @@
             <div class="grid-alfabeto" id="container-cores" style="grid-template-columns: repeat(auto-fill, minmax(140px, 1fr));"></div>
         </section>
 
-        <section id="aba-nome" class="aba-conteudo">
+        <section id="aba-nome" class="aba-conteudo" role="tabpanel" aria-labelledby="tab-aba-nome" tabindex="0">
             <div class="bloco-instrucao">
                 <button class="btn-instrucao" onclick="Voz.falar('CLIQUE NA CAIXA BRANCA E DIGITE O SEU NOME PARA TREINAR A ESCRITA DA SUA IDENTIDADE.')">
                     🔊 CLIQUE AQUI PARA OUVIR A INSTRUÇÃO
@@ -489,7 +519,7 @@
             </div>
         </section>
 
-        <section id="aba-dia-a-dia" class="aba-conteudo">
+        <section id="aba-dia-a-dia" class="aba-conteudo" role="tabpanel" aria-labelledby="tab-aba-dia-a-dia" tabindex="0">
             <div class="bloco-instrucao">
                 <button class="btn-instrucao" onclick="Voz.falar('VAMOS PRATICAR A LEITURA DE TEXTOS DO NOSSO DIA A DIA. TOQUE NOS QUADROS PARA OUVIR.')">
                     🔊 CLIQUE AQUI PARA OUVIR A INSTRUÇÃO
@@ -498,7 +528,7 @@
             <div class="grid-cards" id="container-dia-a-dia"></div>
         </section>
 
-        <section id="aba-animais" class="aba-conteudo">
+        <section id="aba-animais" class="aba-conteudo" role="tabpanel" aria-labelledby="tab-aba-animais" tabindex="0">
             <div class="bloco-instrucao">
                 <button class="btn-instrucao" onclick="Voz.falar('EXPANSÃO DE VOCABULÁRIO: TOQUE NAS CARTAS PARA OUVIR E ASSOCIAR OS NOMES.')">
                     🔊 CLIQUE AQUI PARA OUVIR A INSTRUÇÃO
@@ -507,7 +537,7 @@
             <div class="grid-cards" id="container-animais"></div>
         </section>
 
-        <section id="aba-numeros" class="aba-conteudo">
+        <section id="aba-numeros" class="aba-conteudo" role="tabpanel" aria-labelledby="tab-aba-numeros" tabindex="0">
             <div class="bloco-instrucao">
                 <button class="btn-instrucao" onclick="Voz.falar('TOQUE EM QUALQUER NÚMERO PARA OUVIR A SUA PRONÚNCIA.')">
                     🔊 CLIQUE AQUI PARA OUVIR A INSTRUÇÃO
@@ -516,6 +546,43 @@
             <div class="cartao">
                 <h2 style="text-align: center; color: var(--cor-primaria); margin-bottom: 25px;">NÚMEROS DE 1 A 100</h2>
                 <div class="grid-numeros" id="container-numeros"></div>
+            </div>
+        </section>
+
+        <section id="aba-equipe" class="aba-conteudo" role="tabpanel" aria-labelledby="tab-aba-equipe" tabindex="0">
+            <div class="bloco-instrucao">
+                <button class="btn-instrucao" onclick="Voz.falar('CONHEÇA AS ALUNAS DO CURSO DE FORMAÇÃO DE DOCENTES QUE ATUAM NESTE PROJETO.')">
+                    🔊 CLIQUE AQUI PARA OUVIR A INSTRUÇÃO
+                </button>
+            </div>
+            <div class="cartao" style="text-align: center;">
+                <h2 style="color: var(--cor-primaria); font-size: 2.5rem; margin-bottom: 30px;">NOSSAS DOCENTES</h2>
+                <div class="flex-center" style="gap: 30px;">
+                    <!-- Card 1: Poliana -->
+                    <div style="background: #F8F9FA; padding: 20px; border-radius: 20px; box-shadow: 0 4px 15px rgba(0,0,0,0.08); max-width: 250px; width: 100%; transition: transform 0.2s;">
+                        <img src="imgem1.jpg" alt="Poliana" style="width: 100%; height: 260px; object-fit: cover; border-radius: 15px; margin-bottom: 15px;" onerror="this.src='https://placehold.co/200x260/007AFF/FFF?text=Poliana'">
+                        <h3 style="margin:0; font-size: 1.5rem; color: var(--cor-texto-principal);">POLIANA</h3>
+                        <p style="margin:0; color: var(--cor-texto-secundario); font-weight: bold; font-size: 0.9rem;">EQUIPE DOCENTE</p>
+                    </div>
+                    
+                    <!-- Card 2: Mirella -->
+                    <div style="background: #F8F9FA; padding: 20px; border-radius: 20px; box-shadow: 0 4px 15px rgba(0,0,0,0.08); max-width: 250px; width: 100%; transition: transform 0.2s;">
+                        <img src="imgem2.jpg" alt="Mirella" style="width: 100%; height: 260px; object-fit: cover; border-radius: 15px; margin-bottom: 15px;" onerror="this.src='https://placehold.co/200x260/007AFF/FFF?text=Mirella'">
+                        <h3 style="margin:0; font-size: 1.5rem; color: var(--cor-texto-principal);">MIRELLA</h3>
+                        <p style="margin:0; color: var(--cor-texto-secundario); font-weight: bold; font-size: 0.9rem;">EQUIPE DOCENTE</p>
+                    </div>
+
+                    <!-- Card 3: Maria Eduarda -->
+                    <div style="background: #F8F9FA; padding: 20px; border-radius: 20px; box-shadow: 0 4px 15px rgba(0,0,0,0.08); max-width: 250px; width: 100%; transition: transform 0.2s;">
+                        <img src="imgem3.jpg" alt="Maria Eduarda" style="width: 100%; height: 260px; object-fit: cover; border-radius: 15px; margin-bottom: 15px;" onerror="this.src='https://placehold.co/200x260/007AFF/FFF?text=Maria+Eduarda'">
+                        <h3 style="margin:0; font-size: 1.5rem; color: var(--cor-texto-principal);">MARIA EDUARDA</h3>
+                        <p style="margin:0; color: var(--cor-texto-secundario); font-weight: bold; font-size: 0.9rem;">EQUIPE DOCENTE</p>
+                    </div>
+                </div>
+                <p style="margin-top: 40px; font-size: 1.3rem; color: var(--cor-texto-secundario); font-weight: 600; line-height: 1.6;">
+                    Alunas do Curso de Formação de Docentes <br>
+                    <span style="color: var(--cor-primaria);">C.E. Prof. Ivone Soares Castanharo</span>
+                </p>
             </div>
         </section>
 
@@ -545,7 +612,7 @@
     </footer>
 
     <!-- MODAL DE VÍDEO -->
-    <div id="modal-letras" class="modal-overlay">
+    <div id="modal-letras" class="modal-overlay" role="dialog" aria-modal="true" aria-labelledby="letra-display">
         <div class="modal-caixa">
             <h1 id="letra-display">A</h1>
             
@@ -568,586 +635,631 @@
     </div>
 
     <script>
-        function toggleMenuMobile() {
-            document.getElementById('menu-principal').classList.toggle('aberto');
-        }
+        (function () {
+            'use strict';
 
-        const BancoDados = {
-            alfabeto: [
-                { letra: 'A', palavra: 'ABELHA', icone: '🐝', youtubeId: 'XBCDUG-yEaw' }, 
-                { letra: 'B', palavra: 'BOLA', icone: '⚽', youtubeId: 'j6ROsDM87UU' },
-                { letra: 'C', palavra: 'CASA', icone: '🏠', youtubeId: 'hWZA7DElS_I' }, 
-                { letra: 'D', palavra: 'DADO', icone: '🎲', youtubeId: 'mAIWY3S12s4' },
-                { letra: 'E', palavra: 'ELEFANTE', icone: '🐘', youtubeId: '8s43APNFMtM' }, 
-                { letra: 'F', palavra: 'FACA', icone: '🔪', youtubeId: 'nuX0O_hqoFM' },
-                { letra: 'G', palavra: 'GATO', icone: '🐈', youtubeId: '4SjEf5gYXio' }, 
-                { letra: 'H', palavra: 'HORA', icone: '⌚', youtubeId: 'NhZ6eVHmVDA' },
-                { letra: 'I', palavra: 'IGREJA', icone: '⛪', youtubeId: 'ILhan-Htj0g' }, 
-                { letra: 'J', palavra: 'JACARÉ', icone: '🐊', youtubeId: 'Z9lBor1lnI8' },
-                { letra: 'K', palavra: 'KIWI', icone: '🥝', youtubeId: 'eGrZ1WM_oaE' }, 
-                { letra: 'L', palavra: 'LÁPIS', icone: '✏️', youtubeId: 'tC3yWQPeNpE' },
-                { letra: 'M', palavra: 'MALA', icone: '🧳', youtubeId: 'mH3byoH67O4' }, 
-                { letra: 'N', palavra: 'NAVIO', icone: '🚢', youtubeId: 'AGPxKWabjSc' },
-                { letra: 'O', palavra: 'ÓCULOS', icone: '👓', youtubeId: '-8RtEgO3Y5s' }, 
-                { letra: 'P', palavra: 'PATO', icone: '🦆', youtubeId: 'bmQ_2UA7sWw' },
-                { letra: 'Q', palavra: 'QUEIJO', icone: '🧀', youtubeId: '-qZ5fNtr-8g' }, 
-                { letra: 'R', palavra: 'RATO', icone: '🐀', youtubeId: '7fKcMXcBNOA' },
-                { letra: 'S', palavra: 'SAPO', icone: '🐸', youtubeId: 's6XAkz5lGxA' }, 
-                { letra: 'T', palavra: 'TATU', icone: '🦔', youtubeId: '-FyHvZ9Hz0Y' },
-                { letra: 'U', palavra: 'UVA', icone: '🍇', youtubeId: 'beFXQ-w5CKs' }, 
-                { letra: 'V', palavra: 'VACA', icone: '🐄', youtubeId: 'cGJ2MXDMsgE' },
-                { letra: 'W', palavra: 'WEB', icone: '🌐', youtubeId: 'An41gHwcEEw' }, 
-                { letra: 'X', palavra: 'XÍCARA', icone: '☕', youtubeId: 'zqrqp-RHFHs' },
-                { letra: 'Y', palavra: 'YOUTUBE', icone: '▶️', youtubeId: 'NJLEAbML25A' }, 
-                { letra: 'Z', palavra: 'ZEBRA', icone: '🦓', youtubeId: '-QBkzFZDWNU' }
-            ],
-            vogais: ['A','E','I','O','U'],
-            consoantes: ['B','C','D','F','G','H','J','K','L','M','N','P','Q','R','S','T','V','W','X','Y','Z'],
-            sinaisDesenho: ['A','B','C','D','E','F','G','H','I','J','K','L','M','N','O','P','Q','R','S','T','U','V','W','X','Y','Z','?','~','-'],
-            
-            iniciais: [
-                { img: '✈️', nome: 'AVIÃO', certa: 'A', ops: ['A','E','O'] }, { img: '🐘', nome: 'ELEFANTE', certa: 'E', ops: ['I','E','U'] },
-                { img: '⛪', nome: 'IGREJA', certa: 'I', ops: ['A','I','O'] }, { img: '👁️', nome: 'OLHO', certa: 'O', ops: ['U','A','O'] },
-                { img: '🍇', nome: 'UVA', certa: 'U', ops: ['E','U','I'] }, { img: '🐎', nome: 'CAVALO', certa: 'C', ops: ['B','C','D'] },
-                { img: '🍌', nome: 'BANANA', certa: 'B', ops: ['P','B','D'] }, { img: '🚗', nome: 'CARRO', certa: 'C', ops: ['C','K','S'] },
-                { img: '🐕', nome: 'CACHORRO', certa: 'C', ops: ['S','X','C'] }, { img: '🐈', nome: 'GATO', certa: 'G', ops: ['J','G','C'] },
-                { img: '🦁', nome: 'LEÃO', certa: 'L', ops: ['M','L','N'] }, { img: '🍎', nome: 'MAÇÃ', certa: 'M', ops: ['N','M','P'] },
-                { img: '🗺️', nome: 'CARTAGO', certa: 'C', ops: ['K','C','S'] }, { img: '🇧🇷', nome: 'BRASIL', certa: 'B', ops: ['P','B','D'] },
-                { img: '💻', nome: 'COMPUTADOR', certa: 'C', ops: ['K','C','Q'] }, { img: '🦖', nome: 'DINOSSAURO', certa: 'D', ops: ['T','D','B'] },
-                { img: '🍉', nome: 'MELANCIA', certa: 'M', ops: ['L','M','N'] }, { img: '🍓', nome: 'MORANGO', certa: 'M', ops: ['M','N','B'] },
-                { img: '🍍', nome: 'ABACAXI', certa: 'A', ops: ['A','O','E'] }, { img: '⚽', nome: 'BOLA', certa: 'B', ops: ['D','B','P'] },
-                { img: '🏠', nome: 'CASA', certa: 'C', ops: ['S','C','K'] }, { img: '🐒', nome: 'MACACO', certa: 'M', ops: ['N','M','L'] },
-                { img: '🥘', nome: 'PANELA', certa: 'P', ops: ['B','P','D'] }, { img: '🍅', nome: 'TOMATE', certa: 'T', ops: ['T','D','P'] },
-                { img: '🦉', nome: 'CORUJA', certa: 'C', ops: ['K','C','S'] }, { img: '🐸', nome: 'SAPO', certa: 'S', ops: ['Z','S','C'] },
-                { img: '🦋', nome: 'BORBOLETA', certa: 'B', ops: ['P','D','B'] }, { img: '🐢', nome: 'TARTARUGA', certa: 'T', ops: ['T','D','F'] },
-                { img: '🐷', nome: 'PORCO', certa: 'P', ops: ['B','P','Q'] }, { img: '🐔', nome: 'GALINHA', certa: 'G', ops: ['J','G','C'] }
-            ],
-
-            silabas: [
-                { consoante: 'B', vogal: 'A', palavra: 'BANANA', icone: '🍌' }, { consoante: 'M', vogal: 'A', palavra: 'MALA', icone: '🧳' },
-                { consoante: 'C', vogal: 'O', palavra: 'COPO', icone: '🥛' }, { consoante: 'D', vogal: 'I', palavra: 'DINHEIRO', icone: '💵' },
-                { consoante: 'F', vogal: 'O', palavra: 'FOGO', icone: '🔥' }, { consoante: 'C', vogal: 'A', palavra: 'CARTAGO', icone: '🗺️' }
-            ],
-
-            palavrasJogo: [
-                { p: 'CARTAGO', s: ['CAR','TA','GO'] }, { p: 'BRASIL', s: ['BRA','SIL'] }, { p: 'ESCOLA', s: ['ES','CO','LA'] },
-                { p: 'BONECA', s: ['BO','NE','CA'] }, { p: 'BULE', s: ['BU','LE'] }, { p: 'CASA', s: ['CA','SA'] },
-                { p: 'BOLA', s: ['BO','LA'] }, { p: 'MACACO', s: ['MA','CA','CO'] }, { p: 'PANELA', s: ['PA','NE','LA'] },
-                { p: 'TOMATE', s: ['TO','MA','TE'] }, { p: 'CAVALO', s: ['CA','VA','LO'] }, { p: 'ABACATE', s: ['A','BA','CA','TE'] },
-                { p: 'BANANA', s: ['BA','NA','NA'] }, { p: 'GATO', s: ['GA','TO'] }, { p: 'PATO', s: ['PA','TO'] },
-                { p: 'COMPUTADOR', s: ['COM','PU','TA','DOR'] }, { p: 'TELEFONE', s: ['TE','LE','FO','NE'] },
-                { p: 'SATO', s: ['SA','TO'] }, { p: 'RATO', s: ['RA','TO'] }, { p: 'MATO', s: ['MA','TO'] },
-                { p: 'LATA', s: ['LA','TA'] }, { p: 'FADA', s: ['FA','DA'] }, { p: 'MALA', s: ['MA','LA'] },
-                { p: 'BOCA', s: ['BO','CA'] }, { p: 'DADO', s: ['DA','DO'] }, { p: 'FOCA', s: ['FO','CA'] },
-                { p: 'LEÃO', s: ['LE','ÃO'] }, { p: 'MÃO', s: ['MÃO'] }, { p: 'PÃO', s: ['PÃO'] },
-                { p: 'CÃO', s: ['CÃO'] }, { p: 'PEIXE', s: ['PEI','XE'] }, { p: 'LIXO', s: ['LI','XO'] },
-                { p: 'RODA', s: ['RO','DA'] }, { p: 'FOTO', s: ['FO','TO'] }, { p: 'LOBO', s: ['LO','BO'] },
-                { p: 'BOLO', s: ['BO','LO'] }, { p: 'SELO', s: ['SE','LO'] }, { p: 'GELO', s: ['GE','LO'] },
-                { p: 'MESA', s: ['ME','SA'] }, { p: 'PESO', s: ['PE','SO'] }, { p: 'VASO', s: ['VA','SO'] },
-                { p: 'SOPA', s: ['SO','PA'] }, { p: 'MAPA', s: ['MA','PA'] }, { p: 'CAPA', s: ['CA','PA'] },
-                { p: 'LUVA', s: ['LU','VA'] }, { p: 'UVA', s: ['U','VA'] }, { p: 'OVO', s: ['O','VO'] },
-                { p: 'AVE', s: ['A','VE'] }, { p: 'NAVE', s: ['NA','VE'] }, { p: 'NEVE', s: ['NE','VE'] },
-                { p: 'VACA', s: ['VA','CA'] }, { p: 'FACA', s: ['FA','CA'] }, { p: 'MACA', s: ['MA','CA'] },
-                { p: 'TELA', s: ['TE','LA'] }, { p: 'VELA', s: ['VE','LA'] }, { p: 'BELO', s: ['BE','LO'] },
-                { p: 'BARCO', s: ['BAR','CO'] }, { p: 'MARCO', s: ['MAR','CO'] }, { p: 'PORCO', s: ['POR','CO'] }
-            ],
-
-            cores: [
-                { n: 'AZUL', c: '#2196F3', txt: '#FFF' }, { n: 'VERMELHO', c: '#FF3B30', txt: '#FFF' },
-                { n: 'AMARELO', c: '#FFCC00', txt: '#000' }, { n: 'VERDE', c: '#34C759', txt: '#FFF' },
-                { n: 'LARANJA', c: '#FF9500', txt: '#FFF' }, { n: 'ROXO', c: '#9B59B6', txt: '#FFF' },
-                { n: 'MARROM', c: '#A2845E', txt: '#FFF' }, { n: 'PRETO', c: '#1C1C1E', txt: '#FFF' },
-                { n: 'BRANCO', c: '#FFFFFF', txt: '#000' }, { n: 'ROSA', c: '#FF2D55', txt: '#FFF' },
-                { n: 'CINZA', c: '#8E8E93', txt: '#FFF' }, { n: 'AZUL CLARO', c: '#5AC8FA', txt: '#000' },
-                { n: 'VERDE ESCURO', c: '#248A3D', txt: '#FFF' }, { n: 'BEGE', c: '#E1C699', txt: '#000' },
-                { n: 'LILÁS', c: '#DAB4E5', txt: '#000' }, { n: 'OURO', c: '#FFD700', txt: '#000' },
-                { n: 'PRATA', c: '#C0C0C0', txt: '#000' }, { n: 'CIANO', c: '#00BCD4', txt: '#000' }
-            ],
-
-            vidaPratica: [
-                { titulo: 'RECEITA MÉDICA', icone: '💊', textoFala: 'ATENÇÃO: TOMAR UM COMPRIMIDO DE DIPIRONA A CADA 8 HORAS.' },
-                { titulo: 'LETREIRO DE ÔNIBUS', icone: '🚌', textoFala: 'EXPRESSO' },
-                { titulo: 'LISTA DO MERCADO', icone: '🛒', textoFala: 'LISTA DE COMPRAS: 5 QUILOS DE ARROZ, FEIJÃO E MACARRÃO.' },
-                { titulo: 'TREINO DA ACADEMIA', icone: '🏋️', textoFala: 'FICHA DE TREINO: FAZER 3 SÉRIES DE 10 REPETIÇÕES.' }
-            ],
-
-            animais: [
-                { nome: 'CACHORRO', icone: '🐕' },
-                { nome: 'GATO', icone: '🐈' },
-                { nome: 'VACA', icone: '🐄' },
-                { nome: 'CAVALO', icone: '🐎' },
-                { nome: 'PORCO', icone: '🐷' },
-                { nome: 'GALINHA', icone: '🐔' },
-                { nome: 'PATO', icone: '🦆' },
-                { nome: 'OVELHA', icone: '🐑' },
-                { nome: 'LEÃO', icone: '🦁' },
-                { nome: 'ELEFANTE', icone: '🐘' },
-                { nome: 'MACACO', icone: '🐒' },
-                { nome: 'URSO', icone: '🐻' },
-                { nome: 'SAPO', icone: '🐸' },
-                { nome: 'PEIXE', icone: '🐟' },
-                { nome: 'PAPAGAIO', icone: '🦜' },
-                { nome: 'COBRA', icone: '🐍' },
-                { nome: 'TARTARUGA', icone: '🐢' },
-                { nome: 'COELHO', icone: '🐇' },
-                { nome: 'ABELHA', icone: '🐝' },
-                { nome: 'BORBOLETA', icone: '🦋' }
-            ]
-        };
-
-        class GerenciadorVoz {
-            constructor() { this.synth = window.speechSynthesis; }
-            falar(texto) {
-                if (!this.synth) return;
-                this.synth.cancel(); 
-                const declaracao = new SpeechSynthesisUtterance(texto.toUpperCase());
-                declaracao.lang = 'pt-BR';
-                this.synth.speak(declaracao);
+            function toggleMenuMobile() {
+                const menu = document.getElementById('menu-principal');
+                const aberto = menu.classList.toggle('aberto');
+                document.querySelector('.menu-toggle').setAttribute('aria-expanded', String(aberto));
             }
-            parar() { if (this.synth) this.synth.cancel(); }
-        }
-        const Voz = new GerenciadorVoz();
 
-        class ConfiguracaoAcessibilidade {
-            constructor() { this.tamanhoAtual = 100; this.html = document.documentElement; }
-            alterarTamanhoFonte(inc) {
-                let novo = this.tamanhoAtual + inc;
-                if (novo >= 80 && novo <= 150) {
-                    this.tamanhoAtual = novo;
-                    this.html.style.fontSize = `${this.tamanhoAtual}%`;
-                    if(document.getElementById('aba-escrever').classList.contains('active')) QuadroInterativo.redimensionar();
+            const BancoDados = {
+                alfabeto: [
+                    { letra: 'A', palavra: 'ABELHA', icone: '🐝', youtubeId: 'XBCDUG-yEaw' }, 
+                    { letra: 'B', palavra: 'BOLA', icone: '⚽', youtubeId: 'j6ROsDM87UU' },
+                    { letra: 'C', palavra: 'CASA', icone: '🏠', youtubeId: 'hWZA7DElS_I' }, 
+                    { letra: 'D', palavra: 'DADO', icone: '🎲', youtubeId: 'mAIWY3S12s4' },
+                    { letra: 'E', palavra: 'ELEFANTE', icone: '🐘', youtubeId: '8s43APNFMtM' }, 
+                    { letra: 'F', palavra: 'FACA', icone: '🔪', youtubeId: 'nuX0O_hqoFM' },
+                    { letra: 'G', palavra: 'GATO', icone: '🐈', youtubeId: '4SjEf5gYXio' }, 
+                    { letra: 'H', palavra: 'HORA', icone: '⌚', youtubeId: 'NhZ6eVHmVDA' },
+                    { letra: 'I', palavra: 'IGREJA', icone: '⛪', youtubeId: 'ILhan-Htj0g' }, 
+                    { letra: 'J', palavra: 'JACARÉ', icone: '🐊', youtubeId: 'Z9lBor1lnI8' },
+                    { letra: 'K', palavra: 'KIWI', icone: '🥝', youtubeId: 'eGrZ1WM_oaE' }, 
+                    { letra: 'L', palavra: 'LÁPIS', icone: '✏️', youtubeId: 'tC3yWQPeNpE' },
+                    { letra: 'M', palavra: 'MALA', icone: '🧳', youtubeId: 'mH3byoH67O4' }, 
+                    { letra: 'N', palavra: 'NAVIO', icone: '🚢', youtubeId: 'AGPxKWabjSc' },
+                    { letra: 'O', palavra: 'ÓCULOS', icone: '👓', youtubeId: '-8RtEgO3Y5s' }, 
+                    { letra: 'P', palavra: 'PATO', icone: '🦆', youtubeId: 'bmQ_2UA7sWw' },
+                    { letra: 'Q', palavra: 'QUEIJO', icone: '🧀', youtubeId: '-qZ5fNtr-8g' }, 
+                    { letra: 'R', palavra: 'RATO', icone: '🐀', youtubeId: '7fKcMXcBNOA' },
+                    { letra: 'S', palavra: 'SAPO', icone: '🐸', youtubeId: 's6XAkz5lGxA' }, 
+                    { letra: 'T', palavra: 'TATU', icone: '🦔', youtubeId: '-FyHvZ9Hz0Y' },
+                    { letra: 'U', palavra: 'UVA', icone: '🍇', youtubeId: 'beFXQ-w5CKs' }, 
+                    { letra: 'V', palavra: 'VACA', icone: '🐄', youtubeId: 'cGJ2MXDMsgE' },
+                    { letra: 'W', palavra: 'WEB', icone: '🌐', youtubeId: 'An41gHwcEEw' }, 
+                    { letra: 'X', palavra: 'XÍCARA', icone: '☕', youtubeId: 'zqrqp-RHFHs' },
+                    { letra: 'Y', palavra: 'YOUTUBE', icone: '▶️', youtubeId: 'NJLEAbML25A' }, 
+                    { letra: 'Z', palavra: 'ZEBRA', icone: '🦓', youtubeId: '-QBkzFZDWNU' }
+                ],
+                vogais: ['A','E','I','O','U'],
+                consoantes: ['B','C','D','F','G','H','J','K','L','M','N','P','Q','R','S','T','V','W','X','Y','Z'],
+                sinaisDesenho: ['A','B','C','D','E','F','G','H','I','J','K','L','M','N','O','P','Q','R','S','T','U','V','W','X','Y','Z','?','~','-'],
+                
+                iniciais: [
+                    { img: '✈️', nome: 'AVIÃO', certa: 'A', ops: ['A','E','O'] }, { img: '🐘', nome: 'ELEFANTE', certa: 'E', ops: ['I','E','U'] },
+                    { img: '⛪', nome: 'IGREJA', certa: 'I', ops: ['A','I','O'] }, { img: '👁️', nome: 'OLHO', certa: 'O', ops: ['U','A','O'] },
+                    { img: '🍇', nome: 'UVA', certa: 'U', ops: ['E','U','I'] }, { img: '🐎', nome: 'CAVALO', certa: 'C', ops: ['B','C','D'] },
+                    { img: '🍌', nome: 'BANANA', certa: 'B', ops: ['P','B','D'] }, { img: '🚗', nome: 'CARRO', certa: 'C', ops: ['C','K','S'] },
+                    { img: '🐕', nome: 'CACHORRO', certa: 'C', ops: ['S','X','C'] }, { img: '🐈', nome: 'GATO', certa: 'G', ops: ['J','G','C'] },
+                    { img: '🦁', nome: 'LEÃO', certa: 'L', ops: ['M','L','N'] }, { img: '🍎', nome: 'MAÇÃ', certa: 'M', ops: ['N','M','P'] },
+                    { img: '🗺️', nome: 'CARTAGO', certa: 'C', ops: ['K','C','S'] }, { img: '🇧🇷', nome: 'BRASIL', certa: 'B', ops: ['P','B','D'] },
+                    { img: '💻', nome: 'COMPUTADOR', certa: 'C', ops: ['K','C','Q'] }, { img: '🦖', nome: 'DINOSSAURO', certa: 'D', ops: ['T','D','B'] },
+                    { img: '🍉', nome: 'MELANCIA', certa: 'M', ops: ['L','M','N'] }, { img: '🍓', nome: 'MORANGO', certa: 'M', ops: ['M','N','B'] },
+                    { img: '🍍', nome: 'ABACAXI', certa: 'A', ops: ['A','O','E'] }, { img: '⚽', nome: 'BOLA', certa: 'B', ops: ['D','B','P'] },
+                    { img: '🏠', nome: 'CASA', certa: 'C', ops: ['S','C','K'] }, { img: '🐒', nome: 'MACACO', certa: 'M', ops: ['N','M','L'] },
+                    { img: '🥘', nome: 'PANELA', certa: 'P', ops: ['B','P','D'] }, { img: '🍅', nome: 'TOMATE', certa: 'T', ops: ['T','D','P'] },
+                    { img: '🦉', nome: 'CORUJA', certa: 'C', ops: ['K','C','S'] }, { img: '🐸', nome: 'SAPO', certa: 'S', ops: ['Z','S','C'] },
+                    { img: '🦋', nome: 'BORBOLETA', certa: 'B', ops: ['P','D','B'] }, { img: '🐢', nome: 'TARTARUGA', certa: 'T', ops: ['T','D','F'] },
+                    { img: '🐷', nome: 'PORCO', certa: 'P', ops: ['B','P','Q'] }, { img: '🐔', nome: 'GALINHA', certa: 'G', ops: ['J','G','C'] }
+                ],
+
+                silabas: [
+                    { consoante: 'B', vogal: 'A', palavra: 'BANANA', icone: '🍌' }, { consoante: 'M', vogal: 'A', palavra: 'MALA', icone: '🧳' },
+                    { consoante: 'C', vogal: 'O', palavra: 'COPO', icone: '🥛' }, { consoante: 'D', vogal: 'I', palavra: 'DINHEIRO', icone: '💵' },
+                    { consoante: 'F', vogal: 'O', palavra: 'FOGO', icone: '🔥' }, { consoante: 'C', vogal: 'A', palavra: 'CARTAGO', icone: '🗺️' }
+                ],
+
+                palavrasJogo: [
+                    { p: 'CARTAGO', s: ['CAR','TA','GO'] }, { p: 'BRASIL', s: ['BRA','SIL'] }, { p: 'ESCOLA', s: ['ES','CO','LA'] },
+                    { p: 'BONECA', s: ['BO','NE','CA'] }, { p: 'BULE', s: ['BU','LE'] }, { p: 'CASA', s: ['CA','SA'] },
+                    { p: 'BOLA', s: ['BO','LA'] }, { p: 'MACACO', s: ['MA','CA','CO'] }, { p: 'PANELA', s: ['PA','NE','LA'] },
+                    { p: 'TOMATE', s: ['TO','MA','TE'] }, { p: 'CAVALO', s: ['CA','VA','LO'] }, { p: 'ABACATE', s: ['A','BA','CA','TE'] },
+                    { p: 'BANANA', s: ['BA','NA','NA'] }, { p: 'GATO', s: ['GA','TO'] }, { p: 'PATO', s: ['PA','TO'] },
+                    { p: 'COMPUTADOR', s: ['COM','PU','TA','DOR'] }, { p: 'TELEFONE', s: ['TE','LE','FO','NE'] },
+                    { p: 'SATO', s: ['SA','TO'] }, { p: 'RATO', s: ['RA','TO'] }, { p: 'MATO', s: ['MA','TO'] },
+                    { p: 'LATA', s: ['LA','TA'] }, { p: 'FADA', s: ['FA','DA'] }, { p: 'MALA', s: ['MA','LA'] },
+                    { p: 'BOCA', s: ['BO','CA'] }, { p: 'DADO', s: ['DA','DO'] }, { p: 'FOCA', s: ['FO','CA'] },
+                    { p: 'LEÃO', s: ['LE','ÃO'] }, { p: 'MÃO', s: ['MÃO'] }, { p: 'PÃO', s: ['PÃO'] },
+                    { p: 'CÃO', s: ['CÃO'] }, { p: 'PEIXE', s: ['PEI','XE'] }, { p: 'LIXO', s: ['LI','XO'] },
+                    { p: 'RODA', s: ['RO','DA'] }, { p: 'FOTO', s: ['FO','TO'] }, { p: 'LOBO', s: ['LO','BO'] },
+                    { p: 'BOLO', s: ['BO','LO'] }, { p: 'SELO', s: ['SE','LO'] }, { p: 'GELO', s: ['GE','LO'] },
+                    { p: 'MESA', s: ['ME','SA'] }, { p: 'PESO', s: ['PE','SO'] }, { p: 'VASO', s: ['VA','SO'] },
+                    { p: 'SOPA', s: ['SO','PA'] }, { p: 'MAPA', s: ['MA','PA'] }, { p: 'CAPA', s: ['CA','PA'] },
+                    { p: 'LUVA', s: ['LU','VA'] }, { p: 'UVA', s: ['U','VA'] }, { p: 'OVO', s: ['O','VO'] },
+                    { p: 'AVE', s: ['A','VE'] }, { p: 'NAVE', s: ['NA','VE'] }, { p: 'NEVE', s: ['NE','VE'] },
+                    { p: 'VACA', s: ['VA','CA'] }, { p: 'FACA', s: ['FA','CA'] }, { p: 'MACA', s: ['MA','CA'] },
+                    { p: 'TELA', s: ['TE','LA'] }, { p: 'VELA', s: ['VE','LA'] }, { p: 'BELO', s: ['BE','LO'] },
+                    { p: 'BARCO', s: ['BAR','CO'] }, { p: 'MARCO', s: ['MAR','CO'] }, { p: 'PORCO', s: ['POR','CO'] }
+                ],
+
+                cores: [
+                    { n: 'AZUL', c: '#2196F3', txt: '#FFF' }, { n: 'VERMELHO', c: '#FF3B30', txt: '#FFF' },
+                    { n: 'AMARELO', c: '#FFCC00', txt: '#000' }, { n: 'VERDE', c: '#34C759', txt: '#FFF' },
+                    { n: 'LARANJA', c: '#FF9500', txt: '#FFF' }, { n: 'ROXO', c: '#9B59B6', txt: '#FFF' },
+                    { n: 'MARROM', c: '#A2845E', txt: '#FFF' }, { n: 'PRETO', c: '#1C1C1E', txt: '#FFF' },
+                    { n: 'BRANCO', c: '#FFFFFF', txt: '#000' }, { n: 'ROSA', c: '#FF2D55', txt: '#FFF' },
+                    { n: 'CINZA', c: '#8E8E93', txt: '#FFF' }, { n: 'AZUL CLARO', c: '#5AC8FA', txt: '#000' },
+                    { n: 'VERDE ESCURO', c: '#248A3D', txt: '#FFF' }, { n: 'BEGE', c: '#E1C699', txt: '#000' },
+                    { n: 'LILÁS', c: '#DAB4E5', txt: '#000' }, { n: 'OURO', c: '#FFD700', txt: '#000' },
+                    { n: 'PRATA', c: '#C0C0C0', txt: '#000' }, { n: 'CIANO', c: '#00BCD4', txt: '#000' }
+                ],
+
+                vidaPratica: [
+                    { titulo: 'RECEITA MÉDICA', icone: '💊', textoFala: 'ATENÇÃO: TOMAR UM COMPRIMIDO DE DIPIRONA A CADA 8 HORAS.' },
+                    { titulo: 'LETREIRO DE ÔNIBUS', icone: '🚌', textoFala: 'EXPRESSO' },
+                    { titulo: 'LISTA DO MERCADO', icone: '🛒', textoFala: 'LISTA DE COMPRAS: 5 QUILOS DE ARROZ, FEIJÃO E MACARRÃO.' },
+                    { titulo: 'TREINO DA ACADEMIA', icone: '🏋️', textoFala: 'FICHA DE TREINO: FAZER 3 SÉRIES DE 10 REPETIÇÕES.' }
+                ],
+
+                animais: [
+                    { nome: 'CACHORRO', icone: '🐕' },
+                    { nome: 'GATO', icone: '🐈' },
+                    { nome: 'VACA', icone: '🐄' },
+                    { nome: 'CAVALO', icone: '🐎' },
+                    { nome: 'PORCO', icone: '🐷' },
+                    { nome: 'GALINHA', icone: '🐔' },
+                    { nome: 'PATO', icone: '🦆' },
+                    { nome: 'OVELHA', icone: '🐑' },
+                    { nome: 'LEÃO', icone: '🦁' },
+                    { nome: 'ELEFANTE', icone: '🐘' },
+                    { nome: 'MACACO', icone: '🐒' },
+                    { nome: 'URSO', icone: '🐻' },
+                    { nome: 'SAPO', icone: '🐸' },
+                    { nome: 'PEIXE', icone: '🐟' },
+                    { nome: 'PAPAGAIO', icone: '🦜' },
+                    { nome: 'COBRA', icone: '🐍' },
+                    { nome: 'TARTARUGA', icone: '🐢' },
+                    { nome: 'COELHO', icone: '🐇' },
+                    { nome: 'ABELHA', icone: '🐝' },
+                    { nome: 'BORBOLETA', icone: '🦋' }
+                ]
+            };
+
+            class GerenciadorVoz {
+                constructor() { this.synth = window.speechSynthesis; }
+                falar(texto) {
+                    if (!this.synth) return;
+                    this.synth.cancel(); 
+                    const declaracao = new SpeechSynthesisUtterance(texto.toUpperCase());
+                    declaracao.lang = 'pt-BR';
+                    this.synth.speak(declaracao);
+                }
+                parar() { if (this.synth) this.synth.cancel(); }
+            }
+            const Voz = new GerenciadorVoz();
+
+            class ConfiguracaoAcessibilidade {
+                constructor() { this.tamanhoAtual = 100; this.html = document.documentElement; }
+                alterarTamanhoFonte(inc) {
+                    let novo = this.tamanhoAtual + inc;
+                    if (novo >= 80 && novo <= 150) {
+                        this.tamanhoAtual = novo;
+                        this.html.style.fontSize = `${this.tamanhoAtual}%`;
+                        if(document.getElementById('aba-escrever').classList.contains('active')) QuadroInterativo.redimensionar();
+                    }
+                }
+                alternarAltoContraste() {
+                    const ativo = document.body.classList.toggle('alto-contraste');
+                    const botao = document.querySelector('[onclick="AppConfig.alternarAltoContraste()"]');
+                    if (botao) botao.setAttribute('aria-pressed', String(ativo));
                 }
             }
-            alternarAltoContraste() { 
-                document.body.classList.toggle('alto-contraste'); 
-            }
-        }
-        const AppConfig = new ConfiguracaoAcessibilidade();
+            const AppConfig = new ConfiguracaoAcessibilidade();
 
-        class GerenciadorModal {
-            constructor() {
-                this.modal = document.getElementById('modal-letras');
-                this.titulo = document.getElementById('letra-display'); 
-                this.icone = document.getElementById('modal-icone-palavra');
-                this.texto = document.getElementById('modal-texto-palavra');
-                this.iframe = document.getElementById('player-youtube'); 
-            }
-
-            mostrarVideo(item) {
-                this.titulo.innerText = item.letra.toUpperCase();
-                this.icone.innerText = item.icone;
-                this.texto.innerText = item.palavra;
-                
-                this.iframe.src = "https://www.youtube.com/embed/" + item.youtubeId + "?vq=hd1080&autoplay=1";
-                this.modal.classList.add('visivel');
-                
-                // Mensagem guiada pelo som e não apenas o nome da letra
-                Voz.falar(`O som da letra ${item.letra} forma a palavra ${item.palavra}.`);
-            }
-
-            fechar() {
-                this.modal.classList.remove('visivel');
-                Voz.parar();
-                this.iframe.src = ""; 
-            }
-        }
-        const InterfaceModal = new GerenciadorModal();
-
-        class CanvasCaligrafia {
-            constructor(idCanvas, idContainer, idGuia) {
-                this.canvas = document.getElementById(idCanvas);
-                this.ctx = this.canvas.getContext('2d', { willReadFrequently: true });
-                this.container = document.getElementById(idContainer);
-                this.guiaFundo = document.getElementById(idGuia);
-                this.desenhando = false;
-                this.timerValidacao = null;
-                this.vincularEventos();
-            }
-
-            redimensionar() {
-                this.canvas.width = this.container.clientWidth;
-                this.canvas.height = this.container.clientHeight;
-                this.ctx.lineWidth = 25; 
-                this.ctx.lineCap = 'round';
-                this.ctx.strokeStyle = '#007AFF';
-            }
-
-            obterCoordenadas(e) {
-                const rect = this.canvas.getBoundingClientRect();
-                if (e.touches && e.touches.length > 0) return { x: e.touches[0].clientX - rect.left, y: e.touches[0].clientY - rect.top };
-                return { x: e.clientX - rect.left, y: e.clientY - rect.top };
-            }
-
-            iniciarTraco(e) {
-                clearTimeout(this.timerValidacao); 
-                this.desenhando = true;
-                e.preventDefault();
-                const pos = this.obterCoordenadas(e);
-                this.ctx.beginPath();
-                this.ctx.moveTo(pos.x, pos.y);
-            }
-
-            desenhar(e) {
-                if (!this.desenhando) return;
-                e.preventDefault();
-                const pos = this.obterCoordenadas(e);
-                this.ctx.lineTo(pos.x, pos.y);
-                this.ctx.stroke();
-                this.ctx.beginPath();
-                this.ctx.moveTo(pos.x, pos.y);
-            }
-
-            finalizarTraco() {
-                this.desenhando = false;
-                this.ctx.beginPath();
-                this.timerValidacao = setTimeout(() => {
-                    this.validarDesenho();
-                }, 1500); 
-            }
-
-            validarDesenho() {
-                const imageData = this.ctx.getImageData(0, 0, this.canvas.width, this.canvas.height).data;
-                let marcados = 0;
-                for (let i = 3; i < imageData.length; i += 4) {
-                    if (imageData[i] > 50) { marcados++; }
+            class GerenciadorModal {
+                constructor() {
+                    this.modal = document.getElementById('modal-letras');
+                    this.titulo = document.getElementById('letra-display'); 
+                    this.icone = document.getElementById('modal-icone-palavra');
+                    this.texto = document.getElementById('modal-texto-palavra');
+                    this.iframe = document.getElementById('player-youtube'); 
                 }
 
-                const totalPixels = this.canvas.width * this.canvas.height;
-                const proporcao = marcados / totalPixels;
-
-                if (proporcao === 0) return; 
-
-                if (proporcao < 0.003) {
-                    Voz.falar("ISSO PARECE APENAS UM RISCO. ERRADO, TENTE NOVAMENTE O TRAÇADO.");
-                    this.limparSilencioso();
-                } else if (proporcao > 0.18) {
-                    Voz.falar("VOCÊ RABISCOU MUITO. ERRADO, TENTE NOVAMENTE O TRAÇADO.");
-                    this.limparSilencioso();
-                } else {
-                    Voz.falar("TÁ CERTO! PARABÉNS PELO DESENHO.");
-                    InteracaoApp.gerarConfetes();
-                    setTimeout(() => this.limparSilencioso(), 3000);
-                }
-            }
-
-            limparSilencioso() { this.ctx.clearRect(0, 0, this.canvas.width, this.canvas.height); }
-            
-            limpar() {
-                this.limparSilencioso();
-                Voz.falar("QUADRO APAGADO.");
-            }
-
-            definirGuia(letra) {
-                this.guiaFundo.innerText = letra;
-                this.limparSilencioso();
-                let textoFalar = (letra === '?' || letra === '~' || letra === '-') ? `DESENHE O SINAL ${letra}` : `CONTORNE O TRAÇADO DA LETRA ${letra}`;
-                Voz.falar(textoFalar);
-            }
-
-            vincularEventos() {
-                this.canvas.addEventListener('mousedown', (e) => this.iniciarTraco(e));
-                this.canvas.addEventListener('mousemove', (e) => this.desenhar(e));
-                this.canvas.addEventListener('mouseup', () => this.finalizarTraco());
-                
-                this.canvas.addEventListener('touchstart', (e) => this.iniciarTraco(e), {passive: false});
-                this.canvas.addEventListener('touchmove', (e) => this.desenhar(e), {passive: false});
-                this.canvas.addEventListener('touchend', () => this.finalizarTraco());
-            }
-        }
-        let QuadroInterativo;
-
-        class InteracoesDiversas {
-            static idInicial = 0;
-            static idPalavra = 0;
-            static palavraAtual = null;
-            static silabasPreenchidas = 0;
-
-            static verificarNome() {
-                const input = document.getElementById('input-nome');
-                const nome = input.value.trim().toUpperCase();
-                if (nome.length > 0) {
-                    Voz.falar(`MUITO BEM, ${nome}! PARABÉNS POR ESCREVER SEU NOME.`);
-                    this.gerarConfetes();
-                } else {
-                    Voz.falar("POR FAVOR, DIGITE O SEU NOME NA CAIXA BRANCA.");
-                }
-            }
-
-            static gerarConfetes() {
-                const cores = ['#FF3B30', '#00BCD4', '#34C759', '#FFCC00', '#9B59B6'];
-                for (let i = 0; i < 60; i++) {
-                    const confete = document.createElement('div');
-                    confete.className = 'confete';
-                    confete.style.left = Math.random() * 100 + 'vw';
-                    confete.style.backgroundColor = cores[Math.floor(Math.random() * cores.length)];
-                    confete.style.animationDuration = (Math.random() * 2 + 2) + 's';
-                    document.body.appendChild(confete);
-                    setTimeout(() => confete.remove(), 4000);
-                }
-            }
-
-            static carregarInicial() {
-                let item = BancoDados.iniciais[this.idInicial];
-                document.getElementById('imagem-inicial').innerText = item.img;
-                
-                let nomeDica = "_ " + item.nome.substring(1).split('').join(' ');
-                document.getElementById('nome-inicial-dica').innerText = nomeDica;
-
-                const ct = document.getElementById('opcoes-iniciais');
-                ct.innerHTML = '';
-                item.ops.forEach(op => {
-                    let b = document.createElement('button'); 
-                    b.className='btn-grande'; 
-                    b.style.backgroundColor='var(--cor-secundaria)'; 
-                    b.innerText = op;
-                    b.onclick = () => {
-                        if(op === item.certa) {
-                            document.getElementById('nome-inicial-dica').innerText = item.nome.split('').join(' ');
-                            // Foco fonético na validação
-                            Voz.falar(`MUITO BEM! O SOM INICIAL DE ${item.nome} É REPRESENTADO PELA LETRA ${item.certa}.`);
-                            this.gerarConfetes();
-                            this.idInicial = (this.idInicial + 1) % BancoDados.iniciais.length;
-                            setTimeout(() => this.carregarInicial(), 3000);
-                        } else {
-                            Voz.falar("ESSE NÃO É O SOM INICIAL CORRETO. TENTE OUTRA LETRA.");
-                        }
-                    };
-                    ct.appendChild(b);
-                });
-            }
-
-            static carregarPalavra() {
-                this.palavraAtual = BancoDados.palavrasJogo[this.idPalavra];
-                this.silabasPreenchidas = 0;
-                document.getElementById('dica-palavra').innerText = this.palavraAtual.p;
-                
-                const slots = document.getElementById('slots-palavra');
-                slots.innerHTML = '';
-                this.palavraAtual.s.forEach((silaba, i) => {
-                    let slot = document.createElement('div'); 
-                    slot.className = 'slot-silaba'; 
-                    slot.id = `slot-${i}`;
-                    slots.appendChild(slot);
-                });
-
-                const soltas = document.getElementById('silabas-soltas');
-                soltas.innerHTML = '';
-                let embaralhadas = [...this.palavraAtual.s].sort(() => Math.random() - 0.5);
-                embaralhadas.forEach(silaba => {
-                    let b = document.createElement('button'); 
-                    b.className='btn-grande'; 
-                    b.style.backgroundColor='var(--cor-secundaria)'; 
-                    b.innerText = silaba;
-                    b.onclick = (e) => {
-                        let silabaCorreta = this.palavraAtual.s[this.silabasPreenchidas];
-                        if(silaba === silabaCorreta) {
-                            Voz.falar(silaba);
-                            document.getElementById(`slot-${this.silabasPreenchidas}`).innerText = silaba;
-                            document.getElementById(`slot-${this.silabasPreenchidas}`).style.backgroundColor = 'var(--cor-sucesso)';
-                            document.getElementById(`slot-${this.silabasPreenchidas}`).style.color = 'white';
-                            document.getElementById(`slot-${this.silabasPreenchidas}`).style.borderColor = 'var(--cor-sucesso)';
-                            e.target.style.visibility = 'hidden';
-                            this.silabasPreenchidas++;
-                            if(this.silabasPreenchidas === this.palavraAtual.s.length) {
-                                setTimeout(() => {
-                                    Voz.falar(`PARABÉNS! VOCÊ FORMOU A PALAVRA ${this.palavraAtual.p}.`);
-                                    this.gerarConfetes();
-                                }, 1000);
-                            }
-                        } else {
-                            Voz.falar("ESSA SÍLABA NÃO ENCAIXA AGORA. TENTE OUTRA.");
-                        }
-                    };
-                    soltas.appendChild(b);
-                });
-            }
-
-            static proximaPalavra() {
-                this.idPalavra = (this.idPalavra + 1) % BancoDados.palavrasJogo.length;
-                this.carregarPalavra();
-            }
-        }
-        const InteracaoApp = InteracoesDiversas;
-
-        class ConstrutorInterface {
-            static renderizarAlfabeto() {
-                const container = document.getElementById('container-grid-alfabeto');
-                BancoDados.alfabeto.forEach(item => {
-                    const btn = document.createElement('button');
-                    btn.className = 'btn-letra';
-                    btn.innerText = item.letra;
-                    btn.onclick = () => InterfaceModal.mostrarVideo(item);
-                    container.appendChild(btn);
-                });
-            }
-
-            static renderizarVogaisConsoantes() {
-                const v = document.getElementById('box-vogais');
-                const c = document.getElementById('box-consoantes');
-                BancoDados.vogais.forEach(l => {
-                    let b = document.createElement('button'); b.className='btn-grande'; b.style.backgroundColor='var(--cor-destaque)'; b.innerText=l;
-                    b.style.boxShadow = '0 6px 0 #C0392B';
-                    b.onclick = () => Voz.falar(`O som desta vogal é ${l}`); v.appendChild(b);
-                });
-                BancoDados.consoantes.forEach(l => {
-                    let b = document.createElement('button'); b.className='btn-letra'; b.style.width='80px'; b.innerText=l;
-                    // Note that pronouncing raw consonant sounds with TTS is difficult, so we keep it simple but change the instructional text above.
-                    b.onclick = () => Voz.falar(l); c.appendChild(b);
-                });
-            }
-
-            static renderizarFamilias() {
-                const bts = document.getElementById('botoes-familias');
-                BancoDados.consoantes.forEach(c => {
-                    let b = document.createElement('button'); b.className='btn-letra'; b.style.width='60px'; b.innerText=c;
-                    b.onclick = () => {
-                        document.getElementById('titulo-familia-atual').innerText = `UNIÕES COM A LETRA ${c}:`;
-                        const res = document.getElementById('resultado-familia');
-                        res.innerHTML = '';
-                        BancoDados.vogais.forEach(v => {
-                            let f = c+v;
-                            let btnF = document.createElement('button'); btnF.className='btn-grande'; btnF.style.backgroundColor='var(--cor-sucesso)'; btnF.innerText=f;
-                            btnF.style.boxShadow = '0 6px 0 var(--cor-sucesso-escuro)';
-                            btnF.onclick = () => Voz.falar(f);
-                            res.appendChild(btnF);
-                        });
-                        Voz.falar(`Veja como o som da letra ${c} se junta com as vogais.`);
-                    };
-                    bts.appendChild(b);
-                });
-            }
-
-            static renderizarSilabas() {
-                const container = document.getElementById('container-silabas');
-                BancoDados.silabas.forEach(item => {
-                    const silaba = item.consoante + item.vogal;
-                    const cartao = document.createElement('div');
-                    cartao.className = 'cartao linha-silaba';
-                    cartao.innerHTML = `<div class="bloco">${item.consoante}</div><div class="sinal-matematico" style="color: var(--cor-primaria);">➕</div><div class="bloco">${item.vogal}</div><div class="sinal-matematico" style="color: var(--cor-primaria);">🟰</div><button class="bloco bloco-resultado" onclick="Voz.falar('A união dos sons forma a sílaba ${silaba}. ${silaba} de ${item.palavra}.')"><span>${silaba}</span><span style="font-size: 2.5rem;">${item.icone}</span></button>`;
-                    container.appendChild(cartao);
-                });
-            }
-
-            static renderizarBotoesDesenho() {
-                const container = document.getElementById('botoes-desenho');
-                BancoDados.sinaisDesenho.forEach(sinal => {
-                    const btn = document.createElement('button');
-                    btn.className = 'btn-ferramenta';
-                    btn.innerText = sinal;
-                    btn.onclick = () => QuadroInterativo.definirGuia(sinal);
-                    container.appendChild(btn);
-                });
-                const btnApagar = document.createElement('button');
-                btnApagar.className = 'btn-ferramenta';
-                btnApagar.style.backgroundColor = 'var(--cor-destaque)';
-                btnApagar.style.boxShadow = '0 6px 0 #C0392B';
-                btnApagar.innerText = '🗑️ APAGAR';
-                btnApagar.onclick = () => QuadroInterativo.limpar();
-                container.appendChild(btnApagar);
-            }
-
-            static renderizarCores() {
-                const ct = document.getElementById('container-cores');
-                BancoDados.cores.forEach(c => {
-                    let btn = document.createElement('button');
-                    btn.className = 'btn-letra';
-                    btn.innerText = c.n;
-                    btn.style.backgroundColor = c.c;
-                    btn.style.color = c.txt;
-                    btn.style.fontSize = '1.5rem';
-                    btn.style.border = '2px solid rgba(0,0,0,0.1)';
-                    btn.style.boxShadow = '0 6px 0 rgba(0,0,0,0.2)';
-                    btn.onclick = () => Voz.falar(c.n);
-                    ct.appendChild(btn);
-                });
-            }
-
-            static renderizarVidaPratica() {
-                const container = document.getElementById('container-dia-a-dia');
-                BancoDados.vidaPratica.forEach(item => {
-                    const card = document.createElement('div');
-                    card.className = 'card-interativo';
-                    card.onclick = () => Voz.falar(item.textoFala);
-                    card.innerHTML = `<span class="icone-card">${item.icone}</span><h2 style="font-size: 1.8rem;">${item.titulo}</h2>`;
-                    container.appendChild(card);
-                });
-            }
-
-            static renderizarAnimais() {
-                const container = document.getElementById('container-animais');
-                BancoDados.animais.forEach(animal => {
-                    const card = document.createElement('div');
-                    card.className = 'card-interativo';
-                    card.onclick = () => Voz.falar(animal.nome); 
-                    card.innerHTML = `<span class="icone-card">${animal.icone}</span><h2 style="font-size: 2rem; color: var(--cor-primaria);">${animal.nome}</h2>`;
-                    container.appendChild(card);
-                });
-            }
-            
-            static renderizarNumeros() {
-                const container = document.getElementById('container-numeros');
-                for (let i = 1; i <= 100; i++) {
-                    const btn = document.createElement('button');
-                    btn.className = 'btn-letra';
-                    btn.style.height = '80px'; 
-                    btn.style.fontSize = '2.5rem';
-                    btn.innerText = i;
+                mostrarVideo(item) {
+                    this.titulo.innerText = item.letra.toUpperCase();
+                    this.icone.innerText = item.icone;
+                    this.texto.innerText = item.palavra;
                     
-                    btn.onclick = () => Voz.falar(i.toString());
+                    this.iframe.src = "https://www.youtube.com/embed/" + item.youtubeId + "?vq=hd1080&autoplay=1";
+                    this.modal.classList.add('visivel');
                     
-                    container.appendChild(btn);
+                    Voz.falar(`O som da letra ${item.letra} forma a palavra ${item.palavra}.`);
+                }
+
+                fechar() {
+                    this.modal.classList.remove('visivel');
+                    Voz.parar();
+                    this.iframe.src = ""; 
+                }
+            }
+            const InterfaceModal = new GerenciadorModal();
+
+            class CanvasCaligrafia {
+                constructor(idCanvas, idContainer, idGuia) {
+                    this.canvas = document.getElementById(idCanvas);
+                    this.ctx = this.canvas.getContext('2d', { willReadFrequently: true });
+                    this.container = document.getElementById(idContainer);
+                    this.guiaFundo = document.getElementById(idGuia);
+                    this.desenhando = false;
+                    this.timerValidacao = null;
+                    this.vincularEventos();
+                }
+
+                redimensionar() {
+                    this.canvas.width = this.container.clientWidth;
+                    this.canvas.height = this.container.clientHeight;
+                    this.ctx.lineWidth = 25; 
+                    this.ctx.lineCap = 'round';
+                    this.ctx.strokeStyle = '#007AFF';
+                }
+
+                obterCoordenadas(e) {
+                    const rect = this.canvas.getBoundingClientRect();
+                    if (e.touches && e.touches.length > 0) return { x: e.touches[0].clientX - rect.left, y: e.touches[0].clientY - rect.top };
+                    return { x: e.clientX - rect.left, y: e.clientY - rect.top };
+                }
+
+                iniciarTraco(e) {
+                    clearTimeout(this.timerValidacao); 
+                    this.desenhando = true;
+                    e.preventDefault();
+                    const pos = this.obterCoordenadas(e);
+                    this.ctx.beginPath();
+                    this.ctx.moveTo(pos.x, pos.y);
+                }
+
+                desenhar(e) {
+                    if (!this.desenhando) return;
+                    e.preventDefault();
+                    const pos = this.obterCoordenadas(e);
+                    this.ctx.lineTo(pos.x, pos.y);
+                    this.ctx.stroke();
+                    this.ctx.beginPath();
+                    this.ctx.moveTo(pos.x, pos.y);
+                }
+
+                finalizarTraco() {
+                    this.desenhando = false;
+                    this.ctx.beginPath();
+                    this.timerValidacao = setTimeout(() => {
+                        this.validarDesenho();
+                    }, 1500); 
+                }
+
+                validarDesenho() {
+                    const imageData = this.ctx.getImageData(0, 0, this.canvas.width, this.canvas.height).data;
+                    let marcados = 0;
+                    for (let i = 3; i < imageData.length; i += 4) {
+                        if (imageData[i] > 50) { marcados++; }
+                    }
+
+                    const totalPixels = this.canvas.width * this.canvas.height;
+                    const proporcao = marcados / totalPixels;
+
+                    if (proporcao === 0) return; 
+
+                    if (proporcao < 0.003) {
+                        Voz.falar("ISSO PARECE APENAS UM RISCO. ERRADO, TENTE NOVAMENTE O TRAÇADO.");
+                        this.limparSilencioso();
+                    } else if (proporcao > 0.18) {
+                        Voz.falar("VOCÊ RABISCOU MUITO. ERRADO, TENTE NOVAMENTE O TRAÇADO.");
+                        this.limparSilencioso();
+                    } else {
+                        Voz.falar("TÁ CERTO! PARABÉNS PELO DESENHO.");
+                        InteracaoApp.gerarConfetes();
+                        setTimeout(() => this.limparSilencioso(), 3000);
+                    }
+                }
+
+                limparSilencioso() { this.ctx.clearRect(0, 0, this.canvas.width, this.canvas.height); }
+                
+                limpar() {
+                    this.limparSilencioso();
+                    Voz.falar("QUADRO APAGADO.");
+                }
+
+                definirGuia(letra) {
+                    this.guiaFundo.innerText = letra;
+                    this.limparSilencioso();
+                    let textoFalar = (letra === '?' || letra === '~' || letra === '-') ? `DESENHE O SINAL ${letra}` : `CONTORNE O TRAÇADO DA LETRA ${letra}`;
+                    Voz.falar(textoFalar);
+                }
+
+                vincularEventos() {
+                    this.canvas.addEventListener('mousedown', (e) => this.iniciarTraco(e));
+                    this.canvas.addEventListener('mousemove', (e) => this.desenhar(e));
+                    this.canvas.addEventListener('mouseup', () => this.finalizarTraco());
+                    
+                    this.canvas.addEventListener('touchstart', (e) => this.iniciarTraco(e), {passive: false});
+                    this.canvas.addEventListener('touchmove', (e) => this.desenhar(e), {passive: false});
+                    this.canvas.addEventListener('touchend', () => this.finalizarTraco());
+                }
+            }
+            let QuadroInterativo;
+
+            class InteracoesDiversas {
+                static idInicial = 0;
+                static idPalavra = 0;
+                static palavraAtual = null;
+                static silabasPreenchidas = 0;
+
+                static verificarNome() {
+                    const input = document.getElementById('input-nome');
+                    const nome = input.value.trim().toUpperCase();
+                    if (nome.length > 0) {
+                        Voz.falar(`MUITO BEM, ${nome}! PARABÉNS POR ESCREVER SEU NOME.`);
+                        this.gerarConfetes();
+                    } else {
+                        Voz.falar("POR FAVOR, DIGITE O SEU NOME NA CAIXA BRANCA.");
+                    }
+                }
+
+                static gerarConfetes() {
+                    const cores = ['#FF3B30', '#00BCD4', '#34C759', '#FFCC00', '#9B59B6'];
+                    for (let i = 0; i < 60; i++) {
+                        const confete = document.createElement('div');
+                        confete.className = 'confete';
+                        confete.style.left = Math.random() * 100 + 'vw';
+                        confete.style.backgroundColor = cores[Math.floor(Math.random() * cores.length)];
+                        confete.style.animationDuration = (Math.random() * 2 + 2) + 's';
+                        document.body.appendChild(confete);
+                        setTimeout(() => confete.remove(), 4000);
+                    }
+                }
+
+                static carregarInicial() {
+                    let item = BancoDados.iniciais[this.idInicial];
+                    document.getElementById('imagem-inicial').innerText = item.img;
+                    
+                    let nomeDica = "_ " + item.nome.substring(1).split('').join(' ');
+                    document.getElementById('nome-inicial-dica').innerText = nomeDica;
+
+                    const ct = document.getElementById('opcoes-iniciais');
+                    ct.innerHTML = '';
+                    item.ops.forEach(op => {
+                        let b = document.createElement('button'); 
+                        b.className='btn-grande'; 
+                        b.style.backgroundColor='var(--cor-secundaria)'; 
+                        b.innerText = op;
+                        b.onclick = () => {
+                            if(op === item.certa) {
+                                document.getElementById('nome-inicial-dica').innerText = item.nome.split('').join(' ');
+                                Voz.falar(`MUITO BEM! O SOM INICIAL DE ${item.nome} É REPRESENTADO PELA LETRA ${item.certa}.`);
+                                this.gerarConfetes();
+                                this.idInicial = (this.idInicial + 1) % BancoDados.iniciais.length;
+                                setTimeout(() => this.carregarInicial(), 3000);
+                            } else {
+                                Voz.falar("ESSE NÃO É O SOM INICIAL CORRETO. TENTE OUTRA LETRA.");
+                            }
+                        };
+                        ct.appendChild(b);
+                    });
+                }
+
+                static carregarPalavra() {
+                    this.palavraAtual = BancoDados.palavrasJogo[this.idPalavra];
+                    this.silabasPreenchidas = 0;
+                    document.getElementById('dica-palavra').innerText = this.palavraAtual.p;
+                    
+                    const slots = document.getElementById('slots-palavra');
+                    slots.innerHTML = '';
+                    this.palavraAtual.s.forEach((silaba, i) => {
+                        let slot = document.createElement('div'); 
+                        slot.className = 'slot-silaba'; 
+                        slot.id = `slot-${i}`;
+                        slots.appendChild(slot);
+                    });
+
+                    const soltas = document.getElementById('silabas-soltas');
+                    soltas.innerHTML = '';
+                    let embaralhadas = [...this.palavraAtual.s].sort(() => Math.random() - 0.5);
+                    embaralhadas.forEach(silaba => {
+                        let b = document.createElement('button'); 
+                        b.className='btn-grande'; 
+                        b.style.backgroundColor='var(--cor-secundaria)'; 
+                        b.innerText = silaba;
+                        b.onclick = (e) => {
+                            let silabaCorreta = this.palavraAtual.s[this.silabasPreenchidas];
+                            if(silaba === silabaCorreta) {
+                                Voz.falar(silaba);
+                                document.getElementById(`slot-${this.silabasPreenchidas}`).innerText = silaba;
+                                document.getElementById(`slot-${this.silabasPreenchidas}`).style.backgroundColor = 'var(--cor-sucesso)';
+                                document.getElementById(`slot-${this.silabasPreenchidas}`).style.color = 'white';
+                                document.getElementById(`slot-${this.silabasPreenchidas}`).style.borderColor = 'var(--cor-sucesso)';
+                                e.target.style.visibility = 'hidden';
+                                this.silabasPreenchidas++;
+                                if(this.silabasPreenchidas === this.palavraAtual.s.length) {
+                                    setTimeout(() => {
+                                        Voz.falar(`PARABÉNS! VOCÊ FORMOU A PALAVRA ${this.palavraAtual.p}.`);
+                                        this.gerarConfetes();
+                                    }, 1000);
+                                }
+                            } else {
+                                Voz.falar("ESSA SÍLABA NÃO ENCAIXA AGORA. TENTE OUTRA.");
+                            }
+                        };
+                        soltas.appendChild(b);
+                    });
+                }
+
+                static proximaPalavra() {
+                    this.idPalavra = (this.idPalavra + 1) % BancoDados.palavrasJogo.length;
+                    this.carregarPalavra();
+                }
+            }
+            const InteracaoApp = InteracoesDiversas;
+
+            class ConstrutorInterface {
+                static renderizarAlfabeto() {
+                    const container = document.getElementById('container-grid-alfabeto');
+                    BancoDados.alfabeto.forEach(item => {
+                        const btn = document.createElement('button');
+                        btn.className = 'btn-letra';
+                        btn.innerText = item.letra;
+                        btn.onclick = () => InterfaceModal.mostrarVideo(item);
+                        container.appendChild(btn);
+                    });
+                }
+
+                static renderizarVogaisConsoantes() {
+                    const v = document.getElementById('box-vogais');
+                    const c = document.getElementById('box-consoantes');
+                    BancoDados.vogais.forEach(l => {
+                        let b = document.createElement('button'); b.className='btn-grande'; b.style.backgroundColor='var(--cor-destaque)'; b.innerText=l;
+                        b.style.boxShadow = '0 6px 0 #C0392B';
+                        b.onclick = () => Voz.falar(`O som desta vogal é ${l}`); v.appendChild(b);
+                    });
+                    BancoDados.consoantes.forEach(l => {
+                        let b = document.createElement('button'); b.className='btn-letra'; b.style.width='80px'; b.innerText=l;
+                        b.onclick = () => Voz.falar(l); c.appendChild(b);
+                    });
+                }
+
+                static renderizarFamilias() {
+                    const bts = document.getElementById('botoes-familias');
+                    BancoDados.consoantes.forEach(c => {
+                        let b = document.createElement('button'); b.className='btn-letra'; b.style.width='60px'; b.innerText=c;
+                        b.onclick = () => {
+                            document.getElementById('titulo-familia-atual').innerText = `UNIÕES COM A LETRA ${c}:`;
+                            const res = document.getElementById('resultado-familia');
+                            res.innerHTML = '';
+                            BancoDados.vogais.forEach(v => {
+                                let f = c+v;
+                                let btnF = document.createElement('button'); btnF.className='btn-grande'; btnF.style.backgroundColor='var(--cor-sucesso)'; btnF.innerText=f;
+                                btnF.style.boxShadow = '0 6px 0 var(--cor-sucesso-escuro)';
+                                btnF.onclick = () => Voz.falar(f);
+                                res.appendChild(btnF);
+                            });
+                            Voz.falar(`Veja como o som da letra ${c} se junta com as vogais.`);
+                        };
+                        bts.appendChild(b);
+                    });
+                }
+
+                static renderizarSilabas() {
+                    const container = document.getElementById('container-silabas');
+                    BancoDados.silabas.forEach(item => {
+                        const silaba = item.consoante + item.vogal;
+                        const cartao = document.createElement('div');
+                        cartao.className = 'cartao linha-silaba';
+                        cartao.innerHTML = `<div class="bloco">${item.consoante}</div><div class="sinal-matematico" style="color: var(--cor-primaria);">➕</div><div class="bloco">${item.vogal}</div><div class="sinal-matematico" style="color: var(--cor-primaria);">🟰</div><button class="bloco bloco-resultado" onclick="Voz.falar('A união dos sons forma a sílaba ${silaba}. ${silaba} de ${item.palavra}.')"><span>${silaba}</span><span style="font-size: 2.5rem;">${item.icone}</span></button>`;
+                        container.appendChild(cartao);
+                    });
+                }
+
+                static renderizarBotoesDesenho() {
+                    const container = document.getElementById('botoes-desenho');
+                    BancoDados.sinaisDesenho.forEach(sinal => {
+                        const btn = document.createElement('button');
+                        btn.className = 'btn-ferramenta';
+                        btn.innerText = sinal;
+                        btn.onclick = () => QuadroInterativo.definirGuia(sinal);
+                        container.appendChild(btn);
+                    });
+                    const btnApagar = document.createElement('button');
+                    btnApagar.className = 'btn-ferramenta';
+                    btnApagar.style.backgroundColor = 'var(--cor-destaque)';
+                    btnApagar.style.boxShadow = '0 6px 0 #C0392B';
+                    btnApagar.innerText = '🗑️ APAGAR';
+                    btnApagar.onclick = () => QuadroInterativo.limpar();
+                    container.appendChild(btnApagar);
+                }
+
+                static renderizarCores() {
+                    const ct = document.getElementById('container-cores');
+                    BancoDados.cores.forEach(c => {
+                        let btn = document.createElement('button');
+                        btn.className = 'btn-letra';
+                        btn.innerText = c.n;
+                        btn.style.backgroundColor = c.c;
+                        btn.style.color = c.txt;
+                        btn.style.fontSize = '1.5rem';
+                        btn.style.border = '2px solid rgba(0,0,0,0.1)';
+                        btn.style.boxShadow = '0 6px 0 rgba(0,0,0,0.2)';
+                        btn.onclick = () => Voz.falar(c.n);
+                        ct.appendChild(btn);
+                    });
+                }
+
+                static renderizarVidaPratica() {
+                    const container = document.getElementById('container-dia-a-dia');
+                    BancoDados.vidaPratica.forEach(item => {
+                        const card = document.createElement('div');
+                        card.className = 'card-interativo';
+                        card.onclick = () => Voz.falar(item.textoFala);
+                        card.innerHTML = `<span class="icone-card">${item.icone}</span><h2 style="font-size: 1.8rem;">${item.titulo}</h2>`;
+                        container.appendChild(card);
+                    });
+                }
+
+                static renderizarAnimais() {
+                    const container = document.getElementById('container-animais');
+                    BancoDados.animais.forEach(animal => {
+                        const card = document.createElement('div');
+                        card.className = 'card-interativo';
+                        card.onclick = () => Voz.falar(animal.nome); 
+                        card.innerHTML = `<span class="icone-card">${animal.icone}</span><h2 style="font-size: 2rem; color: var(--cor-primaria);">${animal.nome}</h2>`;
+                        container.appendChild(card);
+                    });
+                }
+                
+                static renderizarNumeros() {
+                    const container = document.getElementById('container-numeros');
+                    for (let i = 1; i <= 100; i++) {
+                        const btn = document.createElement('button');
+                        btn.className = 'btn-letra';
+                        btn.style.height = '80px'; 
+                        btn.style.fontSize = '2.5rem';
+                        btn.innerText = i;
+                        
+                        btn.onclick = () => Voz.falar(i.toString());
+                        
+                        container.appendChild(btn);
+                    }
+                }
+
+                static configurarNavegacaoAbas() {
+                    const botoes = document.querySelectorAll('.btn-tab');
+                    const conteudos = document.querySelectorAll('.aba-conteudo');
+                    botoes.forEach(btn => {
+                        btn.addEventListener('click', (e) => {
+                            Voz.parar(); 
+                            botoes.forEach(b => b.classList.remove('active'));
+                            e.currentTarget.classList.add('active');
+                            const alvo = e.currentTarget.getAttribute('data-target');
+                            conteudos.forEach(c => {
+                                c.classList.remove('active');
+                                if (c.id === alvo) {
+                                    c.classList.add('active');
+                                    if(alvo === 'aba-escrever') setTimeout(() => QuadroInterativo.redimensionar(), 50);
+                                }
+                            });
+                            if (window.innerWidth <= 768) {
+                                document.getElementById('menu-principal').classList.remove('aberto');
+                            }
+                        });
+                    });
                 }
             }
 
-            static configurarNavegacaoAbas() {
-                const botoes = document.querySelectorAll('.btn-tab');
-                const conteudos = document.querySelectorAll('.aba-conteudo');
-                botoes.forEach(btn => {
-                    btn.addEventListener('click', (e) => {
-                        Voz.parar(); 
-                        botoes.forEach(b => b.classList.remove('active'));
-                        e.currentTarget.classList.add('active');
-                        const alvo = e.currentTarget.getAttribute('data-target');
-                        conteudos.forEach(c => {
-                            c.classList.remove('active');
-                            if (c.id === alvo) {
-                                c.classList.add('active');
-                                if(alvo === 'aba-escrever') setTimeout(() => QuadroInterativo.redimensionar(), 50);
-                            }
-                        });
-                        if (window.innerWidth <= 768) {
-                            document.getElementById('menu-principal').classList.remove('aberto');
+            function avisarSemSuporteDeVoz() {
+                if (window.speechSynthesis) return;
+                const aviso = document.createElement('div');
+                aviso.setAttribute('role', 'alert');
+                aviso.style.cssText = 'background:#FFCC00;color:#000;text-align:center;padding:12px;font-weight:900;';
+                aviso.innerText = 'ESTE NAVEGADOR NÃO SUPORTA LEITURA EM VOZ ALTA. O CONTEÚDO CONTINUA DISPONÍVEL POR TEXTO.';
+                document.body.insertBefore(aviso, document.body.firstChild);
+            }
+
+            function configurarFechamentoModal() {
+                const overlay = document.getElementById('modal-letras');
+                overlay.addEventListener('click', (e) => {
+                    if (e.target === overlay) InterfaceModal.fechar();
+                });
+                document.addEventListener('keydown', (e) => {
+                    if (e.key === 'Escape' && overlay.classList.contains('visivel')) InterfaceModal.fechar();
+                });
+            }
+
+            function inicializarAplicacao() {
+                try {
+                    ConstrutorInterface.renderizarAlfabeto();
+                    ConstrutorInterface.renderizarVogaisConsoantes();
+                    ConstrutorInterface.renderizarFamilias();
+                    ConstrutorInterface.renderizarSilabas();
+                    ConstrutorInterface.renderizarCores();
+                    ConstrutorInterface.renderizarVidaPratica();
+                    ConstrutorInterface.renderizarAnimais();
+                    ConstrutorInterface.renderizarNumeros();
+                    ConstrutorInterface.configurarNavegacaoAbas();
+
+                    BancoDados.iniciais.sort(() => Math.random() - 0.5);
+                    BancoDados.palavrasJogo.sort(() => Math.random() - 0.5);
+
+                    InteracaoApp.carregarInicial();
+                    InteracaoApp.carregarPalavra();
+
+                    QuadroInterativo = new CanvasCaligrafia('canvas-caligrafia', 'container-canvas', 'guia-fundo');
+                    ConstrutorInterface.renderizarBotoesDesenho();
+                    QuadroInterativo.redimensionar();
+
+                    configurarFechamentoModal();
+                    avisarSemSuporteDeVoz();
+
+                    window.addEventListener('resize', () => {
+                        if (document.getElementById('aba-escrever').classList.contains('active')) {
+                            QuadroInterativo.redimensionar();
                         }
                     });
-                });
+                } catch (erro) {
+                    console.error('Falha ao inicializar o PhoneticFace:', erro);
+                }
             }
-        }
 
-        window.onload = () => {
-            ConstrutorInterface.renderizarAlfabeto();
-            ConstrutorInterface.renderizarVogaisConsoantes();
-            ConstrutorInterface.renderizarFamilias();
-            ConstrutorInterface.renderizarSilabas();
-            ConstrutorInterface.renderizarCores();
-            ConstrutorInterface.renderizarVidaPratica();
-            ConstrutorInterface.renderizarAnimais();
-            ConstrutorInterface.renderizarNumeros();
-            ConstrutorInterface.configurarNavegacaoAbas();
-            
-            BancoDados.iniciais.sort(() => Math.random() - 0.5);
-            BancoDados.palavrasJogo.sort(() => Math.random() - 0.5);
-            
-            InteracaoApp.carregarInicial();
-            InteracaoApp.carregarPalavra();
-            
-            QuadroInterativo = new CanvasCaligrafia('canvas-caligrafia', 'container-canvas', 'guia-fundo');
-            ConstrutorInterface.renderizarBotoesDesenho();
-            QuadroInterativo.redimensionar(); 
-            
-            window.addEventListener('resize', () => {
-                if(document.getElementById('aba-escrever').classList.contains('active')) QuadroInterativo.redimensionar();
-            });
-        };
+            if (document.readyState === 'loading') {
+                document.addEventListener('DOMContentLoaded', inicializarAplicacao);
+            } else {
+                inicializarAplicacao();
+            }
+
+            window.toggleMenuMobile = toggleMenuMobile;
+            window.Voz = Voz;
+            window.AppConfig = AppConfig;
+            window.InterfaceModal = InterfaceModal;
+            window.InteracaoApp = InteracaoApp;
+        })();
     </script>
 </body>
 </html>
