@@ -2,11 +2,8 @@
 <html lang="pt-BR">
 <head>
     <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <meta name="description" content="PhoneticFace: aplicativo de apoio à alfabetização fônica de jovens e adultos (EJA), alinhado ao Programa Brasil Alfabetizado.">
-    <meta name="theme-color" content="#007AFF">
-    <link rel="icon" href="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 100 100'%3E%3Crect width='100' height='100' rx='22' fill='%23007AFF'/%3E%3Ctext x='50' y='68' font-size='58' font-family='system-ui,sans-serif' font-weight='900' fill='white' text-anchor='middle'%3EPf%3C/text%3E%3C/svg%3E">
-    <title>PhoneticFace — Alfabetização Fônica EJA</title>
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
+    <title>PhoneticFace - Alfabetização Fônica EJA</title>
     <style>
         /* ==========================================================================
            1. VARIÁVEIS GERAIS (Design Profissional & Acessibilidade)
@@ -87,31 +84,6 @@
            2. RESET CSS E TIPOGRAFIA BASE
            ========================================================================== */
         * { margin: 0; padding: 0; box-sizing: border-box; }
-
-        /* Foco visível para navegação por teclado (essencial para acessibilidade) */
-        button:focus-visible,
-        input:focus-visible,
-        [tabindex]:focus-visible {
-            outline: 4px solid var(--cor-alerta);
-            outline-offset: 3px;
-        }
-
-        /* Utilitário para texto lido por leitores de tela, mas oculto visualmente */
-        .apenas-leitor-tela {
-            position: absolute; width: 1px; height: 1px; padding: 0; margin: -1px;
-            overflow: hidden; clip: rect(0,0,0,0); white-space: nowrap; border: 0;
-        }
-
-        .sinal-matematico { font-size: 2rem; font-weight: 900; }
-
-        @media (prefers-reduced-motion: reduce) {
-            *, *::before, *::after {
-                animation-duration: 0.01ms !important;
-                animation-iteration-count: 1 !important;
-                transition-duration: 0.01ms !important;
-                scroll-behavior: auto !important;
-            }
-        }
         html { font-size: var(--tamanho-base); scroll-behavior: smooth; }
         body {
             font-family: var(--fonte-principal);
@@ -163,13 +135,12 @@
             margin-bottom: 1rem;
         }
 
-        .logo-container .logo-img {
+        .logo-container img {
             max-height: 90px;
-            border-radius: 15px;
-            box-shadow: 0 8px 15px rgba(0,0,0,0.2);
+            border-radius: 15px; 
+            box-shadow: 0 8px 15px rgba(0,0,0,0.2); 
             background-color: #FFF;
             padding: 5px;
-            flex-shrink: 0;
         }
         
         .cabecalho-app h1 { font-size: 3.5rem; text-shadow: 2px 4px 8px rgba(0,0,0,0.2); margin: 0;}
@@ -347,7 +318,7 @@
             .btn-tab.active { color: #FFF; background: var(--cor-sucesso); }
             
             .cabecalho-app h1 { font-size: 2.5rem; }
-            .logo-container .logo-img { max-height: 70px; }
+            .logo-container img { max-height: 70px; }
             .cartao { padding: 1.5rem; }
             .btn-letra { font-size: 3rem; height: 100px; border-radius: 12px; }
             .linha-silaba { font-size: 2rem; }
@@ -368,44 +339,43 @@
 </head>
 <body>
 
-    <div class="barra-acessibilidade" role="region" aria-label="Ferramentas de acessibilidade">
-        <div style="font-weight: 900; font-size: 1rem; letter-spacing: 1px;" aria-hidden="true">👁️ AJUDA E ACESSIBILIDADE</div>
+    <div class="barra-acessibilidade">
+        <div style="font-weight: 900; font-size: 1rem; letter-spacing: 1px;">👁️ AJUDA E ACESSIBILIDADE</div>
         <div class="controles-acesso">
-            <button class="btn-acesso" onclick="AppConfig.alterarTamanhoFonte(10)" aria-label="Aumentar tamanho do texto">A+ AUMENTAR</button>
-            <button class="btn-acesso" onclick="AppConfig.alterarTamanhoFonte(-10)" aria-label="Diminuir tamanho do texto">A- DIMINUIR</button>
-            <button class="btn-acesso" onclick="AppConfig.alternarAltoContraste()" aria-pressed="false" aria-label="Ativar ou desativar alto contraste">🌓 ALTO CONTRASTE</button>
+            <button class="btn-acesso" onclick="AppConfig.alterarTamanhoFonte(10)">A+ AUMENTAR</button>
+            <button class="btn-acesso" onclick="AppConfig.alterarTamanhoFonte(-10)">A- DIMINUIR</button>
+            <button class="btn-acesso" onclick="AppConfig.alternarAltoContraste()">🌓 ALTO CONTRASTE</button>
         </div>
     </div>
 
     <header class="cabecalho-app">
         <div class="logo-container">
-            <img src="kaiologoteste.jpg" alt="Logotipo PhoneticFace" class="logo-img" id="logo-principal"
-                 onerror="this.onerror=null; this.src='data:image/svg+xml,%3Csvg xmlns=%27http://www.w3.org/2000/svg%27 viewBox=%270 0 100 100%27%3E%3Crect width=%27100%27 height=%27100%27 rx=%2722%27 fill=%27%23FFFFFF%27/%3E%3Ctext x=%2750%27 y=%2770%27 font-size=%2758%27 font-family=%27system-ui,sans-serif%27 font-weight=%27900%27 fill=%27%23007AFF%27 text-anchor=%27middle%27%3EPf%3C/text%3E%3C/svg%3E';">
+            <img src="kaiologoteste.jpg" alt="PhoneticFace Logo" class="logo-img" onerror="this.style.display='none'">
             <h1>PHONETICFACE</h1>
         </div>
         <p>METODOLOGIA FÔNICA DE APOIO À ALFABETIZAÇÃO DE JOVENS E ADULTOS</p>
         
-        <button class="menu-toggle" onclick="toggleMenuMobile()" aria-expanded="false" aria-controls="menu-principal">☰ MENU DE OPÇÕES</button>
-
-        <nav class="menu-principal" id="menu-principal" role="tablist" aria-label="Módulos de aprendizagem">
-            <button class="btn-tab active" role="tab" aria-selected="true" aria-controls="aba-alfabeto" id="tab-aba-alfabeto" data-target="aba-alfabeto">1. SONS DAS LETRAS</button>
-            <button class="btn-tab" role="tab" aria-selected="false" aria-controls="aba-vogais" id="tab-aba-vogais" data-target="aba-vogais">2. VOGAIS/CONS.</button>
-            <button class="btn-tab" role="tab" aria-selected="false" aria-controls="aba-iniciais" id="tab-aba-iniciais" data-target="aba-iniciais">3. SOM INICIAL</button>
-            <button class="btn-tab" role="tab" aria-selected="false" aria-controls="aba-familias" id="tab-aba-familias" data-target="aba-familias">4. UNINDO SONS</button>
-            <button class="btn-tab" role="tab" aria-selected="false" aria-controls="aba-silabas" id="tab-aba-silabas" data-target="aba-silabas">5. FORMAR SÍLABAS</button>
-            <button class="btn-tab" role="tab" aria-selected="false" aria-controls="aba-palavras" id="tab-aba-palavras" data-target="aba-palavras">6. FORMAR PALAVRAS</button>
-            <button class="btn-tab" role="tab" aria-selected="false" aria-controls="aba-escrever" id="tab-aba-escrever" data-target="aba-escrever">7. TRAÇADO</button>
-            <button class="btn-tab" role="tab" aria-selected="false" aria-controls="aba-cores" id="tab-aba-cores" data-target="aba-cores">8. CORES</button>
-            <button class="btn-tab" role="tab" aria-selected="false" aria-controls="aba-nome" id="tab-aba-nome" data-target="aba-nome">9. MEU NOME</button>
-            <button class="btn-tab" role="tab" aria-selected="false" aria-controls="aba-dia-a-dia" id="tab-aba-dia-a-dia" data-target="aba-dia-a-dia">10. LEITURA PRÁTICA</button>
-            <button class="btn-tab" role="tab" aria-selected="false" aria-controls="aba-animais" id="tab-aba-animais" data-target="aba-animais">11. VOCABULÁRIO</button>
-            <button class="btn-tab" role="tab" aria-selected="false" aria-controls="aba-numeros" id="tab-aba-numeros" data-target="aba-numeros" style="background-color: var(--cor-roxo); color: white; border-color: var(--cor-roxo);">12. NÚMEROS</button>
+        <div class="menu-toggle" onclick="toggleMenuMobile()">☰ MENU DE OPÇÕES</div>
+        
+        <nav class="menu-principal" id="menu-principal">
+            <button class="btn-tab active" data-target="aba-alfabeto">1. SONS DAS LETRAS</button>
+            <button class="btn-tab" data-target="aba-vogais">2. VOGAIS/CONS.</button>
+            <button class="btn-tab" data-target="aba-iniciais">3. SOM INICIAL</button>
+            <button class="btn-tab" data-target="aba-familias">4. UNINDO SONS</button>
+            <button class="btn-tab" data-target="aba-silabas">5. FORMAR SÍLABAS</button>
+            <button class="btn-tab" data-target="aba-palavras">6. FORMAR PALAVRAS</button>
+            <button class="btn-tab" data-target="aba-escrever">7. TRAÇADO</button>
+            <button class="btn-tab" data-target="aba-cores">8. CORES</button>
+            <button class="btn-tab" data-target="aba-nome">9. MEU NOME</button>
+            <button class="btn-tab" data-target="aba-dia-a-dia">10. LEITURA PRÁTICA</button>
+            <button class="btn-tab" data-target="aba-animais">11. VOCABULÁRIO</button>
+            <button class="btn-tab" data-target="aba-numeros" style="background-color: var(--cor-roxo); color: white; border-color: var(--cor-roxo);">12. NÚMEROS</button>
         </nav>
     </header>
 
     <main class="conteudo-app">
         
-        <section id="aba-alfabeto" class="aba-conteudo active" role="tabpanel" aria-labelledby="tab-aba-alfabeto" tabindex="0">
+        <section id="aba-alfabeto" class="aba-conteudo active">
             <div class="bloco-instrucao">
                 <button class="btn-instrucao" onclick="Voz.falar('BEM-VINDO. TOQUE EM UMA LETRA PARA CONHECER O SEU SOM E VER O VÍDEO.')">
                     🔊 CLIQUE AQUI PARA OUVIR A INSTRUÇÃO
@@ -414,21 +384,21 @@
             <div id="container-grid-alfabeto" class="grid-alfabeto"></div>
         </section>
 
-        <section id="aba-vogais" class="aba-conteudo" role="tabpanel" aria-labelledby="tab-aba-vogais" tabindex="0">
+        <section id="aba-vogais" class="aba-conteudo">
             <div class="bloco-instrucao">
                 <button class="btn-instrucao" onclick="Voz.falar('VAMOS CONHECER OS SONS DAS VOGAIS E DAS CONSOANTES. TOQUE NAS LETRAS.')">
                     🔊 CLIQUE AQUI PARA OUVIR A INSTRUÇÃO
                 </button>
             </div>
             <div class="cartao">
-                <h2 style="text-align: center; color: var(--cor-primaria);">SONS DAS VOGAIS</h2>
+                <h2 style="text-align: center; color: var(--cor-primaria);">SOMS DAS VOGAIS</h2>
                 <div class="flex-center" id="box-vogais" style="border: 4px dashed var(--cor-secundaria); padding: 25px; border-radius: var(--borda-raio); margin-bottom: 30px; background: #F8F9FA;"></div>
-                <h2 style="text-align: center; color: var(--cor-primaria);">SONS DAS CONSOANTES</h2>
+                <h2 style="text-align: center; color: var(--cor-primaria);">SOMS DAS CONSOANTES</h2>
                 <div class="flex-center" id="box-consoantes" style="border: 4px dashed var(--cor-secundaria); padding: 25px; border-radius: var(--borda-raio); background: #F8F9FA;"></div>
             </div>
         </section>
 
-        <section id="aba-iniciais" class="aba-conteudo" role="tabpanel" aria-labelledby="tab-aba-iniciais" tabindex="0">
+        <section id="aba-iniciais" class="aba-conteudo">
             <div class="bloco-instrucao">
                 <button class="btn-instrucao" onclick="Voz.falar('OUÇA A PALAVRA. QUAL É A PRIMEIRA LETRA QUE REPRESENTA O SOM INICIAL?')">
                     🔊 CLIQUE AQUI PARA OUVIR A INSTRUÇÃO
@@ -436,13 +406,13 @@
             </div>
             <div class="cartao" style="text-align: center;">
                 <h2 id="titulo-inicial">IDENTIFIQUE O PRIMEIRO SOM</h2>
-                <h3 id="nome-inicial-dica" aria-live="polite" style="font-size: 3.5rem; color: var(--cor-primaria); letter-spacing: 10px; margin-top: 20px; background: #F8F9FA; padding: 15px 30px; border-radius: var(--borda-raio); display: inline-block; box-shadow: inset 0 4px 8px rgba(0,0,0,0.05);">_ V I Ã O</h3>
+                <h3 id="nome-inicial-dica" style="font-size: 3.5rem; color: var(--cor-primaria); letter-spacing: 10px; margin-top: 20px; background: #F8F9FA; padding: 15px 30px; border-radius: var(--borda-raio); display: inline-block; box-shadow: inset 0 4px 8px rgba(0,0,0,0.05);">_ V I Ã O</h3>
                 <div id="imagem-inicial" style="font-size: 8rem; margin: 15px 0; text-shadow: 0 10px 20px rgba(0,0,0,0.1);">✈️</div>
                 <div id="opcoes-iniciais" class="flex-center"></div>
             </div>
         </section>
 
-        <section id="aba-familias" class="aba-conteudo" role="tabpanel" aria-labelledby="tab-aba-familias" tabindex="0">
+        <section id="aba-familias" class="aba-conteudo">
             <div class="bloco-instrucao">
                 <button class="btn-instrucao" onclick="Voz.falar('VAMOS APRENDER A UNIR OS SONS. ESCOLHA UMA CONSOANTE PARA VER COMO ELA SE JUNTA COM AS VOGAIS.')">
                     🔊 CLIQUE AQUI PARA OUVIR A INSTRUÇÃO
@@ -457,7 +427,7 @@
             </div>
         </section>
 
-        <section id="aba-silabas" class="aba-conteudo" role="tabpanel" aria-labelledby="tab-aba-silabas" tabindex="0">
+        <section id="aba-silabas" class="aba-conteudo">
             <div class="bloco-instrucao">
                 <button class="btn-instrucao" onclick="Voz.falar('AQUI VEMOS O SOM DA CONSOANTE MAIS O SOM DA VOGAL FORMANDO UMA SÍLABA. TOQUE NO BOTÃO VERDE PARA OUVIR.')">
                     🔊 CLIQUE AQUI PARA OUVIR A INSTRUÇÃO
@@ -466,7 +436,7 @@
             <div id="container-silabas" class="area-silabas"></div>
         </section>
 
-        <section id="aba-palavras" class="aba-conteudo" role="tabpanel" aria-labelledby="tab-aba-palavras" tabindex="0">
+        <section id="aba-palavras" class="aba-conteudo">
             <div class="bloco-instrucao">
                 <button class="btn-instrucao" onclick="Voz.falar('AGORA VAMOS JUNTAR AS SÍLABAS PARA FORMAR PALAVRAS COMPLETAS. TOQUE NA ORDEM CERTA.')">
                     🔊 CLIQUE AQUI PARA OUVIR A INSTRUÇÃO
@@ -480,7 +450,7 @@
             </div>
         </section>
 
-        <section id="aba-escrever" class="aba-conteudo" role="tabpanel" aria-labelledby="tab-aba-escrever" tabindex="0">
+        <section id="aba-escrever" class="aba-conteudo">
             <div class="bloco-instrucao">
                 <button class="btn-instrucao" onclick="Voz.falar('VAMOS TREINAR O TRAÇADO. ESCOLHA UMA LETRA E ACOMPANHE O DESENHO COM O DEDO OU MOUSE.')">
                     🔊 CLIQUE AQUI PARA OUVIR A INSTRUÇÃO
@@ -495,7 +465,7 @@
             </div>
         </section>
 
-        <section id="aba-cores" class="aba-conteudo" role="tabpanel" aria-labelledby="tab-aba-cores" tabindex="0">
+        <section id="aba-cores" class="aba-conteudo">
             <div class="bloco-instrucao">
                 <button class="btn-instrucao" onclick="Voz.falar('TOQUE NAS CORES PARA OUVIR O NOME DELAS.')">
                     🔊 CLIQUE AQUI PARA OUVIR A INSTRUÇÃO
@@ -504,7 +474,7 @@
             <div class="grid-alfabeto" id="container-cores" style="grid-template-columns: repeat(auto-fill, minmax(140px, 1fr));"></div>
         </section>
 
-        <section id="aba-nome" class="aba-conteudo" role="tabpanel" aria-labelledby="tab-aba-nome" tabindex="0">
+        <section id="aba-nome" class="aba-conteudo">
             <div class="bloco-instrucao">
                 <button class="btn-instrucao" onclick="Voz.falar('CLIQUE NA CAIXA BRANCA E DIGITE O SEU NOME PARA TREINAR A ESCRITA DA SUA IDENTIDADE.')">
                     🔊 CLIQUE AQUI PARA OUVIR A INSTRUÇÃO
@@ -519,7 +489,7 @@
             </div>
         </section>
 
-        <section id="aba-dia-a-dia" class="aba-conteudo" role="tabpanel" aria-labelledby="tab-aba-dia-a-dia" tabindex="0">
+        <section id="aba-dia-a-dia" class="aba-conteudo">
             <div class="bloco-instrucao">
                 <button class="btn-instrucao" onclick="Voz.falar('VAMOS PRATICAR A LEITURA DE TEXTOS DO NOSSO DIA A DIA. TOQUE NOS QUADROS PARA OUVIR.')">
                     🔊 CLIQUE AQUI PARA OUVIR A INSTRUÇÃO
@@ -528,7 +498,7 @@
             <div class="grid-cards" id="container-dia-a-dia"></div>
         </section>
 
-        <section id="aba-animais" class="aba-conteudo" role="tabpanel" aria-labelledby="tab-aba-animais" tabindex="0">
+        <section id="aba-animais" class="aba-conteudo">
             <div class="bloco-instrucao">
                 <button class="btn-instrucao" onclick="Voz.falar('EXPANSÃO DE VOCABULÁRIO: TOQUE NAS CARTAS PARA OUVIR E ASSOCIAR OS NOMES.')">
                     🔊 CLIQUE AQUI PARA OUVIR A INSTRUÇÃO
@@ -537,7 +507,7 @@
             <div class="grid-cards" id="container-animais"></div>
         </section>
 
-        <section id="aba-numeros" class="aba-conteudo" role="tabpanel" aria-labelledby="tab-aba-numeros" tabindex="0">
+        <section id="aba-numeros" class="aba-conteudo">
             <div class="bloco-instrucao">
                 <button class="btn-instrucao" onclick="Voz.falar('TOQUE EM QUALQUER NÚMERO PARA OUVIR A SUA PRONÚNCIA.')">
                     🔊 CLIQUE AQUI PARA OUVIR A INSTRUÇÃO
@@ -575,7 +545,7 @@
     </footer>
 
     <!-- MODAL DE VÍDEO -->
-    <div id="modal-letras" class="modal-overlay" role="dialog" aria-modal="true" aria-labelledby="letra-display">
+    <div id="modal-letras" class="modal-overlay">
         <div class="modal-caixa">
             <h1 id="letra-display">A</h1>
             
@@ -598,61 +568,38 @@
     </div>
 
     <script>
-    /**
-     * PhoneticFace — Metodologia fônica de apoio à alfabetização de jovens e adultos (EJA)
-     * Aplicação single-file: HTML + CSS + JS puro (sem dependências externas).
-     *
-     * Estrutura deste arquivo:
-     *   1. BancoDados            -> conteúdo pedagógico (letras, sílabas, palavras, cores...)
-     *   2. GerenciadorVoz        -> encapsula a Web Speech API (síntese de voz)
-     *   3. ConfiguracaoAcessibilidade -> zoom de fonte e alto contraste
-     *   4. GerenciadorModal      -> modal de vídeo por letra
-     *   5. CanvasCaligrafia      -> quadro de traçado livre com validação de preenchimento
-     *   6. InteracoesDiversas    -> lógica dos jogos (som inicial, formar palavras, nome, confete)
-     *   7. ConstrutorInterface   -> renderização de cada aba a partir do BancoDados
-     *
-     * Todo o código roda em modo estrito, dentro de uma IIFE, para não vazar
-     * variáveis globais. Os handlers "onclick=" do HTML continuam funcionando
-     * porque os objetos necessários são expostos explicitamente em `window`
-     * no final do arquivo.
-     */
-    (function () {
-        'use strict';
-
         function toggleMenuMobile() {
-            const menu = document.getElementById('menu-principal');
-            const aberto = menu.classList.toggle('aberto');
-            document.querySelector('.menu-toggle').setAttribute('aria-expanded', String(aberto));
+            document.getElementById('menu-principal').classList.toggle('aberto');
         }
 
         const BancoDados = {
             alfabeto: [
-                { letra: 'A', palavra: 'ABELHA', icone: '🐝', youtubeId: 'PBo0Ibxc4Cc' }, 
-                { letra: 'B', palavra: 'BOLA', icone: '⚽', youtubeId: 'EaVbTrivnXY' },
-                { letra: 'C', palavra: 'CASA', icone: '🏠', youtubeId: 'fGu3vI0jS2s' }, 
-                { letra: 'D', palavra: 'DADO', icone: '🎲', youtubeId: 'fQOXSa0JzhE' },
-                { letra: 'E', palavra: 'ELEFANTE', icone: '🐘', youtubeId: 'jGysecJ4uP8' }, 
-                { letra: 'F', palavra: 'FACA', icone: '🔪', youtubeId: 'V32FRGOY6k8' },
-                { letra: 'G', palavra: 'GATO', icone: '🐈', youtubeId: 'RbLggfX8kCo' }, 
-                { letra: 'H', palavra: 'HORA', icone: '⌚', youtubeId: 'hcezKr7mBJs' },
-                { letra: 'I', palavra: 'IGREJA', icone: '⛪', youtubeId: 'p4fCoJZfHs4' }, 
-                { letra: 'J', palavra: 'JACARÉ', icone: '🐊', youtubeId: 'a200Q-FpHNA' },
-                { letra: 'K', palavra: 'KIWI', icone: '🥝', youtubeId: 'qJOYCe4MmRo' }, 
-                { letra: 'L', palavra: 'LÁPIS', icone: '✏️', youtubeId: 'H9FcVDsNNv8' },
-                { letra: 'M', palavra: 'MALA', icone: '🧳', youtubeId: 'sNiuenYgbbM' }, 
-                { letra: 'N', palavra: 'NAVIO', icone: '🚢', youtubeId: 'sPpJbu4-nUU' },
-                { letra: 'O', palavra: 'ÓCULOS', icone: '👓', youtubeId: 'fESK199vyRY' }, 
-                { letra: 'P', palavra: 'PATO', icone: '🦆', youtubeId: 'Qxpu-j0BCLk' },
-                { letra: 'Q', palavra: 'QUEIJO', icone: '🧀', youtubeId: 'OSSUuLCByDA' }, 
-                { letra: 'R', palavra: 'RATO', icone: '🐀', youtubeId: 'ceMKbN0SJU8' },
-                { letra: 'S', palavra: 'SAPO', icone: '🐸', youtubeId: 'u0bJIZpJse0' }, 
-                { letra: 'T', palavra: 'TATU', icone: '🦔', youtubeId: '9GQ1MdFVuz8' },
-                { letra: 'U', palavra: 'UVA', icone: '🍇', youtubeId: '4qq9gaodpdE' }, 
-                { letra: 'V', palavra: 'VACA', icone: '🐄', youtubeId: 'xXL31ADG0gw' },
-                { letra: 'W', palavra: 'WEB', icone: '🌐', youtubeId: 'ltlWXVRXc5g' }, 
-                { letra: 'X', palavra: 'XÍCARA', icone: '☕', youtubeId: 'Yikiq9iNjUI' },
-                { letra: 'Y', palavra: 'YOUTUBE', icone: '▶️', youtubeId: 'EDafpAvO-Js' }, 
-                { letra: 'Z', palavra: 'ZEBRA', icone: '🦓', youtubeId: 'EowfTPvwXMg' }
+                { letra: 'A', palavra: 'ABELHA', icone: '🐝', youtubeId: 'XBCDUG-yEaw' }, 
+                { letra: 'B', palavra: 'BOLA', icone: '⚽', youtubeId: 'j6ROsDM87UU' },
+                { letra: 'C', palavra: 'CASA', icone: '🏠', youtubeId: 'hWZA7DElS_I' }, 
+                { letra: 'D', palavra: 'DADO', icone: '🎲', youtubeId: 'mAIWY3S12s4' },
+                { letra: 'E', palavra: 'ELEFANTE', icone: '🐘', youtubeId: '8s43APNFMtM' }, 
+                { letra: 'F', palavra: 'FACA', icone: '🔪', youtubeId: 'nuX0O_hqoFM' },
+                { letra: 'G', palavra: 'GATO', icone: '🐈', youtubeId: '4SjEf5gYXio' }, 
+                { letra: 'H', palavra: 'HORA', icone: '⌚', youtubeId: 'NhZ6eVHmVDA' },
+                { letra: 'I', palavra: 'IGREJA', icone: '⛪', youtubeId: 'ILhan-Htj0g' }, 
+                { letra: 'J', palavra: 'JACARÉ', icone: '🐊', youtubeId: 'Z9lBor1lnI8' },
+                { letra: 'K', palavra: 'KIWI', icone: '🥝', youtubeId: 'eGrZ1WM_oaE' }, 
+                { letra: 'L', palavra: 'LÁPIS', icone: '✏️', youtubeId: 'tC3yWQPeNpE' },
+                { letra: 'M', palavra: 'MALA', icone: '🧳', youtubeId: 'mH3byoH67O4' }, 
+                { letra: 'N', palavra: 'NAVIO', icone: '🚢', youtubeId: 'AGPxKWabjSc' },
+                { letra: 'O', palavra: 'ÓCULOS', icone: '👓', youtubeId: '-8RtEgO3Y5s' }, 
+                { letra: 'P', palavra: 'PATO', icone: '🦆', youtubeId: 'bmQ_2UA7sWw' },
+                { letra: 'Q', palavra: 'QUEIJO', icone: '🧀', youtubeId: '-qZ5fNtr-8g' }, 
+                { letra: 'R', palavra: 'RATO', icone: '🐀', youtubeId: '7fKcMXcBNOA' },
+                { letra: 'S', palavra: 'SAPO', icone: '🐸', youtubeId: 's6XAkz5lGxA' }, 
+                { letra: 'T', palavra: 'TATU', icone: '🦔', youtubeId: '-FyHvZ9Hz0Y' },
+                { letra: 'U', palavra: 'UVA', icone: '🍇', youtubeId: 'beFXQ-w5CKs' }, 
+                { letra: 'V', palavra: 'VACA', icone: '🐄', youtubeId: 'cGJ2MXDMsgE' },
+                { letra: 'W', palavra: 'WEB', icone: '🌐', youtubeId: 'An41gHwcEEw' }, 
+                { letra: 'X', palavra: 'XÍCARA', icone: '☕', youtubeId: 'zqrqp-RHFHs' },
+                { letra: 'Y', palavra: 'YOUTUBE', icone: '▶️', youtubeId: 'NJLEAbML25A' }, 
+                { letra: 'Z', palavra: 'ZEBRA', icone: '🦓', youtubeId: '-QBkzFZDWNU' }
             ],
             vogais: ['A','E','I','O','U'],
             consoantes: ['B','C','D','F','G','H','J','K','L','M','N','P','Q','R','S','T','V','W','X','Y','Z'],
@@ -771,10 +718,8 @@
                     if(document.getElementById('aba-escrever').classList.contains('active')) QuadroInterativo.redimensionar();
                 }
             }
-            alternarAltoContraste() {
-                const ativo = document.body.classList.toggle('alto-contraste');
-                const botao = document.querySelector('[onclick="AppConfig.alternarAltoContraste()"]');
-                if (botao) botao.setAttribute('aria-pressed', String(ativo));
+            alternarAltoContraste() { 
+                document.body.classList.toggle('alto-contraste'); 
             }
         }
         const AppConfig = new ConfiguracaoAcessibilidade();
@@ -1178,75 +1123,31 @@
             }
         }
 
-        /** Avisa o usuário, de forma visível, quando o navegador não tem suporte a voz. */
-        function avisarSemSuporteDeVoz() {
-            if (window.speechSynthesis) return;
-            const aviso = document.createElement('div');
-            aviso.setAttribute('role', 'alert');
-            aviso.style.cssText = 'background:#FFCC00;color:#000;text-align:center;padding:12px;font-weight:900;';
-            aviso.innerText = 'ESTE NAVEGADOR NÃO SUPORTA LEITURA EM VOZ ALTA. O CONTEÚDO CONTINUA DISPONÍVEL POR TEXTO.';
-            document.body.insertBefore(aviso, document.body.firstChild);
-        }
-
-        /** Fecha o modal ao pressionar Esc ou ao clicar fora da caixa de vídeo. */
-        function configurarFechamentoModal() {
-            const overlay = document.getElementById('modal-letras');
-            overlay.addEventListener('click', (e) => {
-                if (e.target === overlay) InterfaceModal.fechar();
+        window.onload = () => {
+            ConstrutorInterface.renderizarAlfabeto();
+            ConstrutorInterface.renderizarVogaisConsoantes();
+            ConstrutorInterface.renderizarFamilias();
+            ConstrutorInterface.renderizarSilabas();
+            ConstrutorInterface.renderizarCores();
+            ConstrutorInterface.renderizarVidaPratica();
+            ConstrutorInterface.renderizarAnimais();
+            ConstrutorInterface.renderizarNumeros();
+            ConstrutorInterface.configurarNavegacaoAbas();
+            
+            BancoDados.iniciais.sort(() => Math.random() - 0.5);
+            BancoDados.palavrasJogo.sort(() => Math.random() - 0.5);
+            
+            InteracaoApp.carregarInicial();
+            InteracaoApp.carregarPalavra();
+            
+            QuadroInterativo = new CanvasCaligrafia('canvas-caligrafia', 'container-canvas', 'guia-fundo');
+            ConstrutorInterface.renderizarBotoesDesenho();
+            QuadroInterativo.redimensionar(); 
+            
+            window.addEventListener('resize', () => {
+                if(document.getElementById('aba-escrever').classList.contains('active')) QuadroInterativo.redimensionar();
             });
-            document.addEventListener('keydown', (e) => {
-                if (e.key === 'Escape' && overlay.classList.contains('visivel')) InterfaceModal.fechar();
-            });
-        }
-
-        function inicializarAplicacao() {
-            try {
-                ConstrutorInterface.renderizarAlfabeto();
-                ConstrutorInterface.renderizarVogaisConsoantes();
-                ConstrutorInterface.renderizarFamilias();
-                ConstrutorInterface.renderizarSilabas();
-                ConstrutorInterface.renderizarCores();
-                ConstrutorInterface.renderizarVidaPratica();
-                ConstrutorInterface.renderizarAnimais();
-                ConstrutorInterface.renderizarNumeros();
-                ConstrutorInterface.configurarNavegacaoAbas();
-
-                BancoDados.iniciais.sort(() => Math.random() - 0.5);
-                BancoDados.palavrasJogo.sort(() => Math.random() - 0.5);
-
-                InteracaoApp.carregarInicial();
-                InteracaoApp.carregarPalavra();
-
-                QuadroInterativo = new CanvasCaligrafia('canvas-caligrafia', 'container-canvas', 'guia-fundo');
-                ConstrutorInterface.renderizarBotoesDesenho();
-                QuadroInterativo.redimensionar();
-
-                configurarFechamentoModal();
-                avisarSemSuporteDeVoz();
-
-                window.addEventListener('resize', () => {
-                    if (document.getElementById('aba-escrever').classList.contains('active')) {
-                        QuadroInterativo.redimensionar();
-                    }
-                });
-            } catch (erro) {
-                console.error('Falha ao inicializar o PhoneticFace:', erro);
-            }
-        }
-
-        if (document.readyState === 'loading') {
-            document.addEventListener('DOMContentLoaded', inicializarAplicacao);
-        } else {
-            inicializarAplicacao();
-        }
-
-        // Expõe apenas o necessário para os atributos onclick= usados no HTML.
-        window.toggleMenuMobile = toggleMenuMobile;
-        window.Voz = Voz;
-        window.AppConfig = AppConfig;
-        window.InterfaceModal = InterfaceModal;
-        window.InteracaoApp = InteracaoApp;
-    })();
+        };
     </script>
 </body>
 </html>
