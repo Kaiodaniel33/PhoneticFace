@@ -1,8 +1,8 @@
-// REGISTRO DO SERVICE WORKER COM CAMINHO RELATIVO PARA GITHUB PAGES
+// REGISTRO SERVICE WORKER (PWA OFFLINE RELATIVO)
 if ('serviceWorker' in navigator) {
     window.addEventListener('load', () => {
         navigator.serviceWorker.register('./sw.js')
-        .then(reg => console.log('PWA Offline ativado:', reg.scope))
+        .then(reg => console.log('PWA Offline ativo:', reg.scope))
         .catch(err => console.error('Erro no PWA:', err));
     });
 }
@@ -16,6 +16,7 @@ if ('serviceWorker' in navigator) {
         document.querySelector('.menu-toggle').setAttribute('aria-expanded', String(aberto));
     }
 
+    // BANCO DE DADOS COMPLETO E SEM CORTES DE ITENS
     const BancoDados = {
         alfabeto: [
             { letra: 'A', palavra: 'ABELHA', icone: '🐝', youtubeId: 'XBCDUG-yEaw' }, 
@@ -43,7 +44,7 @@ if ('serviceWorker' in navigator) {
             { letra: 'W', palavra: 'WEB', icone: '🌐', youtubeId: 'An41gHwcEEw' }, 
             { letra: 'X', palavra: 'XÍCARA', icone: '☕', youtubeId: 'zqrqp-RHFHs' },
             { letra: 'Y', palavra: 'YOUTUBE', icone: '▶️', youtubeId: 'NJLEAbML25A' }, 
-            { letra: 'Z', palavra: 'ZEBRA', icone: 'SIM' }
+            { letra: 'Z', palavra: 'ZEBRA', icone: '🦓', youtubeId: '-QBkzFZDWNU' }
         ],
         vogais: ['A','E','I','O','U'],
         consoantes: ['B','C','D','F','G','H','J','K','L','M','N','P','Q','R','S','T','V','W','X','Y','Z'],
@@ -53,37 +54,78 @@ if ('serviceWorker' in navigator) {
             { img: '⛪', nome: 'IGREJA', certa: 'I', ops: ['A','I','O'] }, { img: '👁️', nome: 'OLHO', certa: 'O', ops: ['U','A','O'] },
             { img: '🍇', nome: 'UVA', certa: 'U', ops: ['E','U','I'] }, { img: '🐎', nome: 'CAVALO', certa: 'C', ops: ['B','C','D'] },
             { img: '🍌', nome: 'BANANA', certa: 'B', ops: ['P','B','D'] }, { img: '🚗', nome: 'CARRO', certa: 'C', ops: ['C','K','S'] },
-            { img: '🐕', nome: 'CACHORRO', certa: 'C', ops: ['S','X','C'] }, { img: '🐈', nome: 'GATO', certa: 'G', ops: ['J','G','C'] }
+            { img: '🐕', nome: 'CACHORRO', certa: 'C', ops: ['S','X','C'] }, { img: '🐈', nome: 'GATO', certa: 'G', ops: ['J','G','C'] },
+            { img: '🦁', nome: 'LEÃO', certa: 'L', ops: ['M','L','N'] }, { img: '🍎', nome: 'MAÇÃ', certa: 'M', ops: ['N','M','P'] },
+            { img: '🗺️', nome: 'CARTAGO', certa: 'C', ops: ['K','C','S'] }, { img: '🇧🇷', nome: 'BRASIL', certa: 'B', ops: ['P','B','D'] },
+            { img: '💻', nome: 'COMPUTADOR', certa: 'C', ops: ['K','C','Q'] }, { img: '🦖', nome: 'DINOSSAURO', certa: 'D', ops: ['T','D','B'] },
+            { img: '🍉', nome: 'MELANCIA', certa: 'M', ops: ['L','M','N'] }, { img: '🍓', nome: 'MORANGO', certa: 'M', ops: ['M','N','B'] },
+            { img: '🍍', nome: 'ABACAXI', certa: 'A', ops: ['A','O','E'] }, { img: '⚽', nome: 'BOLA', certa: 'B', ops: ['D','B','P'] },
+            { img: '🏠', nome: 'CASA', certa: 'C', ops: ['S','C','K'] }, { img: '🐒', nome: 'MACACO', certa: 'M', ops: ['N','M','L'] },
+            { img: '🥘', nome: 'PANELA', certa: 'P', ops: ['B','P','D'] }, { img: '🍅', nome: 'TOMATE', certa: 'T', ops: ['T','D','P'] },
+            { img: '🦉', nome: 'CORUJA', certa: 'C', ops: ['K','C','S'] }, { img: '🐸', nome: 'SAPO', certa: 'S', ops: ['Z','S','C'] },
+            { img: '🦋', nome: 'BORBOLETA', certa: 'B', ops: ['P','D','B'] }, { img: '🐢', nome: 'TARTARUGA', certa: 'T', ops: ['T','D','F'] },
+            { img: '🐷', nome: 'PORCO', certa: 'P', ops: ['B','P','Q'] }, { img: '🐔', nome: 'GALINHA', certa: 'G', ops: ['J','G','C'] }
         ],
         silabas: [
             { consoante: 'B', vogal: 'A', palavra: 'BANANA', icone: '🍌' }, { consoante: 'M', vogal: 'A', palavra: 'MALA', icone: '🧳' },
             { consoante: 'C', vogal: 'O', palavra: 'COPO', icone: '🥛' }, { consoante: 'D', vogal: 'I', palavra: 'DINHEIRO', icone: '💵' },
-            { consoante: 'F', vogal: 'O', palavra: 'FOGO', icone: '🔥' }
+            { consoante: 'F', vogal: 'O', palavra: 'FOGO', icone: '🔥' }, { consoante: 'C', vogal: 'A', palavra: 'CARTAGO', icone: '🗺️' }
         ],
         palavrasJogo: [
             { p: 'CARTAGO', s: ['CAR','TA','GO'] }, { p: 'BRASIL', s: ['BRA','SIL'] }, { p: 'ESCOLA', s: ['ES','CO','LA'] },
-            { p: 'BONECA', s: ['BO','NE','CA'] }, { p: 'BULE', s: ['BU','LE'] }, { p: 'CASA', s: ['CA','SA'] }
+            { p: 'BONECA', s: ['BO','NE','CA'] }, { p: 'BULE', s: ['BU','LE'] }, { p: 'CASA', s: ['CA','SA'] },
+            { p: 'BOLA', s: ['BO','LA'] }, { p: 'MACACO', s: ['MA','CA','CO'] }, { p: 'PANELA', s: ['PA','NE','LA'] },
+            { p: 'TOMATE', s: ['TO','MA','TE'] }, { p: 'CAVALO', s: ['CA','VA','LO'] }, { p: 'ABACATE', s: ['A','BA','CA','TE'] },
+            { p: 'BANANA', s: ['BA','NA','NA'] }, { p: 'GATO', s: ['GA','TO'] }, { p: 'PATO', s: ['PA','TO'] },
+            { p: 'COMPUTADOR', s: ['COM','PU','TA','DOR'] }, { p: 'TELEFONE', s: ['TE','LE','FO','NE'] },
+            { p: 'SATO', s: ['SA','TO'] }, { p: 'RATO', s: ['RA','TO'] }, { p: 'MATO', s: ['MA','TO'] },
+            { p: 'LATA', s: ['LA','TA'] }, { p: 'FADA', s: ['FA','DA'] }, { p: 'MALA', s: ['MA','LA'] },
+            { p: 'BOCA', s: ['BO','CA'] }, { p: 'DADO', s: ['DA','DO'] }, { p: 'FOCA', s: ['FO','CA'] },
+            { p: 'LEÃO', s: ['LE','ÃO'] }, { p: 'MÃO', s: ['MÃO'] }, { p: 'PÃO', s: ['PÃO'] },
+            { p: 'CÃO', s: ['CÃO'] }, { p: 'PEIXE', s: ['PEI','XE'] }, { p: 'LIXO', s: ['LI','XO'] },
+            { p: 'RODA', s: ['RO','DA'] }, { p: 'FOTO', s: ['FO','TO'] }, { p: 'LOBO', s: ['LO','BO'] },
+            { p: 'BOLO', s: ['BO','LO'] }, { p: 'SELO', s: ['SE','LO'] }, { p: 'GELO', s: ['GE','LO'] },
+            { p: 'MESA', s: ['ME','SA'] }, { p: 'PESO', s: ['PE','SO'] }, { p: 'VASO', s: ['VA','SO'] },
+            { p: 'SOPA', s: ['SO','PA'] }, { p: 'MAPA', s: ['MA','PA'] }, { p: 'CAPA', s: ['CA','PA'] },
+            { p: 'LUVA', s: ['LU','VA'] }, { p: 'UVA', s: ['U','VA'] }, { p: 'OVO', s: ['O','VO'] },
+            { p: 'AVE', s: ['A','VE'] }, { p: 'NAVE', s: ['NA','VE'] }, { p: 'NEVE', s: ['NE','VE'] },
+            { p: 'VACA', s: ['VA','CA'] }, { p: 'FACA', s: ['FA','CA'] }, { p: 'MACA', s: ['MA','CA'] },
+            { p: 'TELA', s: ['TE','LA'] }, { p: 'VELA', s: ['VE','LA'] }, { p: 'BELO', s: ['BE','LO'] },
+            { p: 'BARCO', s: ['BAR','CO'] }, { p: 'MARCO', s: ['MAR','CO'] }, { p: 'PORCO', s: ['POR','CO'] }
         ],
         cores: [
             { n: 'AZUL', c: '#2196F3', txt: '#FFF' }, { n: 'VERMELHO', c: '#FF3B30', txt: '#FFF' },
             { n: 'AMARELO', c: '#FFCC00', txt: '#000' }, { n: 'VERDE', c: '#34C759', txt: '#FFF' },
-            { n: 'LARANJA', c: '#FF9500', txt: '#FFF' }, { n: 'ROXO', c: '#9B59B6', txt: '#FFF' }
+            { n: 'LARANJA', c: '#FF9500', txt: '#FFF' }, { n: 'ROXO', c: '#9B59B6', txt: '#FFF' },
+            { n: 'MARROM', c: '#A2845E', txt: '#FFF' }, { n: 'PRETO', c: '#1C1C1E', txt: '#FFF' },
+            { n: 'BRANCO', c: '#FFFFFF', txt: '#000' }, { n: 'ROSA', c: '#FF2D55', txt: '#FFF' },
+            { n: 'CINZA', c: '#8E8E93', txt: '#FFF' }, { n: 'AZUL CLARO', c: '#5AC8FA', txt: '#000' },
+            { n: 'VERDE ESCURO', c: '#248A3D', txt: '#FFF' }, { n: 'BEGE', c: '#E1C699', txt: '#000' },
+            { n: 'LILÁS', c: '#DAB4E5', txt: '#000' }, { n: 'OURO', c: '#FFD700', txt: '#000' },
+            { n: 'PRATA', c: '#C0C0C0', txt: '#000' }, { n: 'CIANO', c: '#00BCD4', txt: '#000' }
         ],
         vidaPratica: [
             { titulo: 'RECEITA MÉDICA', icone: '💊', textoFala: 'ATENÇÃO: TOMAR UM COMPRIMIDO DE DIPIRONA A CADA 8 HORAS.' },
             { titulo: 'LETREIRO DE ÔNIBUS', icone: '🚌', textoFala: 'EXPRESSO' },
-            { titulo: 'LISTA DO MERCADO', icone: '🛒', textoFala: 'LISTA DE COMPRAS: 5 QUILOS DE ARROZ, FEIJÃO E MACARRÃO.' }
+            { titulo: 'LISTA DO MERCADO', icone: '🛒', textoFala: 'LISTA DE COMPRAS: 5 QUILOS DE ARROZ, FEIJÃO E MACARRÃO.' },
+            { titulo: 'TREINO DA ACADEMIA', icone: '🏋️', textoFala: 'FICHA DE TREINO: FAZER 3 SÉRIES DE 10 REPETIÇÕES.' }
         ],
         animais: [
             { nome: 'CACHORRO', icone: '🐕' }, { nome: 'GATO', icone: '🐈' }, { nome: 'VACA', icone: '🐄' },
-            { nome: 'CAVALO', icone: '🐎' }, { nome: 'PORCO', icone: '🐷' }
+            { nome: 'CAVALO', icone: '🐎' }, { nome: 'PORCO', icone: '🐷' }, { nome: 'GALINHA', icone: '🐔' },
+            { nome: 'PATO', icone: '🦆' }, { nome: 'OVELHA', icone: '🐑' }, { nome: 'LEÃO', icone: '🦁' },
+            { nome: 'ELEFANTE', icone: '🐘' }, { nome: 'MACACO', icone: '🐒' }, { nome: 'URSO', icone: '🐻' },
+            { nome: 'SAPO', icone: '🐸' }, { nome: 'PEIXE', icone: '🐟' }, { nome: 'PAPAGAIO', icone: '🦜' },
+            { nome: 'COBRA', icone: '🐍' }, { nome: 'TARTARUGA', icone: '🐢' }, { nome: 'COELHO', icone: '🐇' },
+            { nome: 'ABELHA', icone: '🐝' }, { nome: 'BORBOLETA', icone: '🦋' }
         ],
-        // DADOS FICTÍCIOS PARA O PAINEL DO PROFESSOR
+        // ESTATÍSTICAS DETALHADAS DO PAINEL DO PROFESSOR
         alunosProfessor: [
-            { nome: 'João Silva', modulo: '5. Formar Sílabas', progresso: '82%', acesso: 'Hoje, 09:14', status: 'Ótimo', classe: 'otimo' },
-            { nome: 'Maria Oliveira', modulo: '3. Som Inicial', progresso: '45%', acesso: 'Ontem, 15:30', status: 'Atenção', classe: 'atencao' },
-            { nome: 'Carlos Eduardo', modulo: '6. Formar Palavras', progresso: '91%', acesso: 'Hoje, 08:00', status: 'Ótimo', classe: 'otimo' },
-            { nome: 'Ana Souza', modulo: '2. Vogais/Cons.', progresso: '30%', acesso: 'Há 3 dias', status: 'Atenção', classe: 'atencao' }
+            { nome: 'João Silva', tarefas: '12 Módulos', desempenho: '92%', diag: 'Excelente retenção do som da consoante B e R', acao: 'Avançar para Formar Palavras', classe: 'otimo', status: 'Avançado' },
+            { nome: 'Maria Oliveira', tarefas: '5 Módulos', desempenho: '58%', diag: 'Dificuldade na associação da vogal E com sílabas complexas', acao: 'Reforço no Módulo 2 e 4', classe: 'atencao', status: 'Dificuldade' },
+            { nome: 'Carlos Eduardo', tarefas: '14 Módulos', desempenho: '98%', diag: 'Traçado de caligrafia 100% preciso no canvas', acao: 'Liberado para Leitura Prática', classe: 'otimo', status: 'Excelente' },
+            { nome: 'Ana Souza', tarefas: '3 Módulos', desempenho: '40%', diag: 'Apresenta dúvida ao clicar no menu para trocar de lição', acao: 'Orientar navegação básica', classe: 'suporte', status: 'Ajuda na Navegação' },
+            { nome: 'Marcos Roberto', tarefas: '8 Módulos', desempenho: '75%', diag: 'Bom domínio do vocabulário prático e números', acao: 'Continuar treino diário', classe: 'otimo', status: 'Normal' }
         ]
     };
 
@@ -102,30 +144,32 @@ if ('serviceWorker' in navigator) {
 
     class GerenciadorPerfil {
         static selecionarPerfil(perfil) {
-            document.getElementById('modal-selecao-perfil').classList.remove('visivel');
+            const modal = document.getElementById('modal-selecao-perfil');
+            modal.classList.remove('visivel');
+            modal.style.display = 'none';
+
             const label = document.getElementById('label-perfil-atual');
-            const navMenu = document.getElementById('menu-principal');
-            const painelProfessor = document.getElementById('painel-professor');
+            const viewAluno = document.getElementById('view-aluno');
+            const viewProfessor = document.getElementById('view-professor');
 
             if (perfil === 'professor') {
                 label.innerText = '👨‍🏫 MODALIDADE: PROFESSOR';
-                navMenu.style.display = 'none'; // Oculta abas do aluno
-                document.querySelectorAll('.aba-conteudo').forEach(a => a.classList.remove('active'));
-                painelProfessor.classList.add('active');
+                viewAluno.style.display = 'none';
+                viewProfessor.style.display = 'block';
                 this.renderizarTabelaProfessor();
-                Voz.falar("BEM-VINDO AO PAINEL DO PROFESSOR.");
+                Voz.falar("Painel do Professor ativado. Relatório pedagógico carregado.");
             } else {
                 label.innerText = '🎓 MODALIDADE: ALUNO';
-                navMenu.style.display = 'flex'; // Exibe abas do aluno
-                document.querySelectorAll('.aba-conteudo').forEach(a => a.classList.remove('active'));
-                document.getElementById('aba-alfabeto').classList.add('active');
-                document.querySelector('.btn-tab').classList.add('active');
-                Voz.falar("BEM-VINDO ALUNO. BOM APRENDIZADO!");
+                viewProfessor.style.display = 'none';
+                viewAluno.style.display = 'block';
+                Voz.falar("Bem-vindo Aluno! Escolha um módulo e bom aprendizado.");
             }
         }
 
         static abrirModalSelecao() {
-            document.getElementById('modal-selecao-perfil').classList.add('visivel');
+            const modal = document.getElementById('modal-selecao-perfil');
+            modal.style.display = 'flex';
+            modal.classList.add('visivel');
         }
 
         static renderizarTabelaProfessor() {
@@ -135,10 +179,10 @@ if ('serviceWorker' in navigator) {
                 const tr = document.createElement('tr');
                 tr.innerHTML = `
                     <td><strong>${aluno.nome}</strong></td>
-                    <td>${aluno.modulo}</td>
-                    <td>${aluno.progresso}</td>
-                    <td>${aluno.acesso}</td>
-                    <td><span class="tag-status ${aluno.classe}">${aluno.status}</span></td>
+                    <td>${aluno.tarefas}</td>
+                    <td><strong>${aluno.desempenho}</strong></td>
+                    <td>${aluno.diag}</td>
+                    <td><span class="tag-status ${aluno.classe}">${aluno.acao}</span></td>
                 `;
                 tbody.appendChild(tr);
             });
@@ -198,6 +242,7 @@ if ('serviceWorker' in navigator) {
             this.vincularEventos();
         }
         redimensionar() {
+            if(!this.container || !this.canvas) return;
             this.canvas.width = this.container.clientWidth;
             this.canvas.height = this.container.clientHeight;
             this.ctx.lineWidth = 25; 
@@ -379,6 +424,7 @@ if ('serviceWorker' in navigator) {
     class ConstrutorInterface {
         static renderizarAlfabeto() {
             const container = document.getElementById('container-grid-alfabeto');
+            container.innerHTML = '';
             BancoDados.alfabeto.forEach(item => {
                 const btn = document.createElement('button'); btn.className = 'btn-letra'; btn.innerText = item.letra;
                 btn.onclick = () => InterfaceModal.mostrarVideo(item); container.appendChild(btn);
@@ -386,6 +432,7 @@ if ('serviceWorker' in navigator) {
         }
         static renderizarVogaisConsoantes() {
             const v = document.getElementById('box-vogais'); const c = document.getElementById('box-consoantes');
+            v.innerHTML = ''; c.innerHTML = '';
             BancoDados.vogais.forEach(l => {
                 let b = document.createElement('button'); b.className='btn-grande'; b.style.backgroundColor='var(--cor-destaque)'; b.innerText=l;
                 b.style.boxShadow = '0 6px 0 #C0392B'; b.onclick = () => Voz.falar(`O som desta vogal é ${l}`); v.appendChild(b);
@@ -397,6 +444,7 @@ if ('serviceWorker' in navigator) {
         }
         static renderizarFamilias() {
             const bts = document.getElementById('botoes-familias');
+            bts.innerHTML = '';
             BancoDados.consoantes.forEach(c => {
                 let b = document.createElement('button'); b.className='btn-letra'; b.style.width='60px'; b.innerText=c;
                 b.onclick = () => {
@@ -414,6 +462,7 @@ if ('serviceWorker' in navigator) {
         }
         static renderizarSilabas() {
             const container = document.getElementById('container-silabas');
+            container.innerHTML = '';
             BancoDados.silabas.forEach(item => {
                 const silaba = item.consoante + item.vogal;
                 const cartao = document.createElement('div'); cartao.className = 'cartao linha-silaba';
@@ -423,6 +472,7 @@ if ('serviceWorker' in navigator) {
         }
         static renderizarBotoesDesenho() {
             const container = document.getElementById('botoes-desenho');
+            container.innerHTML = '';
             BancoDados.sinaisDesenho.forEach(sinal => {
                 const btn = document.createElement('button'); btn.className = 'btn-ferramenta'; btn.innerText = sinal;
                 btn.onclick = () => QuadroInterativo.definirGuia(sinal); container.appendChild(btn);
@@ -433,6 +483,7 @@ if ('serviceWorker' in navigator) {
         }
         static renderizarCores() {
             const ct = document.getElementById('container-cores');
+            ct.innerHTML = '';
             BancoDados.cores.forEach(c => {
                 let btn = document.createElement('button'); btn.className = 'btn-letra'; btn.innerText = c.n;
                 btn.style.backgroundColor = c.c; btn.style.color = c.txt; btn.style.fontSize = '1.5rem'; btn.style.border = '2px solid rgba(0,0,0,0.1)';
@@ -441,6 +492,7 @@ if ('serviceWorker' in navigator) {
         }
         static renderizarVidaPratica() {
             const container = document.getElementById('container-dia-a-dia');
+            container.innerHTML = '';
             BancoDados.vidaPratica.forEach(item => {
                 const card = document.createElement('div'); card.className = 'card-interativo'; card.onclick = () => Voz.falar(item.textoFala);
                 card.innerHTML = `<span class="icone-card">${item.icone}</span><h2 style="font-size: 1.8rem;">${item.titulo}</h2>`; container.appendChild(card);
@@ -448,6 +500,7 @@ if ('serviceWorker' in navigator) {
         }
         static renderizarAnimais() {
             const container = document.getElementById('container-animais');
+            container.innerHTML = '';
             BancoDados.animais.forEach(animal => {
                 const card = document.createElement('div'); card.className = 'card-interativo'; card.onclick = () => Voz.falar(animal.nome); 
                 card.innerHTML = `<span class="icone-card">${animal.icone}</span><h2 style="font-size: 2rem; color: var(--cor-primaria);">${animal.nome}</h2>`;
@@ -456,6 +509,7 @@ if ('serviceWorker' in navigator) {
         }
         static renderizarNumeros() {
             const container = document.getElementById('container-numeros');
+            container.innerHTML = '';
             for (let i = 1; i <= 100; i++) {
                 const btn = document.createElement('button'); btn.className = 'btn-letra'; btn.style.height = '80px'; btn.style.fontSize = '2.5rem';
                 btn.innerText = i; btn.onclick = () => Voz.falar(i.toString()); container.appendChild(btn);
@@ -476,7 +530,7 @@ if ('serviceWorker' in navigator) {
                         c.classList.remove('active');
                         if (c.id === alvo) {
                             c.classList.add('active');
-                            if(alvo === 'aba-escrever') setTimeout(() => QuadroInterativo.redimensionar(), 50);
+                            if(alvo === 'aba-escrever' && QuadroInterativo) setTimeout(() => QuadroInterativo.redimensionar(), 50);
                         }
                     });
                     if (window.innerWidth <= 768) {
@@ -516,7 +570,9 @@ if ('serviceWorker' in navigator) {
             configurarFechamentoModal();
 
             window.addEventListener('resize', () => {
-                if (document.getElementById('aba-escrever').classList.contains('active')) { QuadroInterativo.redimensionar(); }
+                if (document.getElementById('aba-escrever').classList.contains('active') && QuadroInterativo) { 
+                    QuadroInterativo.redimensionar(); 
+                }
             });
         } catch (erro) {
             console.error('Falha ao inicializar:', erro);
