@@ -1,5 +1,5 @@
 /* ==========================================================================
-   1. VARIÁVEIS GERAIS (Design Profissional & Acessibilidade)
+   1. VARIÁVEIS DE DESIGN E TEMAS
    ========================================================================== */
 :root {
     --cor-bg-principal: #F4F7F6;
@@ -24,9 +24,7 @@
     --sombra-botao: 0 6px 0px rgba(0,0,0,0.15);
 }
 
-/* ==========================================================================
-   TEMA DE ALTO CONTRASTE 
-   ========================================================================== */
+/* TEMA ALTO CONTRASTE */
 body.alto-contraste { background: #000000 !important; color: #FFFF00 !important; }
 body.alto-contraste .cabecalho-app,
 body.alto-contraste .cartao,
@@ -43,26 +41,19 @@ body.alto-contraste input { background-color: #000000 !important; color: #FFFF00
 body.alto-contraste .logo-img { filter: invert(1) sepia(1) saturate(5) hue-rotate(175deg); background: transparent !important; border: none !important; }
 
 /* ==========================================================================
-   2. RESET CSS E TIPOGRAFIA BASE
+   2. RESET E ESTRUTURA GERAL
    ========================================================================== */
 * { margin: 0; padding: 0; box-sizing: border-box; }
-
 button:focus-visible, input:focus-visible, [tabindex]:focus-visible { outline: 4px solid var(--cor-alerta); outline-offset: 3px; }
 .apenas-leitor-tela { position: absolute; width: 1px; height: 1px; padding: 0; margin: -1px; overflow: hidden; clip: rect(0,0,0,0); white-space: nowrap; border: 0; }
 .sinal-matematico { font-size: 2rem; font-weight: 900; }
-
-@media (prefers-reduced-motion: reduce) {
-    *, *::before, *::after { animation-duration: 0.01ms !important; animation-iteration-count: 1 !important; transition-duration: 0.01ms !important; scroll-behavior: auto !important; }
-}
 
 html { font-size: var(--tamanho-base); scroll-behavior: smooth; }
 body { font-family: var(--fonte-principal); background: linear-gradient(135deg, #F4F7F6 0%, #E0EAF5 100%); color: var(--cor-texto-principal); line-height: 1.6; transition: background-color 0.4s, color 0.4s; overflow-x: hidden; display: flex; flex-direction: column; min-height: 100vh; text-transform: uppercase; letter-spacing: 0.5px; }
 h1, h2, h3, h4 { line-height: 1.2; margin-bottom: 1rem; font-weight: 900; letter-spacing: 1px;}
 input { text-transform: uppercase; font-family: inherit; }
 
-/* ==========================================================================
-   3. BARRA SUPERIOR E PERFIL
-   ========================================================================== */
+/* BARRA SUPERIOR */
 .barra-acessibilidade { background-color: #1C2833; color: #FFF; padding: 10px 24px; display: flex; justify-content: space-between; align-items: center; flex-wrap: wrap; gap: 10px; position: sticky; top: 0; z-index: 100; box-shadow: 0 4px 10px rgba(0,0,0,0.1); }
 .perfil-status { display: flex; align-items: center; gap: 15px; font-weight: 900; }
 .btn-trocar-perfil { background: var(--cor-secundaria); color: #000; border: none; padding: 6px 14px; font-weight: 900; border-radius: 15px; cursor: pointer; transition: 0.2s; font-size: 0.85rem; }
@@ -72,6 +63,7 @@ input { text-transform: uppercase; font-family: inherit; }
 .btn-acesso { background: rgba(255,255,255,0.1); border: 1px solid rgba(255,255,255,0.3); color: #FFF; padding: 6px 12px; font-weight: bold; border-radius: 20px; cursor: pointer; transition: 0.2s; font-size: 0.9rem; }
 .btn-acesso:hover { background-color: #FFF; color: #1C2833; }
 
+/* CABEÇALHO */
 header.cabecalho-app { background: linear-gradient(135deg, var(--cor-primaria) 0%, var(--cor-secundaria) 100%); color: #FFF; padding: 2rem 1rem; text-align: center; border-bottom: 6px solid var(--cor-sucesso); box-shadow: 0 10px 20px rgba(0,122,255,0.2); position: relative; }
 .logo-container { display: flex; align-items: center; justify-content: center; gap: 25px; flex-wrap: wrap; margin-bottom: 1rem; }
 .logo-container .logo-img { max-height: 90px; border-radius: 15px; box-shadow: 0 8px 15px rgba(0,0,0,0.2); background-color: #FFF; padding: 5px; flex-shrink: 0; }
@@ -79,21 +71,19 @@ header.cabecalho-app { background: linear-gradient(135deg, var(--cor-primaria) 0
 .cabecalho-app p { font-size: 1.2rem; font-weight: 800; opacity: 0.9; }
 .tag-boas-vindas { margin-top: 5px; color: var(--cor-alerta); font-size: 1.1rem; font-weight: 900; display: none; }
 
+/* MENU DE NAVEGAÇÃO DO ALUNO */
+.container-menu { max-width: 1400px; margin: 0 auto; padding: 0 15px; }
 .menu-toggle { display: none; background-color: #FFF; color: var(--cor-primaria); padding: 12px 20px; font-size: 1.2rem; font-weight: bold; border-radius: 12px; cursor: pointer; margin: 15px auto 0; width: fit-content; box-shadow: 0 4px 0 rgba(0,0,0,0.1); }
 .menu-toggle:active { transform: translateY(4px); box-shadow: none; }
 
-nav.menu-principal { display: flex; justify-content: center; flex-wrap: wrap; gap: 10px; margin-top: 2rem; max-width: 1400px; margin-left: auto; margin-right: auto; }
+nav.menu-principal { display: flex; justify-content: center; flex-wrap: wrap; gap: 10px; margin-top: 2rem; }
 .btn-tab { background-color: rgba(255,255,255,0.15); color: #FFF; border: 2px solid rgba(255,255,255,0.3); padding: 10px 20px; font-size: 1rem; font-weight: 800; border-radius: 30px; cursor: pointer; backdrop-filter: blur(5px); transition: all 0.3s cubic-bezier(0.25, 0.8, 0.25, 1); }
 .btn-tab:hover { background-color: rgba(255,255,255,0.3); transform: translateY(-2px); }
 .btn-tab.active { background-color: var(--cor-sucesso); color: #FFF; border-color: var(--cor-sucesso); transform: scale(1.05); box-shadow: 0 8px 15px rgba(52, 199, 89, 0.4); }
 
 /* ==========================================================================
-   4. ESTRUTURA PRINCIPAL E PAINEL DO PROFESSOR
+   3. PAINEL DO PROFESSOR (DASHBOARD)
    ========================================================================== */
-main.conteudo-app { flex: 1; width: 100%; max-width: 1300px; margin: 2rem auto; padding: 0 15px; }
-.aba-conteudo { display: none; animation: fadeIn 0.6s cubic-bezier(0.16, 1, 0.3, 1) forwards; }
-.aba-conteudo.active { display: block; }
-
 .painel-docente-box { border-left: 8px solid var(--cor-roxo); }
 .cabecalho-painel { margin-bottom: 2rem; border-bottom: 2px dashed #DDD; padding-bottom: 1rem; }
 .cabecalho-painel h2 { color: var(--cor-roxo); font-size: 2.2rem; }
@@ -107,19 +97,25 @@ main.conteudo-app { flex: 1; width: 100%; max-width: 1300px; margin: 2rem auto; 
 
 .titulo-secao-painel { font-size: 1.5rem; color: var(--cor-texto-principal); margin: 25px 0 15px; }
 .tabela-responsive { overflow-x: auto; }
-.tabela-alunos { width: 100%; border-collapse: collapse; text-align: left; font-size: 1rem; }
-.tabela-alunos th, .tabela-alunos td { padding: 15px; border-bottom: 1px solid #EEE; }
+.tabela-alunos { width: 100%; border-collapse: collapse; text-align: left; font-size: 0.95rem; }
+.tabela-alunos th, .tabela-alunos td { padding: 15px; border-bottom: 1px solid #EEE; text-transform: none; }
 .tabela-alunos th { background: #1C2833; color: #FFF; text-transform: uppercase; }
-.tag-status { padding: 6px 12px; border-radius: 12px; font-weight: bold; font-size: 0.85rem; color: #FFF; }
+.tag-status { padding: 6px 12px; border-radius: 12px; font-weight: bold; font-size: 0.85rem; color: #FFF; display: inline-block; }
 .tag-status.otimo { background: var(--cor-sucesso); }
-.tag-status.atencao { background: var(--cor-alerta); color: #000; }
+.tag-status.atencao { background: var(--cor-destaque); }
+.tag-status.suporte { background: var(--cor-alerta); color: #000; }
 
 /* ==========================================================================
-   5. CARTÕES E BOTOES DE ALFABETIZAÇÃO
+   4. CONTEÚDO E COMPONENTES DO ALUNO
    ========================================================================== */
+main.conteudo-app { flex: 1; width: 100%; max-width: 1300px; margin: 2rem auto; padding: 0 15px; }
+.aba-conteudo { display: none; animation: fadeIn 0.4s cubic-bezier(0.16, 1, 0.3, 1) forwards; }
+.aba-conteudo.active { display: block; }
+
 .bloco-instrucao { margin-bottom: 2rem; }
 .btn-instrucao { width: 100%; background: linear-gradient(90deg, #FFD60A 0%, #FF9F0A 100%); color: #000; border: none; padding: 20px; font-size: 1.4rem; font-weight: 900; border-radius: var(--borda-raio); cursor: pointer; box-shadow: 0 8px 0px #D08A00, 0 15px 20px rgba(0,0,0,0.1); display: flex; justify-content: center; align-items: center; gap: 15px; transition: transform 0.1s; }
 .btn-instrucao:active { transform: translateY(8px); box-shadow: 0 0px 0px #D08A00; }
+
 .cartao { background-color: var(--cor-bg-secundario); border-radius: var(--borda-raio); padding: 2.5rem; margin-bottom: 2rem; box-shadow: var(--sombra-padrao); border: 2px solid rgba(0,0,0,0.03); }
 .flex-center { display: flex; flex-wrap: wrap; gap: 15px; justify-content: center; align-items: center; }
 .btn-grande { font-size: 2.2rem; font-weight: 900; padding: 15px 30px; border-radius: 20px; border: none; cursor: pointer; color: white; box-shadow: var(--sombra-botao); transition: transform 0.1s; }
@@ -143,9 +139,6 @@ main.conteudo-app { flex: 1; width: 100%; max-width: 1300px; margin: 2rem auto; 
 .icone-card { font-size: 6rem; margin-bottom: 1rem; text-shadow: 2px 2px 10px rgba(0,0,0,0.1); }
 .slot-silaba { width: 90px; height: 90px; border: 4px dashed #B0BEC5; border-radius: 15px; display: flex; justify-content: center; align-items: center; font-size: 2.5rem; font-weight: bold; background: #F8F9FA;}
 
-/* ==========================================================================
-   6. CALIGRAFIA E MODAL 
-   ========================================================================== */
 .painel-desenho { position: relative; width: 100%; height: 50vh; min-height: 400px; border: 6px dashed var(--cor-primaria); border-radius: var(--borda-raio); background-color: #fff; touch-action: none; overflow: hidden; box-shadow: inset 0 0 20px rgba(0,0,0,0.05);}
 #guia-fundo { position: absolute; top: 50%; left: 50%; transform: translate(-50%, -50%); font-size: 20rem; color: rgba(0,0,0,0.04); user-select: none; pointer-events: none; font-weight: 900; }
 #canvas-caligrafia { position: absolute; top: 0; left: 0; cursor: crosshair; }
@@ -154,8 +147,9 @@ main.conteudo-app { flex: 1; width: 100%; max-width: 1300px; margin: 2rem auto; 
 .btn-ferramenta:active { transform: translateY(5px); box-shadow: none; }
 .input-gigante { width: 100%; max-width: 600px; padding: 20px; font-size: 2.5rem; text-align: center; border: 4px solid var(--cor-primaria); border-radius: 15px; font-weight: 900; background: #F8F9FA; box-shadow: inset 0 4px 10px rgba(0,0,0,0.05); }
 
-.modal-overlay { position: fixed; top: 0; left: 0; width: 100%; height: 100%; background-color: rgba(28, 40, 51, 0.95); display: flex; justify-content: center; align-items: center; z-index: 9999; opacity: 0; visibility: hidden; transition: 0.3s; backdrop-filter: blur(5px); }
-.modal-overlay.visivel { opacity: 1; visibility: visible; }
+/* MODAIS */
+.modal-overlay { position: fixed; top: 0; left: 0; width: 100%; height: 100%; background-color: rgba(28, 40, 51, 0.95); display: flex; justify-content: center; align-items: center; z-index: 99999; opacity: 0; visibility: hidden; transition: 0.3s; backdrop-filter: blur(5px); }
+.modal-overlay.visivel { opacity: 1 !important; visibility: visible !important; display: flex !important; }
 .modal-caixa { background-color: var(--cor-bg-secundario); width: 95%; max-width: 650px; border-radius: 25px; padding: 1.5rem; text-align: center; box-shadow: 0 25px 50px rgba(0,0,0,0.3); max-height: 90vh; display: flex; flex-direction: column; justify-content: space-between; align-items: center; }
 
 .caixa-perfil { max-width: 750px; }
@@ -174,20 +168,15 @@ main.conteudo-app { flex: 1; width: 100%; max-width: 1300px; margin: 2rem auto; 
 #modal-texto-palavra { font-size: 2.5rem; font-weight: 900; color: var(--cor-texto-principal); margin: 0;}
 
 @keyframes fadeIn { from { opacity: 0; transform: translateY(20px); } to { opacity: 1; transform: translateY(0); } }
-.confete { position: fixed; width: 15px; height: 15px; z-index: 10000; animation: cair 3s linear forwards; border-radius: 3px; }
+.confete { position: fixed; width: 15px; height: 15px; z-index: 100000; animation: cair 3s linear forwards; border-radius: 3px; }
 @keyframes cair { to { transform: translateY(100vh) rotate(720deg); opacity: 0; } }
 
-/* ==========================================================================
-   7. RODAPÉ INSTITUCIONAL
-   ========================================================================== */
+/* RODAPÉ */
 .rodape-app { background-color: #1C2833; color: #E0EAF5; padding: 3rem 20px; margin-top: auto; border-top: 8px solid var(--cor-sucesso); }
 .container-creditos { max-width: 1200px; margin: 0 auto; display: grid; grid-template-columns: repeat(auto-fit, minmax(250px, 1fr)); gap: 30px; }
 .coluna-creditos h3 { color: var(--cor-alerta); border-bottom: 2px solid rgba(255,255,255,0.1); padding-bottom: 10px; margin-bottom: 15px; letter-spacing: 1px; font-size: 1.1rem;}
 .coluna-creditos p { margin-bottom: 5px; font-size: 1rem; }
 
-/* ==========================================================================
-   RESPONSIVIDADE (MOBILE / TABLET)
-   ========================================================================== */
 @media (max-width: 768px) {
     html { font-size: 85%; }
     .barra-acessibilidade { padding: 8px 10px; justify-content: center;}
