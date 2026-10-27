@@ -1,8 +1,8 @@
-// REGISTRO DO SERVICE WORKER (PWA OFFLINE)
+// REGISTRO DO SERVICE WORKER COM CAMINHO RELATIVO PARA GITHUB PAGES
 if ('serviceWorker' in navigator) {
     window.addEventListener('load', () => {
         navigator.serviceWorker.register('./sw.js')
-        .then(reg => console.log('PWA Offline ativado com sucesso!', reg.scope))
+        .then(reg => console.log('PWA Offline ativado:', reg.scope))
         .catch(err => console.error('Erro no PWA:', err));
     });
 }
@@ -43,7 +43,7 @@ if ('serviceWorker' in navigator) {
             { letra: 'W', palavra: 'WEB', icone: '🌐', youtubeId: 'An41gHwcEEw' }, 
             { letra: 'X', palavra: 'XÍCARA', icone: '☕', youtubeId: 'zqrqp-RHFHs' },
             { letra: 'Y', palavra: 'YOUTUBE', icone: '▶️', youtubeId: 'NJLEAbML25A' }, 
-            { letra: 'Z', palavra: 'ZEBRA', icone: '🦓', youtubeId: '-QBkzFZDWNU' }
+            { letra: 'Z', palavra: 'ZEBRA', icone: 'SIM' }
         ],
         vogais: ['A','E','I','O','U'],
         consoantes: ['B','C','D','F','G','H','J','K','L','M','N','P','Q','R','S','T','V','W','X','Y','Z'],
@@ -53,70 +53,37 @@ if ('serviceWorker' in navigator) {
             { img: '⛪', nome: 'IGREJA', certa: 'I', ops: ['A','I','O'] }, { img: '👁️', nome: 'OLHO', certa: 'O', ops: ['U','A','O'] },
             { img: '🍇', nome: 'UVA', certa: 'U', ops: ['E','U','I'] }, { img: '🐎', nome: 'CAVALO', certa: 'C', ops: ['B','C','D'] },
             { img: '🍌', nome: 'BANANA', certa: 'B', ops: ['P','B','D'] }, { img: '🚗', nome: 'CARRO', certa: 'C', ops: ['C','K','S'] },
-            { img: '🐕', nome: 'CACHORRO', certa: 'C', ops: ['S','X','C'] }, { img: '🐈', nome: 'GATO', certa: 'G', ops: ['J','G','C'] },
-            { img: '🦁', nome: 'LEÃO', certa: 'L', ops: ['M','L','N'] }, { img: '🍎', nome: 'MAÇÃ', certa: 'M', ops: ['N','M','P'] },
-            { img: '🗺️', nome: 'CARTAGO', certa: 'C', ops: ['K','C','S'] }, { img: '🇧🇷', nome: 'BRASIL', certa: 'B', ops: ['P','B','D'] },
-            { img: '💻', nome: 'COMPUTADOR', certa: 'C', ops: ['K','C','Q'] }, { img: '🦖', nome: 'DINOSSAURO', certa: 'D', ops: ['T','D','B'] },
-            { img: '🍉', nome: 'MELANCIA', certa: 'M', ops: ['L','M','N'] }, { img: '🍓', nome: 'MORANGO', certa: 'M', ops: ['M','N','B'] },
-            { img: '🍍', nome: 'ABACAXI', certa: 'A', ops: ['A','O','E'] }, { img: '⚽', nome: 'BOLA', certa: 'B', ops: ['D','B','P'] },
-            { img: '🏠', nome: 'CASA', certa: 'C', ops: ['S','C','K'] }, { img: '🐒', nome: 'MACACO', certa: 'M', ops: ['N','M','L'] },
-            { img: '🥘', nome: 'PANELA', certa: 'P', ops: ['B','P','D'] }, { img: '🍅', nome: 'TOMATE', certa: 'T', ops: ['T','D','P'] },
-            { img: '🦉', nome: 'CORUJA', certa: 'C', ops: ['K','C','S'] }, { img: '🐸', nome: 'SAPO', certa: 'S', ops: ['Z','S','C'] },
-            { img: '🦋', nome: 'BORBOLETA', certa: 'B', ops: ['P','D','B'] }, { img: '🐢', nome: 'TARTARUGA', certa: 'T', ops: ['T','D','F'] },
-            { img: '🐷', nome: 'PORCO', certa: 'P', ops: ['B','P','Q'] }, { img: '🐔', nome: 'GALINHA', certa: 'G', ops: ['J','G','C'] }
+            { img: '🐕', nome: 'CACHORRO', certa: 'C', ops: ['S','X','C'] }, { img: '🐈', nome: 'GATO', certa: 'G', ops: ['J','G','C'] }
         ],
         silabas: [
             { consoante: 'B', vogal: 'A', palavra: 'BANANA', icone: '🍌' }, { consoante: 'M', vogal: 'A', palavra: 'MALA', icone: '🧳' },
             { consoante: 'C', vogal: 'O', palavra: 'COPO', icone: '🥛' }, { consoante: 'D', vogal: 'I', palavra: 'DINHEIRO', icone: '💵' },
-            { consoante: 'F', vogal: 'O', palavra: 'FOGO', icone: '🔥' }, { consoante: 'C', vogal: 'A', palavra: 'CARTAGO', icone: '🗺️' }
+            { consoante: 'F', vogal: 'O', palavra: 'FOGO', icone: '🔥' }
         ],
         palavrasJogo: [
             { p: 'CARTAGO', s: ['CAR','TA','GO'] }, { p: 'BRASIL', s: ['BRA','SIL'] }, { p: 'ESCOLA', s: ['ES','CO','LA'] },
-            { p: 'BONECA', s: ['BO','NE','CA'] }, { p: 'BULE', s: ['BU','LE'] }, { p: 'CASA', s: ['CA','SA'] },
-            { p: 'BOLA', s: ['BO','LA'] }, { p: 'MACACO', s: ['MA','CA','CO'] }, { p: 'PANELA', s: ['PA','NE','LA'] },
-            { p: 'TOMATE', s: ['TO','MA','TE'] }, { p: 'CAVALO', s: ['CA','VA','LO'] }, { p: 'ABACATE', s: ['A','BA','CA','TE'] },
-            { p: 'BANANA', s: ['BA','NA','NA'] }, { p: 'GATO', s: ['GA','TO'] }, { p: 'PATO', s: ['PA','TO'] },
-            { p: 'COMPUTADOR', s: ['COM','PU','TA','DOR'] }, { p: 'TELEFONE', s: ['TE','LE','FO','NE'] },
-            { p: 'SATO', s: ['SA','TO'] }, { p: 'RATO', s: ['RA','TO'] }, { p: 'MATO', s: ['MA','TO'] },
-            { p: 'LATA', s: ['LA','TA'] }, { p: 'FADA', s: ['FA','DA'] }, { p: 'MALA', s: ['MA','LA'] },
-            { p: 'BOCA', s: ['BO','CA'] }, { p: 'DADO', s: ['DA','DO'] }, { p: 'FOCA', s: ['FO','CA'] },
-            { p: 'LEÃO', s: ['LE','ÃO'] }, { p: 'MÃO', s: ['MÃO'] }, { p: 'PÃO', s: ['PÃO'] },
-            { p: 'CÃO', s: ['CÃO'] }, { p: 'PEIXE', s: ['PEI','XE'] }, { p: 'LIXO', s: ['LI','XO'] },
-            { p: 'RODA', s: ['RO','DA'] }, { p: 'FOTO', s: ['FO','TO'] }, { p: 'LOBO', s: ['LO','BO'] },
-            { p: 'BOLO', s: ['BO','LO'] }, { p: 'SELO', s: ['SE','LO'] }, { p: 'GELO', s: ['GE','LO'] },
-            { p: 'MESA', s: ['ME','SA'] }, { p: 'PESO', s: ['PE','SO'] }, { p: 'VASO', s: ['VA','SO'] },
-            { p: 'SOPA', s: ['SO','PA'] }, { p: 'MAPA', s: ['MA','PA'] }, { p: 'CAPA', s: ['CA','PA'] },
-            { p: 'LUVA', s: ['LU','VA'] }, { p: 'UVA', s: ['U','VA'] }, { p: 'OVO', s: ['O','VO'] },
-            { p: 'AVE', s: ['A','VE'] }, { p: 'NAVE', s: ['NA','VE'] }, { p: 'NEVE', s: ['NE','VE'] },
-            { p: 'VACA', s: ['VA','CA'] }, { p: 'FACA', s: ['FA','CA'] }, { p: 'MACA', s: ['MA','CA'] },
-            { p: 'TELA', s: ['TE','LA'] }, { p: 'VELA', s: ['VE','LA'] }, { p: 'BELO', s: ['BE','LO'] },
-            { p: 'BARCO', s: ['BAR','CO'] }, { p: 'MARCO', s: ['MAR','CO'] }, { p: 'PORCO', s: ['POR','CO'] }
+            { p: 'BONECA', s: ['BO','NE','CA'] }, { p: 'BULE', s: ['BU','LE'] }, { p: 'CASA', s: ['CA','SA'] }
         ],
         cores: [
             { n: 'AZUL', c: '#2196F3', txt: '#FFF' }, { n: 'VERMELHO', c: '#FF3B30', txt: '#FFF' },
             { n: 'AMARELO', c: '#FFCC00', txt: '#000' }, { n: 'VERDE', c: '#34C759', txt: '#FFF' },
-            { n: 'LARANJA', c: '#FF9500', txt: '#FFF' }, { n: 'ROXO', c: '#9B59B6', txt: '#FFF' },
-            { n: 'MARROM', c: '#A2845E', txt: '#FFF' }, { n: 'PRETO', c: '#1C1C1E', txt: '#FFF' },
-            { n: 'BRANCO', c: '#FFFFFF', txt: '#000' }, { n: 'ROSA', c: '#FF2D55', txt: '#FFF' },
-            { n: 'CINZA', c: '#8E8E93', txt: '#FFF' }, { n: 'AZUL CLARO', c: '#5AC8FA', txt: '#000' },
-            { n: 'VERDE ESCURO', c: '#248A3D', txt: '#FFF' }, { n: 'BEGE', c: '#E1C699', txt: '#000' },
-            { n: 'LILÁS', c: '#DAB4E5', txt: '#000' }, { n: 'OURO', c: '#FFD700', txt: '#000' },
-            { n: 'PRATA', c: '#C0C0C0', txt: '#000' }, { n: 'CIANO', c: '#00BCD4', txt: '#000' }
+            { n: 'LARANJA', c: '#FF9500', txt: '#FFF' }, { n: 'ROXO', c: '#9B59B6', txt: '#FFF' }
         ],
         vidaPratica: [
             { titulo: 'RECEITA MÉDICA', icone: '💊', textoFala: 'ATENÇÃO: TOMAR UM COMPRIMIDO DE DIPIRONA A CADA 8 HORAS.' },
             { titulo: 'LETREIRO DE ÔNIBUS', icone: '🚌', textoFala: 'EXPRESSO' },
-            { titulo: 'LISTA DO MERCADO', icone: '🛒', textoFala: 'LISTA DE COMPRAS: 5 QUILOS DE ARROZ, FEIJÃO E MACARRÃO.' },
-            { titulo: 'TREINO DA ACADEMIA', icone: '🏋️', textoFala: 'FICHA DE TREINO: FAZER 3 SÉRIES DE 10 REPETIÇÕES.' }
+            { titulo: 'LISTA DO MERCADO', icone: '🛒', textoFala: 'LISTA DE COMPRAS: 5 QUILOS DE ARROZ, FEIJÃO E MACARRÃO.' }
         ],
         animais: [
             { nome: 'CACHORRO', icone: '🐕' }, { nome: 'GATO', icone: '🐈' }, { nome: 'VACA', icone: '🐄' },
-            { nome: 'CAVALO', icone: '🐎' }, { nome: 'PORCO', icone: '🐷' }, { nome: 'GALINHA', icone: '🐔' },
-            { nome: 'PATO', icone: '🦆' }, { nome: 'OVELHA', icone: '🐑' }, { nome: 'LEÃO', icone: '🦁' },
-            { nome: 'ELEFANTE', icone: '🐘' }, { nome: 'MACACO', icone: '🐒' }, { nome: 'URSO', icone: '🐻' },
-            { nome: 'SAPO', icone: '🐸' }, { nome: 'PEIXE', icone: '🐟' }, { nome: 'PAPAGAIO', icone: '🦜' },
-            { nome: 'COBRA', icone: '🐍' }, { nome: 'TARTARUGA', icone: '🐢' }, { nome: 'COELHO', icone: '🐇' },
-            { nome: 'ABELHA', icone: '🐝' }, { nome: 'BORBOLETA', icone: '🦋' }
+            { nome: 'CAVALO', icone: '🐎' }, { nome: 'PORCO', icone: '🐷' }
+        ],
+        // DADOS FICTÍCIOS PARA O PAINEL DO PROFESSOR
+        alunosProfessor: [
+            { nome: 'João Silva', modulo: '5. Formar Sílabas', progresso: '82%', acesso: 'Hoje, 09:14', status: 'Ótimo', classe: 'otimo' },
+            { nome: 'Maria Oliveira', modulo: '3. Som Inicial', progresso: '45%', acesso: 'Ontem, 15:30', status: 'Atenção', classe: 'atencao' },
+            { nome: 'Carlos Eduardo', modulo: '6. Formar Palavras', progresso: '91%', acesso: 'Hoje, 08:00', status: 'Ótimo', classe: 'otimo' },
+            { nome: 'Ana Souza', modulo: '2. Vogais/Cons.', progresso: '30%', acesso: 'Há 3 dias', status: 'Atenção', classe: 'atencao' }
         ]
     };
 
@@ -132,6 +99,51 @@ if ('serviceWorker' in navigator) {
         parar() { if (this.synth) this.synth.cancel(); }
     }
     const Voz = new GerenciadorVoz();
+
+    class GerenciadorPerfil {
+        static selecionarPerfil(perfil) {
+            document.getElementById('modal-selecao-perfil').classList.remove('visivel');
+            const label = document.getElementById('label-perfil-atual');
+            const navMenu = document.getElementById('menu-principal');
+            const painelProfessor = document.getElementById('painel-professor');
+
+            if (perfil === 'professor') {
+                label.innerText = '👨‍🏫 MODALIDADE: PROFESSOR';
+                navMenu.style.display = 'none'; // Oculta abas do aluno
+                document.querySelectorAll('.aba-conteudo').forEach(a => a.classList.remove('active'));
+                painelProfessor.classList.add('active');
+                this.renderizarTabelaProfessor();
+                Voz.falar("BEM-VINDO AO PAINEL DO PROFESSOR.");
+            } else {
+                label.innerText = '🎓 MODALIDADE: ALUNO';
+                navMenu.style.display = 'flex'; // Exibe abas do aluno
+                document.querySelectorAll('.aba-conteudo').forEach(a => a.classList.remove('active'));
+                document.getElementById('aba-alfabeto').classList.add('active');
+                document.querySelector('.btn-tab').classList.add('active');
+                Voz.falar("BEM-VINDO ALUNO. BOM APRENDIZADO!");
+            }
+        }
+
+        static abrirModalSelecao() {
+            document.getElementById('modal-selecao-perfil').classList.add('visivel');
+        }
+
+        static renderizarTabelaProfessor() {
+            const tbody = document.getElementById('lista-alunos-professor');
+            tbody.innerHTML = '';
+            BancoDados.alunosProfessor.forEach(aluno => {
+                const tr = document.createElement('tr');
+                tr.innerHTML = `
+                    <td><strong>${aluno.nome}</strong></td>
+                    <td>${aluno.modulo}</td>
+                    <td>${aluno.progresso}</td>
+                    <td>${aluno.acesso}</td>
+                    <td><span class="tag-status ${aluno.classe}">${aluno.status}</span></td>
+                `;
+                tbody.appendChild(tr);
+            });
+        }
+    }
 
     class ConfiguracaoAcessibilidade {
         constructor() { this.tamanhoAtual = 100; this.html = document.documentElement; }
@@ -266,10 +278,10 @@ if ('serviceWorker' in navigator) {
             const input = document.getElementById('input-nome');
             const nome = input.value.trim().toUpperCase();
             if (nome.length > 0) {
-                localStorage.setItem('phoneticface_aluno', nome); // Salva no dispositivo
+                localStorage.setItem('phoneticface_aluno', nome);
                 document.getElementById('mensagem-boas-vindas').innerText = `👋 OLÁ, ${nome}!`;
                 document.getElementById('mensagem-boas-vindas').style.display = 'block';
-                Voz.falar(`MUITO BEM, ${nome}! PARABÉNS POR ESCREVER SEU NOME. SEU PERFIL FOI SALVO.`);
+                Voz.falar(`MUITO BEM, ${nome}! PARABÉNS POR ESCREVER SEU NOME.`);
                 this.gerarConfetes();
             } else {
                 Voz.falar("POR FAVOR, DIGITE O SEU NOME NA CAIXA BRANCA.");
@@ -452,18 +464,6 @@ if ('serviceWorker' in navigator) {
         static configurarNavegacaoAbas() {
             const botoes = document.querySelectorAll('.btn-tab');
             const conteudos = document.querySelectorAll('.aba-conteudo');
-            
-            // CARREGA A ÚLTIMA ABA ACESSADA
-            const abaSalva = localStorage.getItem('phoneticface_aba');
-            if (abaSalva) {
-                botoes.forEach(b => b.classList.remove('active'));
-                conteudos.forEach(c => c.classList.remove('active'));
-                const btnAtivo = document.querySelector(`[data-target="${abaSalva}"]`);
-                if (btnAtivo) {
-                    btnAtivo.classList.add('active');
-                    document.getElementById(abaSalva).classList.add('active');
-                }
-            }
 
             botoes.forEach(btn => {
                 btn.addEventListener('click', (e) => {
@@ -471,7 +471,6 @@ if ('serviceWorker' in navigator) {
                     botoes.forEach(b => b.classList.remove('active'));
                     e.currentTarget.classList.add('active');
                     const alvo = e.currentTarget.getAttribute('data-target');
-                    localStorage.setItem('phoneticface_aba', alvo);
 
                     conteudos.forEach(c => {
                         c.classList.remove('active');
@@ -486,15 +485,6 @@ if ('serviceWorker' in navigator) {
                 });
             });
         }
-    }
-
-    function avisarSemSuporteDeVoz() {
-        if (window.speechSynthesis) return;
-        const aviso = document.createElement('div');
-        aviso.setAttribute('role', 'alert');
-        aviso.style.cssText = 'background:#FFCC00;color:#000;text-align:center;padding:12px;font-weight:900;';
-        aviso.innerText = 'ESTE NAVEGADOR NÃO SUPORTA LEITURA EM VOZ ALTA. O CONTEÚDO CONTINUA DISPONÍVEL POR TEXTO.';
-        document.body.insertBefore(aviso, document.body.firstChild);
     }
 
     function configurarFechamentoModal() {
@@ -515,31 +505,31 @@ if ('serviceWorker' in navigator) {
             ConstrutorInterface.renderizarNumeros();
             ConstrutorInterface.configurarNavegacaoAbas();
 
-            BancoDados.iniciais.sort(() => Math.random() - 0.5);
-            BancoDados.palavrasJogo.sort(() => Math.random() - 0.5);
-
             InteracaoApp.carregarInicial();
             InteracaoApp.carregarPalavra();
-            InteracaoApp.carregarNomeSalvo(); // Retoma o nome salvo
+            InteracaoApp.carregarNomeSalvo();
 
             QuadroInterativo = new CanvasCaligrafia('canvas-caligrafia', 'container-canvas', 'guia-fundo');
             ConstrutorInterface.renderizarBotoesDesenho();
             QuadroInterativo.redimensionar();
 
             configurarFechamentoModal();
-            avisarSemSuporteDeVoz();
 
             window.addEventListener('resize', () => {
                 if (document.getElementById('aba-escrever').classList.contains('active')) { QuadroInterativo.redimensionar(); }
             });
         } catch (erro) {
-            console.error('Falha ao inicializar o PhoneticFace:', erro);
+            console.error('Falha ao inicializar:', erro);
         }
     }
 
     if (document.readyState === 'loading') { document.addEventListener('DOMContentLoaded', inicializarAplicacao); } 
     else { inicializarAplicacao(); }
 
-    window.toggleMenuMobile = toggleMenuMobile; window.Voz = Voz; window.AppConfig = AppConfig;
-    window.InterfaceModal = InterfaceModal; window.InteracaoApp = InteracaoApp;
+    window.toggleMenuMobile = toggleMenuMobile;
+    window.Voz = Voz;
+    window.AppConfig = AppConfig;
+    window.InterfaceModal = InterfaceModal;
+    window.InteracaoApp = InteracaoApp;
+    window.GerenciadorPerfil = GerenciadorPerfil;
 })();
