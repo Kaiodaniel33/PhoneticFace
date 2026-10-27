@@ -1,7 +1,7 @@
 {
   "name": "PhoneticFace - Alfabetização Fônica EJA",
   "short_name": "PhoneticFace",
-  "description": "Aplicativo de apoio à alfabetização fônica de jovens e adultos (EJA), alinhado ao Programa Brasil Alfabetizado.",
+  "description": "Aplicativo de apoio à alfabetização fônica de jovens e adultos (EJA).",
   "start_url": "/index.html",
   "display": "standalone",
   "background_color": "#F4F7F6",
