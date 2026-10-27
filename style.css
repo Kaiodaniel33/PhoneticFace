@@ -203,3 +203,23 @@ main.conteudo-app { flex: 1; width: 100%; max-width: 1300px; margin: 2rem auto; 
     #modal-icone-palavra { font-size: 2.5rem; }
     .btn-acao { padding: 15px; font-size: 1.2rem;}
 }
+/* ==========================================================================
+   AJUSTES 
+   ========================================================================== */
+
+/* O menu saiu de dentro do <header>: devolve o fundo azul para os botões ficarem legíveis */
+header.cabecalho-app { border-bottom: none; padding-bottom: 1rem; box-shadow: none; }
+.container-menu { max-width: none; margin: 0; padding: 0 15px 1.5rem; background: linear-gradient(135deg, var(--cor-primaria) 0%, var(--cor-secundaria) 100%); border-bottom: 6px solid var(--cor-sucesso); box-shadow: 0 10px 20px rgba(0,122,255,0.2); }
+nav.menu-principal { max-width: 1400px; margin: 0 auto; }
+.menu-toggle { margin-top: 0; }
+body.alto-contraste .container-menu { background: #000 !important; border-bottom: 2px solid #FFFF00 !important; box-shadow: none !important; }
+
+/* Sílabas clicáveis (agora são <button>) e espaços preenchidos */
+button.bloco { border: none; font: inherit; font-size: 2.5rem; font-weight: 900; cursor: pointer; }
+button.bloco:active { transform: translateY(6px); box-shadow: none; }
+.slot-silaba.preenchido { border-style: solid; border-color: var(--cor-sucesso); color: var(--cor-sucesso); background: #FFF; }
+
+@media (max-width: 768px) {
+    .container-menu { padding-bottom: 0.8rem; }
+    button.bloco { font-size: 2rem; }
+}
