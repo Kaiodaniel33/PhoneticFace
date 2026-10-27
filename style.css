@@ -6,6 +6,7 @@
     --cor-bg-secundario: #FFFFFF;
     --cor-texto-principal: #2C3E50;
     --cor-texto-secundario: #546E7A;
+    
     --cor-primaria: #007AFF; 
     --cor-primaria-escura: #0056b3;
     --cor-secundaria: #00BCD4; 
@@ -60,9 +61,13 @@ h1, h2, h3, h4 { line-height: 1.2; margin-bottom: 1rem; font-weight: 900; letter
 input { text-transform: uppercase; font-family: inherit; }
 
 /* ==========================================================================
-   3. CABEÇALHO COM LOGO AO LADO DO TÍTULO E MENU RESPONSIVO
+   3. BARRA SUPERIOR E PERFIL
    ========================================================================== */
 .barra-acessibilidade { background-color: #1C2833; color: #FFF; padding: 10px 24px; display: flex; justify-content: space-between; align-items: center; flex-wrap: wrap; gap: 10px; position: sticky; top: 0; z-index: 100; box-shadow: 0 4px 10px rgba(0,0,0,0.1); }
+.perfil-status { display: flex; align-items: center; gap: 15px; font-weight: 900; }
+.btn-trocar-perfil { background: var(--cor-secundaria); color: #000; border: none; padding: 6px 14px; font-weight: 900; border-radius: 15px; cursor: pointer; transition: 0.2s; font-size: 0.85rem; }
+.btn-trocar-perfil:hover { transform: scale(1.05); }
+
 .controles-acesso { display: flex; gap: 10px; flex-wrap: wrap; justify-content: center; }
 .btn-acesso { background: rgba(255,255,255,0.1); border: 1px solid rgba(255,255,255,0.3); color: #FFF; padding: 6px 12px; font-weight: bold; border-radius: 20px; cursor: pointer; transition: 0.2s; font-size: 0.9rem; }
 .btn-acesso:hover { background-color: #FFF; color: #1C2833; }
@@ -72,6 +77,7 @@ header.cabecalho-app { background: linear-gradient(135deg, var(--cor-primaria) 0
 .logo-container .logo-img { max-height: 90px; border-radius: 15px; box-shadow: 0 8px 15px rgba(0,0,0,0.2); background-color: #FFF; padding: 5px; flex-shrink: 0; }
 .cabecalho-app h1 { font-size: 3.5rem; text-shadow: 2px 4px 8px rgba(0,0,0,0.2); margin: 0;}
 .cabecalho-app p { font-size: 1.2rem; font-weight: 800; opacity: 0.9; }
+.tag-boas-vindas { margin-top: 5px; color: var(--cor-alerta); font-size: 1.1rem; font-weight: 900; display: none; }
 
 .menu-toggle { display: none; background-color: #FFF; color: var(--cor-primaria); padding: 12px 20px; font-size: 1.2rem; font-weight: bold; border-radius: 12px; cursor: pointer; margin: 15px auto 0; width: fit-content; box-shadow: 0 4px 0 rgba(0,0,0,0.1); }
 .menu-toggle:active { transform: translateY(4px); box-shadow: none; }
@@ -82,11 +88,35 @@ nav.menu-principal { display: flex; justify-content: center; flex-wrap: wrap; ga
 .btn-tab.active { background-color: var(--cor-sucesso); color: #FFF; border-color: var(--cor-sucesso); transform: scale(1.05); box-shadow: 0 8px 15px rgba(52, 199, 89, 0.4); }
 
 /* ==========================================================================
-   4. ESTRUTURA PRINCIPAL E CARTÕES
+   4. ESTRUTURA PRINCIPAL E PAINEL DO PROFESSOR
    ========================================================================== */
 main.conteudo-app { flex: 1; width: 100%; max-width: 1300px; margin: 2rem auto; padding: 0 15px; }
 .aba-conteudo { display: none; animation: fadeIn 0.6s cubic-bezier(0.16, 1, 0.3, 1) forwards; }
 .aba-conteudo.active { display: block; }
+
+.painel-docente-box { border-left: 8px solid var(--cor-roxo); }
+.cabecalho-painel { margin-bottom: 2rem; border-bottom: 2px dashed #DDD; padding-bottom: 1rem; }
+.cabecalho-painel h2 { color: var(--cor-roxo); font-size: 2.2rem; }
+
+.grid-metricas { display: grid; grid-template-columns: repeat(auto-fit, minmax(200px, 1fr)); gap: 20px; margin-bottom: 30px; }
+.card-metrica { background: #F8F9FA; border-radius: var(--borda-raio-sm); padding: 20px; text-align: center; border-bottom: 5px solid var(--cor-primaria); box-shadow: 0 4px 10px rgba(0,0,0,0.05); }
+.card-metrica h3 { font-size: 2.8rem; color: var(--cor-primaria); margin-bottom: 5px; }
+.card-metrica.sucesso { border-color: var(--cor-sucesso); } .card-metrica.sucesso h3 { color: var(--cor-sucesso); }
+.card-metrica.alerta { border-color: var(--cor-destaque); } .card-metrica.alerta h3 { color: var(--cor-destaque); }
+.card-metrica.roxo { border-color: var(--cor-roxo); } .card-metrica.roxo h3 { color: var(--cor-roxo); }
+
+.titulo-secao-painel { font-size: 1.5rem; color: var(--cor-texto-principal); margin: 25px 0 15px; }
+.tabela-responsive { overflow-x: auto; }
+.tabela-alunos { width: 100%; border-collapse: collapse; text-align: left; font-size: 1rem; }
+.tabela-alunos th, .tabela-alunos td { padding: 15px; border-bottom: 1px solid #EEE; }
+.tabela-alunos th { background: #1C2833; color: #FFF; text-transform: uppercase; }
+.tag-status { padding: 6px 12px; border-radius: 12px; font-weight: bold; font-size: 0.85rem; color: #FFF; }
+.tag-status.otimo { background: var(--cor-sucesso); }
+.tag-status.atencao { background: var(--cor-alerta); color: #000; }
+
+/* ==========================================================================
+   5. CARTÕES E BOTOES DE ALFABETIZAÇÃO
+   ========================================================================== */
 .bloco-instrucao { margin-bottom: 2rem; }
 .btn-instrucao { width: 100%; background: linear-gradient(90deg, #FFD60A 0%, #FF9F0A 100%); color: #000; border: none; padding: 20px; font-size: 1.4rem; font-weight: 900; border-radius: var(--borda-raio); cursor: pointer; box-shadow: 0 8px 0px #D08A00, 0 15px 20px rgba(0,0,0,0.1); display: flex; justify-content: center; align-items: center; gap: 15px; transition: transform 0.1s; }
 .btn-instrucao:active { transform: translateY(8px); box-shadow: 0 0px 0px #D08A00; }
@@ -95,19 +125,18 @@ main.conteudo-app { flex: 1; width: 100%; max-width: 1300px; margin: 2rem auto; 
 .btn-grande { font-size: 2.2rem; font-weight: 900; padding: 15px 30px; border-radius: 20px; border: none; cursor: pointer; color: white; box-shadow: var(--sombra-botao); transition: transform 0.1s; }
 .btn-grande:active { transform: translateY(6px); box-shadow: none; }
 
-/* ==========================================================================
-   5. ESTILOS DE JOGOS E ALFABETO
-   ========================================================================== */
 .grid-alfabeto { display: grid; grid-template-columns: repeat(auto-fill, minmax(110px, 1fr)); gap: 15px; }
 .grid-numeros { display: grid; grid-template-columns: repeat(auto-fill, minmax(90px, 1fr)); gap: 12px; }
 .btn-letra { background-color: var(--cor-primaria); color: #fff; font-size: 3.5rem; font-weight: 900; border: none; border-radius: 15px; height: 120px; cursor: pointer; box-shadow: 0 8px 0 var(--cor-primaria-escura); display: flex; justify-content: center; align-items: center; transition: transform 0.1s; }
 .btn-letra:active { transform: translateY(8px); box-shadow: none; }
 .btn-acao { background-color: var(--cor-destaque); color: #fff; border: none; padding: 18px 35px; font-size: 1.4rem; font-weight: 900; border-radius: 20px; cursor: pointer; width: 100%; box-shadow: 0 8px 0 #C93427; text-transform: uppercase; transition: transform 0.1s; }
 .btn-acao:active { transform: translateY(8px); box-shadow: none; }
+
 .area-silabas { display: flex; flex-direction: column; gap: 30px; }
 .linha-silaba { display: flex; justify-content: center; align-items: center; flex-wrap: wrap; gap: 20px; font-size: 2.5rem; font-weight: 900; }
 .bloco { background-color: var(--cor-primaria); color: #fff; padding: 20px 30px; border-radius: 15px; box-shadow: 0 6px 0 var(--cor-primaria-escura); }
 .bloco-resultado { background-color: var(--cor-sucesso); cursor: pointer; box-shadow: 0 8px 0 var(--cor-sucesso-escuro); display: flex; flex-direction: column; align-items: center; border: none;}
+
 .grid-cards { display: grid; grid-template-columns: repeat(auto-fit, minmax(250px, 1fr)); gap: 25px; }
 .card-interativo { text-align: center; cursor: pointer; display: flex; flex-direction: column; align-items: center; background: #FFF; border-radius: var(--borda-raio); padding: 1.5rem; box-shadow: 0 8px 20px rgba(0,0,0,0.08); border: 2px solid rgba(0,0,0,0.05); transition: transform 0.2s; }
 .card-interativo:hover { transform: translateY(-5px); box-shadow: 0 15px 30px rgba(0,0,0,0.12); }
@@ -128,6 +157,15 @@ main.conteudo-app { flex: 1; width: 100%; max-width: 1300px; margin: 2rem auto; 
 .modal-overlay { position: fixed; top: 0; left: 0; width: 100%; height: 100%; background-color: rgba(28, 40, 51, 0.95); display: flex; justify-content: center; align-items: center; z-index: 9999; opacity: 0; visibility: hidden; transition: 0.3s; backdrop-filter: blur(5px); }
 .modal-overlay.visivel { opacity: 1; visibility: visible; }
 .modal-caixa { background-color: var(--cor-bg-secundario); width: 95%; max-width: 650px; border-radius: 25px; padding: 1.5rem; text-align: center; box-shadow: 0 25px 50px rgba(0,0,0,0.3); max-height: 90vh; display: flex; flex-direction: column; justify-content: space-between; align-items: center; }
+
+.caixa-perfil { max-width: 750px; }
+.grid-selecao-perfil { display: grid; grid-template-columns: repeat(auto-fit, minmax(260px, 1fr)); gap: 20px; width: 100%; margin-top: 15px; }
+.card-perfil-opcao { background: #FFF; border: 3px solid #EEE; padding: 30px 20px; border-radius: 20px; cursor: pointer; transition: 0.3s; text-align: center; }
+.card-perfil-opcao:hover { border-color: var(--cor-primaria); transform: translateY(-5px); box-shadow: 0 10px 20px rgba(0,122,255,0.15); }
+.card-perfil-opcao .icone-perfil { font-size: 5rem; display: block; margin-bottom: 10px; }
+.card-perfil-opcao h3 { font-size: 1.8rem; color: var(--cor-primaria); margin-bottom: 8px; }
+.card-perfil-opcao p { font-size: 0.95rem; color: var(--cor-texto-secundario); line-height: 1.4; text-transform: none; }
+
 .video-wrapper { width: 100%; aspect-ratio: 16 / 9; background-color: #000; border-radius: 15px; overflow: hidden; box-shadow: 0 10px 20px rgba(0,0,0,0.2); margin: 10px 0; flex-shrink: 0; }
 .video-wrapper iframe { width: 100%; height: 100%; border: none; }
 #letra-display { font-size: 4rem; color: var(--cor-primaria); margin: 0; line-height: 1; flex-shrink: 0;}
