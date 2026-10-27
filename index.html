@@ -6,39 +6,45 @@
     <meta name="description" content="PhoneticFace: aplicativo de apoio à alfabetização fônica de jovens e adultos (EJA), alinhado ao Programa Brasil Alfabetizado.">
     <meta name="theme-color" content="#007AFF">
     
-    <!-- PWA: MANIFESTO -->
-    <link rel="manifest" href="manifest.json">
+    <!-- PWA MANIFESTO (CAMINHO RELATIVO PARA GITHUB PAGES) -->
+    <link rel="manifest" href="./manifest.json">
     <link rel="icon" href="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 100 100'%3E%3Crect width='100' height='100' rx='22' fill='%23007AFF'/%3E%3Ctext x='50' y='68' font-size='58' font-family='system-ui,sans-serif' font-weight='900' fill='white' text-anchor='middle'%3EPf%3C/text%3E%3C/svg%3E">
     
     <title>PhoneticFace — Alfabetização Fônica EJA</title>
     
-    <!-- CONECTANDO O CSS -->
-    <link rel="stylesheet" href="style.css">
+    <!-- ESTILO EXTERNO RELATIVO -->
+    <link rel="stylesheet" href="./style.css">
 </head>
 <body>
 
-    <div class="barra-acessibilidade" role="region" aria-label="Ferramentas de acessibilidade">
-        <div style="font-weight: 900; font-size: 1rem; letter-spacing: 1px;" aria-hidden="true">👁️ AJUDA E ACESSIBILIDADE</div>
+    <!-- BARRA SUPERIOR DE ACESSIBILIDADE E PERFIL -->
+    <div class="barra-acessibilidade" role="region" aria-label="Ferramentas de acessibilidade e perfil">
+        <div class="perfil-status">
+            <span id="label-perfil-atual">👤 MODALIDADE: ALUNO</span>
+            <button class="btn-trocar-perfil" onclick="GerenciadorPerfil.abrirModalSelecao()">🔄 ALTERNAR (ALUNO / PROFESSOR)</button>
+        </div>
         <div class="controles-acesso">
-            <button class="btn-acesso" onclick="AppConfig.alterarTamanhoFonte(10)" aria-label="Aumentar tamanho do texto">A+ AUMENTAR</button>
-            <button class="btn-acesso" onclick="AppConfig.alterarTamanhoFonte(-10)" aria-label="Diminuir tamanho do texto">A- DIMINUIR</button>
-            <button class="btn-acesso" onclick="AppConfig.alternarAltoContraste()" aria-pressed="false" aria-label="Ativar ou desativar alto contraste">🌓 ALTO CONTRASTE</button>
+            <button class="btn-acesso" onclick="AppConfig.alterarTamanhoFonte(10)" aria-label="Aumentar texto">A+ AUMENTAR</button>
+            <button class="btn-acesso" onclick="AppConfig.alterarTamanhoFonte(-10)" aria-label="Diminuir texto">A- DIMINUIR</button>
+            <button class="btn-acesso" onclick="AppConfig.alternarAltoContraste()" aria-pressed="false" aria-label="Alto contraste">🌓 ALTO CONTRASTE</button>
         </div>
     </div>
 
+    <!-- CABEÇALHO DO APLICATIVO -->
     <header class="cabecalho-app">
         <div class="logo-container">
             <img src="kaiologoteste.jpg" alt="Logotipo PhoneticFace" class="logo-img" id="logo-principal"
                  onerror="this.onerror=null; this.src='data:image/svg+xml,%3Csvg xmlns=%27http://www.w3.org/2000/svg%27 viewBox=%270 0 100 100%27%3E%3Crect width=%27100%27 height=%27100%27 rx=%2722%27 fill=%27%23FFFFFF%27/%3E%3Ctext x=%2750%27 y=%2770%27 font-size=%2758%27 font-family=%27system-ui,sans-serif%27 font-weight=%27900%27 fill=%27%23007AFF%27 text-anchor=%27middle%27%3EPf%3C/text%3E%3C/svg%3E';">
             <div>
                 <h1>PHONETICFACE</h1>
-                <p id="mensagem-boas-vindas" style="margin-top: 5px; color: var(--cor-alerta); font-size: 1.1rem; display: none;"></p>
+                <p id="mensagem-boas-vindas" class="tag-boas-vindas"></p>
             </div>
         </div>
         <p>METODOLOGIA FÔNICA DE APOIO À ALFABETIZAÇÃO DE JOVENS E ADULTOS</p>
         
         <button class="menu-toggle" onclick="toggleMenuMobile()" aria-expanded="false" aria-controls="menu-principal">☰ MENU DE OPÇÕES</button>
 
+        <!-- NAVEGAÇÃO DO ALUNO -->
         <nav class="menu-principal" id="menu-principal" role="tablist" aria-label="Módulos de aprendizagem">
             <button class="btn-tab active" role="tab" aria-selected="true" aria-controls="aba-alfabeto" id="tab-aba-alfabeto" data-target="aba-alfabeto">1. SONS DAS LETRAS</button>
             <button class="btn-tab" role="tab" aria-selected="false" aria-controls="aba-vogais" id="tab-aba-vogais" data-target="aba-vogais">2. VOGAIS/CONS.</button>
@@ -58,13 +64,71 @@
 
     <main class="conteudo-app">
         
+        <!-- PAINEL EXCLUSIVO DO PROFESSOR (OCULTO POR PADRÃO) -->
+        <section id="painel-professor" class="aba-conteudo" role="tabpanel">
+            <div class="cartao painel-docente-box">
+                <div class="cabecalho-painel">
+                    <h2>📊 PAINEL DE GESTÃO PEDAGÓGICA (EJA)</h2>
+                    <p>Acompanhamento em tempo real do desempenho e evolução da turma</p>
+                </div>
+
+                <!-- CARDS DE MÉTRICAS -->
+                <div class="grid-metricas">
+                    <div class="card-metrica">
+                        <h3>28</h3>
+                        <p>Alunos Ativos</p>
+                    </div>
+                    <div class="card-metrica sucesso">
+                        <h3>84%</h3>
+                        <p>Taxa de Domínio Fônico</p>
+                    </div>
+                    <div class="card-metrica alerta">
+                        <h3>Módulo 5</h3>
+                        <p>Maior Dificuldade (Sílabas)</p>
+                    </div>
+                    <div class="card-metrica roxo">
+                        <h3>142h</h3>
+                        <p>Horas de Treino Acumuladas</p>
+                    </div>
+                </div>
+
+                <!-- TABELA DE DESEMPENHO DOS ALUNOS -->
+                <h3 class="titulo-secao-painel">📋 RELATÓRIO INDIVIDUAL DE ALUNOS</h3>
+                <div class="tabela-responsive">
+                    <table class="tabela-alunos">
+                        <thead>
+                            <tr>
+                                <th>Nome do Aluno</th>
+                                <th>Módulo Atual</th>
+                                <th>Progresso</th>
+                                <th>Último Acesso</th>
+                                <th>Status Fônico</th>
+                            </tr>
+                        </thead>
+                        <tbody id="lista-alunos-professor">
+                            <!-- Inserido dinamicamente via JavaScript -->
+                        </tbody>
+                    </table>
+                </div>
+            </div>
+        </section>
+
+        <!-- MÓDULOS DO ALUNO -->
         <section id="aba-alfabeto" class="aba-conteudo active" role="tabpanel" aria-labelledby="tab-aba-alfabeto" tabindex="0">
-            <div class="bloco-instrucao"><button class="btn-instrucao" onclick="Voz.falar('BEM-VINDO. TOQUE EM UMA LETRA PARA CONHECER O SEU SOM E VER O VÍDEO.')">🔊 CLIQUE AQUI PARA OUVIR A INSTRUÇÃO</button></div>
+            <div class="bloco-instrucao">
+                <button class="btn-instrucao" onclick="Voz.falar('BEM-VINDO. TOQUE EM UMA LETRA PARA CONHECER O SEU SOM E VER O VÍDEO.')">
+                    🔊 CLIQUE AQUI PARA OUVIR A INSTRUÇÃO
+                </button>
+            </div>
             <div id="container-grid-alfabeto" class="grid-alfabeto"></div>
         </section>
 
         <section id="aba-vogais" class="aba-conteudo" role="tabpanel" aria-labelledby="tab-aba-vogais" tabindex="0">
-            <div class="bloco-instrucao"><button class="btn-instrucao" onclick="Voz.falar('VAMOS CONHECER OS SONS DAS VOGAIS E DAS CONSOANTES. TOQUE NAS LETRAS.')">🔊 CLIQUE AQUI PARA OUVIR A INSTRUÇÃO</button></div>
+            <div class="bloco-instrucao">
+                <button class="btn-instrucao" onclick="Voz.falar('VAMOS CONHECER OS SONS DAS VOGAIS E DAS CONSOANTES. TOQUE NAS LETRAS.')">
+                    🔊 CLIQUE AQUI PARA OUVIR A INSTRUÇÃO
+                </button>
+            </div>
             <div class="cartao">
                 <h2 style="text-align: center; color: var(--cor-primaria);">SONS DAS VOGAIS</h2>
                 <div class="flex-center" id="box-vogais" style="border: 4px dashed var(--cor-secundaria); padding: 25px; border-radius: var(--borda-raio); margin-bottom: 30px; background: #F8F9FA;"></div>
@@ -74,7 +138,11 @@
         </section>
 
         <section id="aba-iniciais" class="aba-conteudo" role="tabpanel" aria-labelledby="tab-aba-iniciais" tabindex="0">
-            <div class="bloco-instrucao"><button class="btn-instrucao" onclick="Voz.falar('OUÇA A PALAVRA. QUAL É A PRIMEIRA LETRA QUE REPRESENTA O SOM INICIAL?')">🔊 CLIQUE AQUI PARA OUVIR A INSTRUÇÃO</button></div>
+            <div class="bloco-instrucao">
+                <button class="btn-instrucao" onclick="Voz.falar('OUÇA A PALAVRA. QUAL É A PRIMEIRA LETRA QUE REPRESENTA O SOM INICIAL?')">
+                    🔊 CLIQUE AQUI PARA OUVIR A INSTRUÇÃO
+                </button>
+            </div>
             <div class="cartao" style="text-align: center;">
                 <h2 id="titulo-inicial">IDENTIFIQUE O PRIMEIRO SOM</h2>
                 <h3 id="nome-inicial-dica" aria-live="polite" style="font-size: 3.5rem; color: var(--cor-primaria); letter-spacing: 10px; margin-top: 20px; background: #F8F9FA; padding: 15px 30px; border-radius: var(--borda-raio); display: inline-block; box-shadow: inset 0 4px 8px rgba(0,0,0,0.05);">_ V I Ã O</h3>
@@ -84,7 +152,11 @@
         </section>
 
         <section id="aba-familias" class="aba-conteudo" role="tabpanel" aria-labelledby="tab-aba-familias" tabindex="0">
-            <div class="bloco-instrucao"><button class="btn-instrucao" onclick="Voz.falar('VAMOS APRENDER A UNIR OS SONS. ESCOLHA UMA CONSOANTE PARA VER COMO ELA SE JUNTA COM AS VOGAIS.')">🔊 CLIQUE AQUI PARA OUVIR A INSTRUÇÃO</button></div>
+            <div class="bloco-instrucao">
+                <button class="btn-instrucao" onclick="Voz.falar('VAMOS APRENDER A UNIR OS SONS. ESCOLHA UMA CONSOANTE PARA VER COMO ELA SE JUNTA COM AS VOGAIS.')">
+                    🔊 CLIQUE AQUI PARA OUVIR A INSTRUÇÃO
+                </button>
+            </div>
             <div class="cartao">
                 <h2 style="text-align: center; color: var(--cor-primaria);">ESCOLHA O SOM DA CONSOANTE:</h2>
                 <div class="flex-center" id="botoes-familias"></div>
@@ -95,12 +167,20 @@
         </section>
 
         <section id="aba-silabas" class="aba-conteudo" role="tabpanel" aria-labelledby="tab-aba-silabas" tabindex="0">
-            <div class="bloco-instrucao"><button class="btn-instrucao" onclick="Voz.falar('AQUI VEMOS O SOM DA CONSOANTE MAIS O SOM DA VOGAL FORMANDO UMA SÍLABA. TOQUE NO BOTÃO VERDE PARA OUVIR.')">🔊 CLIQUE AQUI PARA OUVIR A INSTRUÇÃO</button></div>
+            <div class="bloco-instrucao">
+                <button class="btn-instrucao" onclick="Voz.falar('AQUI VEMOS O SOM DA CONSOANTE MAIS O SOM DA VOGAL FORMANDO UMA SÍLABA. TOQUE NO BOTÃO VERDE PARA OUVIR.')">
+                    🔊 CLIQUE AQUI PARA OUVIR A INSTRUÇÃO
+                </button>
+            </div>
             <div id="container-silabas" class="area-silabas"></div>
         </section>
 
         <section id="aba-palavras" class="aba-conteudo" role="tabpanel" aria-labelledby="tab-aba-palavras" tabindex="0">
-            <div class="bloco-instrucao"><button class="btn-instrucao" onclick="Voz.falar('AGORA VAMOS JUNTAR AS SÍLABAS PARA FORMAR PALAVRAS COMPLETAS. TOQUE NA ORDEM CERTA.')">🔊 CLIQUE AQUI PARA OUVIR A INSTRUÇÃO</button></div>
+            <div class="bloco-instrucao">
+                <button class="btn-instrucao" onclick="Voz.falar('AGORA VAMOS JUNTAR AS SÍLABAS PARA FORMAR PALAVRAS COMPLETAS. TOQUE NA ORDEM CERTA.')">
+                    🔊 CLIQUE AQUI PARA OUVIR A INSTRUÇÃO
+                </button>
+            </div>
             <div class="cartao" style="text-align: center;">
                 <h2 id="dica-palavra" style="font-size: 4rem; color: var(--cor-primaria); letter-spacing: 5px;">BONECA</h2>
                 <div id="slots-palavra" class="flex-center" style="margin: 30px 0;"></div>
@@ -110,7 +190,11 @@
         </section>
 
         <section id="aba-escrever" class="aba-conteudo" role="tabpanel" aria-labelledby="tab-aba-escrever" tabindex="0">
-            <div class="bloco-instrucao"><button class="btn-instrucao" onclick="Voz.falar('VAMOS TREINAR O TRAÇADO. ESCOLHA UMA LETRA E ACOMPANHE O DESENHO COM O DEDO OU MOUSE.')">🔊 CLIQUE AQUI PARA OUVIR A INSTRUÇÃO</button></div>
+            <div class="bloco-instrucao">
+                <button class="btn-instrucao" onclick="Voz.falar('VAMOS TREINAR O TRAÇADO. ESCOLHA UMA LETRA E ACOMPANHE O DESENHO COM O DEDO OU MOUSE.')">
+                    🔊 CLIQUE AQUI PARA OUVIR A INSTRUÇÃO
+                </button>
+            </div>
             <div class="cartao">
                 <div class="ferramentas-canvas" id="botoes-desenho"></div>
                 <div class="painel-desenho" id="container-canvas">
@@ -121,12 +205,20 @@
         </section>
 
         <section id="aba-cores" class="aba-conteudo" role="tabpanel" aria-labelledby="tab-aba-cores" tabindex="0">
-            <div class="bloco-instrucao"><button class="btn-instrucao" onclick="Voz.falar('TOQUE NAS CORES PARA OUVIR O NOME DELAS.')">🔊 CLIQUE AQUI PARA OUVIR A INSTRUÇÃO</button></div>
+            <div class="bloco-instrucao">
+                <button class="btn-instrucao" onclick="Voz.falar('TOQUE NAS CORES PARA OUVIR O NOME DELAS.')">
+                    🔊 CLIQUE AQUI PARA OUVIR A INSTRUÇÃO
+                </button>
+            </div>
             <div class="grid-alfabeto" id="container-cores" style="grid-template-columns: repeat(auto-fill, minmax(140px, 1fr));"></div>
         </section>
 
         <section id="aba-nome" class="aba-conteudo" role="tabpanel" aria-labelledby="tab-aba-nome" tabindex="0">
-            <div class="bloco-instrucao"><button class="btn-instrucao" onclick="Voz.falar('CLIQUE NA CAIXA BRANCA E DIGITE O SEU NOME PARA TREINAR A ESCRITA DA SUA IDENTIDADE.')">🔊 CLIQUE AQUI PARA OUVIR A INSTRUÇÃO</button></div>
+            <div class="bloco-instrucao">
+                <button class="btn-instrucao" onclick="Voz.falar('CLIQUE NA CAIXA BRANCA E DIGITE O SEU NOME PARA TREINAR A ESCRITA DA SUA IDENTIDADE.')">
+                    🔊 CLIQUE AQUI PARA OUVIR A INSTRUÇÃO
+                </button>
+            </div>
             <div class="cartao area-digitacao" style="text-align: center;">
                 <h2 style="font-size: 2.5rem; color: var(--cor-primaria);">COMO VOCÊ SE CHAMA?</h2>
                 <input type="text" id="input-nome" class="input-gigante" placeholder="DIGITE AQUI..." autocomplete="off">
@@ -137,17 +229,29 @@
         </section>
 
         <section id="aba-dia-a-dia" class="aba-conteudo" role="tabpanel" aria-labelledby="tab-aba-dia-a-dia" tabindex="0">
-            <div class="bloco-instrucao"><button class="btn-instrucao" onclick="Voz.falar('VAMOS PRATICAR A LEITURA DE TEXTOS DO NOSSO DIA A DIA. TOQUE NOS QUADROS PARA OUVIR.')">🔊 CLIQUE AQUI PARA OUVIR A INSTRUÇÃO</button></div>
+            <div class="bloco-instrucao">
+                <button class="btn-instrucao" onclick="Voz.falar('VAMOS PRATICAR A LEITURA DE TEXTOS DO NOSSO DIA A DIA. TOQUE NOS QUADROS PARA OUVIR.')">
+                    🔊 CLIQUE AQUI PARA OUVIR A INSTRUÇÃO
+                </button>
+            </div>
             <div class="grid-cards" id="container-dia-a-dia"></div>
         </section>
 
         <section id="aba-animais" class="aba-conteudo" role="tabpanel" aria-labelledby="tab-aba-animais" tabindex="0">
-            <div class="bloco-instrucao"><button class="btn-instrucao" onclick="Voz.falar('EXPANSÃO DE VOCABULÁRIO: TOQUE NAS CARTAS PARA OUVIR E ASSOCIAR OS NOMES.')">🔊 CLIQUE AQUI PARA OUVIR A INSTRUÇÃO</button></div>
+            <div class="bloco-instrucao">
+                <button class="btn-instrucao" onclick="Voz.falar('EXPANSÃO DE VOCABULÁRIO: TOQUE NAS CARTAS PARA OUVIR E ASSOCIAR OS NOMES.')">
+                    🔊 CLIQUE AQUI PARA OUVIR A INSTRUÇÃO
+                </button>
+            </div>
             <div class="grid-cards" id="container-animais"></div>
         </section>
 
         <section id="aba-numeros" class="aba-conteudo" role="tabpanel" aria-labelledby="tab-aba-numeros" tabindex="0">
-            <div class="bloco-instrucao"><button class="btn-instrucao" onclick="Voz.falar('TOQUE EM QUALQUER NÚMERO PARA OUVIR A SUA PRONÚNCIA.')">🔊 CLIQUE AQUI PARA OUVIR A INSTRUÇÃO</button></div>
+            <div class="bloco-instrucao">
+                <button class="btn-instrucao" onclick="Voz.falar('TOQUE EM QUALQUER NÚMERO PARA OUVIR A SUA PRONÚNCIA.')">
+                    🔊 CLIQUE AQUI PARA OUVIR A INSTRUÇÃO
+                </button>
+            </div>
             <div class="cartao">
                 <h2 style="text-align: center; color: var(--cor-primaria); margin-bottom: 25px;">NÚMEROS DE 1 A 100</h2>
                 <div class="grid-numeros" id="container-numeros"></div>
@@ -155,23 +259,24 @@
         </section>
 
         <section id="aba-equipe" class="aba-conteudo" role="tabpanel" aria-labelledby="tab-aba-equipe" tabindex="0">
-            <div class="bloco-instrucao"><button class="btn-instrucao" onclick="Voz.falar('CONHEÇA AS ALUNAS DO CURSO DE FORMAÇÃO DE DOCENTES QUE ATUAM NESTE PROJETO.')">🔊 CLIQUE AQUI PARA OUVIR A INSTRUÇÃO</button></div>
+            <div class="bloco-instrucao">
+                <button class="btn-instrucao" onclick="Voz.falar('CONHEÇA AS ALUNAS DO CURSO DE FORMAÇÃO DE DOCENTES QUE ATUAM NESTE PROJETO.')">
+                    🔊 CLIQUE AQUI PARA OUVIR A INSTRUÇÃO
+                </button>
+            </div>
             <div class="cartao" style="text-align: center;">
                 <h2 style="color: var(--cor-primaria); font-size: 2.5rem; margin-bottom: 30px;">NOSSAS DOCENTES</h2>
                 <div class="flex-center" style="gap: 30px;">
-                    <!-- Card 1: Poliana -->
                     <div style="background: #F8F9FA; padding: 20px; border-radius: 20px; box-shadow: 0 4px 15px rgba(0,0,0,0.08); max-width: 250px; width: 100%; transition: transform 0.2s;">
                         <img src="imgem1.jpg" alt="Poliana" style="width: 100%; height: 260px; object-fit: cover; border-radius: 15px; margin-bottom: 15px;" onerror="this.src='https://placehold.co/200x260/007AFF/FFF?text=Poliana'">
                         <h3 style="margin:0; font-size: 1.5rem; color: var(--cor-texto-principal);">POLIANA</h3>
                         <p style="margin:0; color: var(--cor-texto-secundario); font-weight: bold; font-size: 0.9rem;">EQUIPE DOCENTE</p>
                     </div>
-                    <!-- Card 2: Mirella -->
                     <div style="background: #F8F9FA; padding: 20px; border-radius: 20px; box-shadow: 0 4px 15px rgba(0,0,0,0.08); max-width: 250px; width: 100%; transition: transform 0.2s;">
                         <img src="imgem2.jpg" alt="Mirella" style="width: 100%; height: 260px; object-fit: cover; border-radius: 15px; margin-bottom: 15px;" onerror="this.src='https://placehold.co/200x260/007AFF/FFF?text=Mirella'">
                         <h3 style="margin:0; font-size: 1.5rem; color: var(--cor-texto-principal);">MIRELLA</h3>
                         <p style="margin:0; color: var(--cor-texto-secundario); font-weight: bold; font-size: 0.9rem;">EQUIPE DOCENTE</p>
                     </div>
-                    <!-- Card 3: Maria Eduarda -->
                     <div style="background: #F8F9FA; padding: 20px; border-radius: 20px; box-shadow: 0 4px 15px rgba(0,0,0,0.08); max-width: 250px; width: 100%; transition: transform 0.2s;">
                         <img src="imgem3.jpg" alt="Maria Eduarda" style="width: 100%; height: 260px; object-fit: cover; border-radius: 15px; margin-bottom: 15px;" onerror="this.src='https://placehold.co/200x260/007AFF/FFF?text=Maria+Eduarda'">
                         <h3 style="margin:0; font-size: 1.5rem; color: var(--cor-texto-principal);">MARIA EDUARDA</h3>
@@ -184,8 +289,10 @@
                 </p>
             </div>
         </section>
+
     </main>
 
+    <!-- RODAPÉ INSTITUCIONAL (CRÉDITOS ATUALIZADOS) -->
     <footer class="rodape-app">
         <div class="container-creditos">
             <div class="coluna-creditos">
@@ -196,7 +303,7 @@
             <div class="coluna-creditos">
                 <h3>DESENVOLVIMENTO</h3>
                 <p><strong>CRIADOR:</strong> KAIO DANIEL</p>
-                <p><strong>APOIO TÉCNICO:</strong> ELAINE E STEFANY</p>
+                <p><strong>APOIO TÉCNICO:</strong> STEFANY</p>
                 <p><strong>PROFESSOR MONITOR:</strong> FELIPE</p>
             </div>
             <div class="coluna-creditos">
@@ -213,6 +320,28 @@
         </div>
     </footer>
 
+    <!-- MODAL DE SELEÇÃO DE PERFIL (INICIAL / ALTERNADOR) -->
+    <div id="modal-selecao-perfil" class="modal-overlay visivel">
+        <div class="modal-caixa caixa-perfil">
+            <h2 style="font-size: 2.2rem; color: var(--cor-primaria);">BEM-VINDO AO PHONETICFACE</h2>
+            <p style="font-size: 1.2rem; margin: 10px 0 25px; color: var(--cor-texto-secundario);">COMO VOCÊ DESEJA ACESSAR A PLATAFORMA HOJE?</p>
+            
+            <div class="grid-selecao-perfil">
+                <button class="card-perfil-opcao aluno" onclick="GerenciadorPerfil.selecionarPerfil('aluno')">
+                    <span class="icone-perfil">🎓</span>
+                    <h3>SOU ALUNO</h3>
+                    <p>Acessar jogos, lições de áudio e treinos fônicos</p>
+                </button>
+                
+                <button class="card-perfil-opcao professor" onclick="GerenciadorPerfil.selecionarPerfil('professor')">
+                    <span class="icone-perfil">👨‍🏫</span>
+                    <h3>SOU PROFESSOR</h3>
+                    <p>Acessar relatório de progresso e estatísticas da turma</p>
+                </button>
+            </div>
+        </div>
+    </div>
+
     <!-- MODAL DE VÍDEO -->
     <div id="modal-letras" class="modal-overlay" role="dialog" aria-modal="true" aria-labelledby="letra-display">
         <div class="modal-caixa">
@@ -228,7 +357,7 @@
         </div>
     </div>
 
-    <!-- CONECTANDO O JAVASCRIPT -->
-    <script src="app.js" defer></script>
+    <!-- JAVASCRIPT EXTERNO RELATIVO -->
+    <script src="./app.js" defer></script>
 </body>
 </html>
