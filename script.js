@@ -1,399 +1,339 @@
-/* PhoneticFace — app.js
-   Tudo roda no navegador (sem banco de dados). Nome do aluno fica no localStorage. */
-'use strict';
-
-/* ========== 1. UTILIDADES ========== */
-const $ = (id) => document.getElementById(id);
-const embaralhar = (lista) => [...lista].sort(() => Math.random() - 0.5);
-const esvaziar = (no) => { no.replaceChildren(); return no; };
-
-function el(tag, classe = '', texto = '', aoClicar = null, cor = '') {
-    const e = document.createElement(tag);
-    if (tag === 'button') e.type = 'button';
-    if (classe) e.className = classe;
-    if (texto) e.textContent = texto;
-    if (aoClicar) e.onclick = aoClicar;
-    if (cor) e.style.background = cor;
-    return e;
-}
-
-const Armazem = {
-    ler(chave) { try { return localStorage.getItem('phoneticface:' + chave); } catch { return null; } },
-    gravar(chave, valor) { try { localStorage.setItem('phoneticface:' + chave, valor); } catch { /* modo privado */ } }
-};
-
-function confete() {
-    const cores = ['#007AFF', '#34C759', '#FFCC00', '#FF3B30', '#AF52DE'];
-    for (let i = 0; i < 40; i++) {
-        const c = el('div', 'confete');
-        c.style.left = Math.random() * 100 + 'vw';
-        c.style.top = '-20px';
-        c.style.background = cores[i % cores.length];
-        c.style.animationDelay = Math.random() * 0.6 + 's';
-        document.body.appendChild(c);
-        setTimeout(() => c.remove(), 3800);
-    }
-}
-
-/* ========== 2. DADOS ========== */
-const MODO_DEMONSTRACAO = true; // painel do professor usa dados fictícios
-
-const LETRAS = [
-    ['A', 'ABELHA', '🐝'], ['B', 'BOLA', '⚽'], ['C', 'CASA', '🏠'], ['D', 'DADO', '🎲'],
-    ['E', 'ELEFANTE', '🐘'], ['F', 'FOGUETE', '🚀'], ['G', 'GATO', '🐱'], ['H', 'HIPOPÓTAMO', '🦛'],
-    ['I', 'IGREJA', '⛪'], ['J', 'JACARÉ', '🐊'], ['K', 'KIWI', '🥝'], ['L', 'LEÃO', '🦁'],
-    ['M', 'MACACO', '🐒'], ['N', 'NAVIO', '🚢'], ['O', 'OVO', '🥚'], ['P', 'PATO', '🦆'],
-    ['Q', 'QUEIJO', '🧀'], ['R', 'RATO', '🐭'], ['S', 'SAPO', '🐸'], ['T', 'TARTARUGA', '🐢'],
-    ['U', 'UVA', '🍇'], ['V', 'VACA', '🐄'], ['W', 'WAFFLE', '🧇'], ['X', 'XÍCARA', '☕'],
-    ['Y', 'YOGA', '🧘'], ['Z', 'ZEBRA', '🦓']
-];
-
-// Cole aqui os IDs dos vídeos do YouTube de cada letra, ex.: A: 'dQw4w9WgXcQ'
-const VIDEOS = {};
-
-const VOGAIS = [...'AEIOU'];
-const CONSOANTES = [...'BCDFGHJKLMNPQRSTVWXYZ'];
-
-const PALAVRAS_INICIAIS = [
-    ['AVIÃO', '✈️'], ['BOLA', '⚽'], ['CASA', '🏠'], ['DADO', '🎲'], ['GATO', '🐱'],
-    ['LUA', '🌙'], ['MACACO', '🐒'], ['SAPO', '🐸'], ['UVA', '🍇'], ['VACA', '🐄']
-];
-
-const SILABAS_EXEMPLO = [['B', 'A'], ['C', 'O'], ['D', 'E'], ['F', 'I'], ['G', 'U'], ['L', 'A'], ['M', 'E'], ['N', 'O'], ['P', 'I'], ['T', 'U']];
-
-const PALAVRAS = [
-    ['BONECA', ['BO', 'NE', 'CA'], '🪆'], ['SAPATO', ['SA', 'PA', 'TO'], '👞'], ['CAMISA', ['CA', 'MI', 'SA'], '👕'],
-    ['JANELA', ['JA', 'NE', 'LA'], '🪟'], ['TOMATE', ['TO', 'MA', 'TE'], '🍅'], ['BANANA', ['BA', 'NA', 'NA'], '🍌'],
-    ['MACACO', ['MA', 'CA', 'CO'], '🐒'], ['PANELA', ['PA', 'NE', 'LA'], '🍲']
-];
-
-const CORES = [
-    ['VERMELHO', '#FF3B30'], ['AZUL', '#007AFF'], ['VERDE', '#34C759'], ['AMARELO', '#FFCC00'],
-    ['LARANJA', '#FF9500'], ['ROXO', '#AF52DE'], ['ROSA', '#FF2D92'], ['MARROM', '#8B5A2B'],
-    ['PRETO', '#1C1C1E'], ['BRANCO', '#FFFFFF'], ['CINZA', '#8E8E93']
-];
-
-const DIA_A_DIA = [
-    ['🚌', 'ÔNIBUS', 'O ÔNIBUS SAI ÀS SETE HORAS.'], ['🛒', 'MERCADO', 'EU COMPRO ARROZ E FEIJÃO NO MERCADO.'],
-    ['💊', 'FARMÁCIA', 'A FARMÁCIA ABRE CEDO.'], ['🏫', 'ESCOLA', 'EU ESTUDO NA ESCOLA À NOITE.'],
-    ['💵', 'DINHEIRO', 'O PÃO CUSTA CINCO REAIS.'], ['🪪', 'DOCUMENTO', 'MEU NOME ESTÁ NO DOCUMENTO.']
-];
-
-const VOCABULARIO = [
-    ['🐶', 'CACHORRO'], ['🐱', 'GATO'], ['🐴', 'CAVALO'], ['🐄', 'VACA'], ['🐔', 'GALINHA'], ['🐟', 'PEIXE'],
-    ['🐦', 'PASSARINHO'], ['🐷', 'PORCO'], ['🍎', 'MAÇÃ'], ['🍌', 'BANANA'], ['🍊', 'LARANJA'], ['🍉', 'MELANCIA']
-];
-
-// [nome, tarefas, classe da etiqueta, rótulo, diagnóstico, ação recomendada]
-const ALUNOS_DEMO = [
-    ['Maria A.', '12/13', 'otimo', 'ÓTIMO', 'Domina sílabas e já forma palavras sozinha.', 'Propor leitura prática.'],
-    ['José C.', '11/13', 'otimo', 'ÓTIMO', 'Boa leitura; escreve o próprio nome com segurança.', 'Avançar em vocabulário.'],
-    ['Ana L.', '9/13', 'suporte', 'EM EVOLUÇÃO', 'Reconhece as vogais; ainda confunde B e D.', 'Reforçar módulo 3.'],
-    ['Carlos M.', '8/13', 'suporte', 'EM EVOLUÇÃO', 'Boa participação; precisa de ritmo mais lento.', 'Repetir módulo 4.'],
-    ['Rita P.', '6/13', 'atencao', 'ATENÇÃO', 'Dificuldade ao unir consoante e vogal.', 'Atendimento individual no módulo 5.'],
-    ['Paulo S.', '10/13', 'otimo', 'ÓTIMO', 'Traçado firme; lê palavras curtas.', 'Treinar leitura de números.'],
-    ['Lúcia F.', '7/13', 'suporte', 'EM EVOLUÇÃO', 'Frequência irregular, mas evolui quando presente.', 'Contato para reforçar assiduidade.'],
-    ['Antônio R.', '5/13', 'atencao', 'ATENÇÃO', 'Ainda no reconhecimento das letras.', 'Retomar módulos 1 e 2.']
-];
-
-/* ========== 3. VOZ, ACESSIBILIDADE E MODAL ========== */
-const Voz = {
-    falar(texto) {
-        if (!('speechSynthesis' in window)) return;
-        speechSynthesis.cancel();
-        const fala = new SpeechSynthesisUtterance(texto);
-        fala.lang = 'pt-BR';
-        fala.rate = 0.85;
-        speechSynthesis.speak(fala);
-    },
-    parar() { if ('speechSynthesis' in window) speechSynthesis.cancel(); }
-};
-
-const AppConfig = {
-    alterarTamanhoFonte(delta) {
-        const raiz = document.documentElement;
-        const atual = parseFloat(getComputedStyle(raiz).fontSize) / 16 * 100;
-        raiz.style.fontSize = Math.min(200, Math.max(70, atual + delta)) + '%';
-    },
-    alternarAltoContraste() {
-        const ativo = document.body.classList.toggle('alto-contraste');
-        const botao = document.querySelector('.btn-acesso[aria-pressed]');
-        if (botao) botao.setAttribute('aria-pressed', String(ativo));
-        Armazem.gravar('contraste', ativo ? '1' : '0');
-    }
-};
-
-const InterfaceModal = {
-    abrir(letra) {
-        const [, palavra, icone] = LETRAS.find((l) => l[0] === letra);
-        const idVideo = VIDEOS[letra];
-        $('letra-display').textContent = letra;
-        $('modal-icone-palavra').textContent = icone;
-        $('modal-texto-palavra').textContent = palavra;
-        document.querySelector('.video-wrapper').style.display = idVideo ? '' : 'none';
-        $('player-youtube').src = idVideo ? `https://www.youtube.com/embed/${idVideo}?rel=0` : '';
-        $('modal-letras').classList.add('visivel');
-        Voz.falar(`${letra}. ${palavra}`);
-    },
-    fechar() {
-        $('modal-letras').classList.remove('visivel');
-        $('player-youtube').src = '';
-        Voz.parar();
-    }
-};
-
-/* ========== 4. PERFIL (ALUNO / PROFESSOR) ========== */
-const GerenciadorPerfil = {
-    atual: null,
-    selecionarPerfil(perfil) {
-        this.atual = perfil;
-        $('modal-selecao-perfil').classList.remove('visivel');
-        $('view-aluno').style.display = perfil === 'aluno' ? 'block' : 'none';
-        $('view-professor').style.display = perfil === 'professor' ? 'block' : 'none';
-        $('label-perfil-atual').textContent = '👤 MODALIDADE: ' + perfil.toUpperCase();
-        if (perfil === 'professor') PainelProfessor.renderizar();
-        if (perfil === 'aluno') Navegacao.ir(document.querySelector('.aba-conteudo.active')?.id || 'aba-alfabeto');
-        window.scrollTo(0, 0);
-    },
-    abrirModalSelecao() {
-        Voz.parar();
-        $('modal-selecao-perfil').classList.add('visivel');
-    }
-};
-
-const PainelProfessor = {
-    renderizar() {
-        const corpo = esvaziar($('lista-alunos-professor'));
-        ALUNOS_DEMO.forEach(([nome, tarefas, classe, rotulo, diagnostico, acao]) => {
-            const linha = el('tr');
-            const etiqueta = el('span', 'tag-status ' + classe, rotulo);
-            const celulaDesempenho = el('td');
-            celulaDesempenho.appendChild(etiqueta);
-            linha.append(el('td', '', nome), el('td', '', tarefas), celulaDesempenho, el('td', '', diagnostico), el('td', '', acao));
-            corpo.appendChild(linha);
-        });
-        const subtitulo = document.querySelector('.cabecalho-painel p');
-        if (MODO_DEMONSTRACAO && subtitulo && !subtitulo.dataset.demo) {
-            subtitulo.dataset.demo = '1';
-            subtitulo.appendChild(el('strong', '', ' (DADOS DE DEMONSTRAÇÃO)'));
+// BLOCO DE SEGURANÇA: REMOVE SERVICE WORKERS ANTIGOS QUE CAUSAM BUGS
+if ('serviceWorker' in navigator) {
+    navigator.serviceWorker.getRegistrations().then(function(registrations) {
+        for(let registration of registrations) {
+            registration.unregister();
+            console.log("Cache antigo removido com sucesso.");
         }
-    }
-};
-
-/* ========== 5. NAVEGAÇÃO ENTRE MÓDULOS ========== */
-const Navegacao = {
-    ir(idAba) {
-        document.querySelectorAll('.aba-conteudo').forEach((s) => s.classList.toggle('active', s.id === idAba));
-        document.querySelectorAll('.btn-tab').forEach((b) => {
-            const ativa = b.dataset.target === idAba;
-            b.classList.toggle('active', ativa);
-            b.setAttribute('aria-selected', String(ativa));
-        });
-        $('menu-principal').classList.remove('aberto');
-        Voz.parar();
-        if (idAba === 'aba-escrever') Tracado.ajustar(true);
-    }
-};
-
-function toggleMenuMobile() {
-    const aberto = $('menu-principal').classList.toggle('aberto');
-    document.querySelector('.menu-toggle').setAttribute('aria-expanded', String(aberto));
+    });
 }
 
-/* ========== 6. ATIVIDADES INTERATIVAS ========== */
-const InteracaoApp = {
-    indicePalavra: -1,
+(function () {
+    'use strict';
 
-    proximaInicial() {
-        const [palavra, icone] = PALAVRAS_INICIAIS[Math.floor(Math.random() * PALAVRAS_INICIAIS.length)];
-        const certa = palavra[0];
-        const dica = $('nome-inicial-dica');
-        dica.textContent = ['_', ...palavra.slice(1)].join(' ');
-        $('imagem-inicial').textContent = icone;
-        const caixa = esvaziar($('opcoes-iniciais'));
-        const erradas = embaralhar([...VOGAIS, ...CONSOANTES].filter((l) => l !== certa)).slice(0, 2);
-        embaralhar([certa, ...erradas]).forEach((letra) => {
-            caixa.appendChild(el('button', 'btn-grande', letra, () => {
-                if (letra !== certa) return Voz.falar('TENTE DE NOVO');
-                caixa.querySelectorAll('button').forEach((b) => { b.disabled = true; });
-                dica.textContent = [...palavra].join(' ');
-                confete();
-                Voz.falar(`MUITO BEM! ${palavra}`);
-                setTimeout(() => this.proximaInicial(), 2500);
-            }, 'var(--cor-primaria)'));
-        });
-    },
+    function toggleMenuMobile() {
+        const menu = document.getElementById('menu-principal');
+        menu.classList.toggle('aberto');
+    }
 
-    escolherFamilia(consoante) {
-        $('titulo-familia-atual').textContent = `UNIÃO DE SONS: ${consoante}`;
-        const caixa = esvaziar($('resultado-familia'));
-        VOGAIS.forEach((v) => caixa.appendChild(el('button', 'btn-grande', consoante + v, () => Voz.falar(consoante + v), 'var(--cor-sucesso)')));
-    },
+    // BANCO DE DADOS ALUNO E PROFESSOR
+    const BancoDados = {
+        alfabeto: [
+            { letra: 'A', palavra: 'ABELHA', icone: '🐝', youtubeId: 'XBCDUG-yEaw' }, 
+            { letra: 'B', palavra: 'BOLA', icone: '⚽', youtubeId: 'j6ROsDM87UU' },
+            { letra: 'C', palavra: 'CASA', icone: '🏠', youtubeId: 'hWZA7DElS_I' }, 
+            { letra: 'D', palavra: 'DADO', icone: '🎲', youtubeId: 'mAIWY3S12s4' },
+            { letra: 'E', palavra: 'ELEFANTE', icone: '🐘', youtubeId: '8s43APNFMtM' }, 
+            { letra: 'F', palavra: 'FACA', icone: '🔪', youtubeId: 'nuX0O_hqoFM' },
+            { letra: 'G', palavra: 'GATO', icone: '🐈', youtubeId: '4SjEf5gYXio' }, 
+            { letra: 'H', palavra: 'HORA', icone: '⌚', youtubeId: 'NhZ6eVHmVDA' },
+            { letra: 'I', palavra: 'IGREJA', icone: '⛪', youtubeId: 'ILhan-Htj0g' }, 
+            { letra: 'J', palavra: 'JACARÉ', icone: '🐊', youtubeId: 'Z9lBor1lnI8' },
+            { letra: 'K', palavra: 'KIWI', icone: '🥝', youtubeId: 'eGrZ1WM_oaE' }, 
+            { letra: 'L', palavra: 'LÁPIS', icone: '✏️', youtubeId: 'tC3yWQPeNpE' },
+            { letra: 'M', palavra: 'MALA', icone: '🧳', youtubeId: 'mH3byoH67O4' }, 
+            { letra: 'N', palavra: 'NAVIO', icone: '🚢', youtubeId: 'AGPxKWabjSc' },
+            { letra: 'O', palavra: 'ÓCULOS', icone: '👓', youtubeId: '-8RtEgO3Y5s' }, 
+            { letra: 'P', palavra: 'PATO', icone: '🦆', youtubeId: 'bmQ_2UA7sWw' },
+            { letra: 'Q', palavra: 'QUEIJO', icone: '🧀', youtubeId: '-qZ5fNtr-8g' }, 
+            { letra: 'R', palavra: 'RATO', icone: '🐀', youtubeId: '7fKcMXcBNOA' },
+            { letra: 'S', palavra: 'SAPO', icone: '🐸', youtubeId: 's6XAkz5lGxA' }, 
+            { letra: 'T', palavra: 'TATU', icone: '🦔', youtubeId: '-FyHvZ9Hz0Y' },
+            { letra: 'U', palavra: 'UVA', icone: '🍇', youtubeId: 'beFXQ-w5CKs' }, 
+            { letra: 'V', palavra: 'VACA', icone: '🐄', youtubeId: 'cGJ2MXDMsgE' },
+            { letra: 'W', palavra: 'WEB', icone: '🌐', youtubeId: 'An41gHwcEEw' }, 
+            { letra: 'X', palavra: 'XÍCARA', icone: '☕', youtubeId: 'zqrqp-RHFHs' },
+            { letra: 'Y', palavra: 'YOUTUBE', icone: '▶️', youtubeId: 'NJLEAbML25A' }, 
+            { letra: 'Z', palavra: 'ZEBRA', icone: '🦓', youtubeId: '-QBkzFZDWNU' }
+        ],
+        vogais: ['A','E','I','O','U'],
+        consoantes: ['B','C','D','F','G','H','J','K','L','M','N','P','Q','R','S','T','V','W','X','Y','Z'],
+        iniciais: [
+            { img: '✈️', nome: 'AVIÃO', certa: 'A', ops: ['A','E','O'] }, { img: '🐘', nome: 'ELEFANTE', certa: 'E', ops: ['I','E','U'] },
+            { img: '⛪', nome: 'IGREJA', certa: 'I', ops: ['A','I','O'] }, { img: '👁️', nome: 'OLHO', certa: 'O', ops: ['U','A','O'] },
+            { img: '🍇', nome: 'UVA', certa: 'U', ops: ['E','U','I'] }, { img: '🐎', nome: 'CAVALO', certa: 'C', ops: ['B','C','D'] }
+        ],
+        silabas: [
+            { consoante: 'B', vogal: 'A', palavra: 'BANANA', icone: '🍌' }, { consoante: 'M', vogal: 'A', palavra: 'MALA', icone: '🧳' },
+            { consoante: 'C', vogal: 'O', palavra: 'COPO', icone: '🥛' }, { consoante: 'D', vogal: 'I', palavra: 'DINHEIRO', icone: '💵' }
+        ],
+        palavrasJogo: [
+            { p: 'BONECA', s: ['BO','NE','CA'] }, { p: 'ESCOLA', s: ['ES','CO','LA'] }, { p: 'BRASIL', s: ['BRA','SIL'] }
+        ],
+        cores: [
+            { n: 'AZUL', c: '#2196F3', txt: '#FFF' }, { n: 'VERMELHO', c: '#FF3B30', txt: '#FFF' },
+            { n: 'AMARELO', c: '#FFCC00', txt: '#000' }, { n: 'VERDE', c: '#34C759', txt: '#FFF' }
+        ],
+        vidaPratica: [
+            { titulo: 'RECEITA MÉDICA', icone: '💊', textoFala: 'ATENÇÃO: TOMAR UM COMPRIMIDO DE DIPIRONA A CADA 8 HORAS.' },
+            { titulo: 'LETREIRO DE ÔNIBUS', icone: '🚌', textoFala: 'EXPRESSO' },
+            { titulo: 'LISTA DO MERCADO', icone: '🛒', textoFala: 'LISTA DE COMPRAS: 5 QUILOS DE ARROZ, FEIJÃO E MACARRÃO.' }
+        ],
+        animais: [
+            { nome: 'CACHORRO', icone: '🐕' }, { nome: 'GATO', icone: '🐈' }, { nome: 'VACA', icone: '🐄' }, { nome: 'CAVALO', icone: '🐎' }
+        ],
+        // DADOS PARA A TABELA DO PROFESSOR (COM PROGRESSO)
+        alunosProfessor: [
+            { nome: 'Seu João da Silva', pct: 90, barra: 'barra-verde', modulo: '10. Leitura Prática', diag: 'Lê receitas e letreiros com facilidade.', acao: 'Apto para o próximo nível', tag: 'tag-verde' },
+            { nome: 'Dona Maria Oliveira', pct: 45, barra: 'barra-amarela', modulo: '4. Unindo Sons', diag: 'Confunde o som do P com o B.', acao: 'Reforço de Consoantes', tag: 'tag-amarelo' },
+            { nome: 'Carlos Eduardo', pct: 98, barra: 'barra-verde', modulo: '12. Números', diag: 'Excelente coordenação motora no traçado.', acao: 'Apto para formatura', tag: 'tag-verde' },
+            { nome: 'Ana Paula Souza', pct: 20, barra: 'barra-vermelha', modulo: '1. Sons das Letras', diag: 'Dificuldade visual. Precisa de Alto Contraste.', acao: 'Acompanhamento lado a lado', tag: 'tag-vermelho' },
+            { nome: 'Marcos Roberto', pct: 70, barra: 'barra-verde', modulo: '6. Formar Palavras', diag: 'Bom desenvolvimento na formação de sílabas.', acao: 'Continuar no módulo atual', tag: 'tag-verde' }
+        ]
+    };
 
-    proximaPalavra() {
-        this.indicePalavra = (this.indicePalavra + 1) % PALAVRAS.length;
-        const [palavra, silabas, icone] = PALAVRAS[this.indicePalavra];
-        $('dica-palavra').textContent = `${icone} ${palavra}`;
-        const slots = esvaziar($('slots-palavra'));
-        const soltas = esvaziar($('silabas-soltas'));
-        const casas = silabas.map(() => slots.appendChild(el('div', 'slot-silaba')));
-        let proxima = 0;
-        embaralhar(silabas).forEach((silaba) => {
-            const botao = el('button', 'bloco', silaba, () => {
-                if (silaba !== silabas[proxima]) return Voz.falar('TENTE DE NOVO');
-                casas[proxima].textContent = silaba;
-                casas[proxima].classList.add('preenchido');
-                botao.remove();
-                Voz.falar(silaba);
-                proxima++;
-                if (proxima === silabas.length) {
-                    confete();
-                    setTimeout(() => Voz.falar(`MUITO BEM! ${palavra}`), 800);
+    const Voz = {
+        falar: function(texto) {
+            if (!window.speechSynthesis) return;
+            window.speechSynthesis.cancel();
+            const fala = new SpeechSynthesisUtterance(texto);
+            fala.lang = 'pt-BR';
+            window.speechSynthesis.speak(fala);
+        },
+        parar: function() {
+            if (window.speechSynthesis) window.speechSynthesis.cancel();
+        }
+    };
+
+    // CONTROLE DE PERFIL EXTREMAMENTE ROBUSTO (SEM BUGS DE CLIQUE)
+    const GerenciadorPerfil = {
+        abrirModalSelecao: function() {
+            const modal = document.getElementById('modal-selecao-perfil');
+            modal.style.display = 'flex';
+        },
+        selecionarPerfil: function(perfil) {
+            try {
+                // 1. Esconde o modal na marra
+                const modal = document.getElementById('modal-selecao-perfil');
+                modal.style.display = 'none';
+                
+                // 2. Controla qual View aparece
+                const viewAluno = document.getElementById('view-aluno');
+                const viewProfessor = document.getElementById('view-professor');
+                const label = document.getElementById('label-perfil-atual');
+
+                if (perfil === 'professor') {
+                    viewAluno.style.display = 'none';
+                    viewProfessor.style.display = 'block';
+                    label.innerText = '👨‍🏫 PERFIL: PROFESSOR';
+                    this.renderizarTabelaProfessor();
+                    Voz.falar('Painel do professor aberto com sucesso.');
+                } else {
+                    viewProfessor.style.display = 'none';
+                    viewAluno.style.display = 'block';
+                    label.innerText = '🎓 PERFIL: ALUNO';
+                    // Força a aba alfabeto a ficar ativa no aluno
+                    document.querySelectorAll('.aba-conteudo').forEach(el => el.classList.remove('active'));
+                    document.querySelectorAll('.btn-tab').forEach(el => el.classList.remove('active'));
+                    document.getElementById('aba-alfabeto').classList.add('active');
+                    document.querySelector('.btn-tab[data-target="aba-alfabeto"]').classList.add('active');
+                    Voz.falar('Painel do aluno aberto. Escolha uma lição.');
                 }
+            } catch (erro) {
+                console.error("Erro no clique do perfil: ", erro);
+            }
+        },
+        renderizarTabelaProfessor: function() {
+            const tbody = document.getElementById('lista-alunos-professor');
+            tbody.innerHTML = '';
+            BancoDados.alunosProfessor.forEach(aluno => {
+                const tr = document.createElement('tr');
+                tr.innerHTML = `
+                    <td>${aluno.nome}</td>
+                    <td>
+                        <div class="barra-fundo">
+                            <div class="barra-preenchimento ${aluno.barra}" style="width: ${aluno.pct}%;">${aluno.pct}%</div>
+                        </div>
+                    </td>
+                    <td>${aluno.modulo}</td>
+                    <td><i style="color: #666;">"${aluno.diag}"</i></td>
+                    <td><span class="tag-status ${aluno.tag}">${aluno.acao}</span></td>
+                `;
+                tbody.appendChild(tr);
             });
-            soltas.appendChild(botao);
-        });
-    },
-
-    verificarNome() {
-        const nome = $('input-nome').value.trim().toUpperCase();
-        if (!nome) return Voz.falar('DIGITE O SEU NOME NA CAIXA BRANCA');
-        Armazem.gravar('nome', nome);
-        mostrarBoasVindas(nome);
-        confete();
-        Voz.falar(`MUITO BEM, ${nome}! SEU NOME TEM AS LETRAS: ${[...nome].join(', ')}`);
-    }
-};
-
-function mostrarBoasVindas(nome) {
-    const tag = $('mensagem-boas-vindas');
-    tag.textContent = `👋 OLÁ, ${nome}!`;
-    tag.style.display = 'block';
-}
-
-/* ========== 7. TRAÇADO (CANVAS) ========== */
-const Tracado = {
-    tela: null, ctx: null, desenhando: false,
-
-    iniciar() {
-        this.tela = $('canvas-caligrafia');
-        this.ctx = this.tela.getContext('2d');
-        const posicao = (e) => { const r = this.tela.getBoundingClientRect(); return [e.clientX - r.left, e.clientY - r.top]; };
-        this.tela.addEventListener('pointerdown', (e) => {
-            this.desenhando = true;
-            this.tela.setPointerCapture(e.pointerId);
-            const [x, y] = posicao(e);
-            this.ctx.beginPath(); this.ctx.moveTo(x, y); this.ctx.lineTo(x + 0.01, y); this.ctx.stroke();
-        });
-        this.tela.addEventListener('pointermove', (e) => {
-            if (!this.desenhando) return;
-            const [x, y] = posicao(e);
-            this.ctx.lineTo(x, y); this.ctx.stroke();
-        });
-        ['pointerup', 'pointercancel'].forEach((ev) => this.tela.addEventListener(ev, () => { this.desenhando = false; }));
-        window.addEventListener('resize', () => this.ajustar(false));
-
-        const botoes = $('botoes-desenho');
-        botoes.appendChild(el('button', 'btn-ferramenta', '🧽 LIMPAR', () => this.limpar(), 'var(--cor-destaque)'));
-        [...'ABCDEFGHIJKLMNOPQRSTUVWXYZ0123456789'].forEach((c) => botoes.appendChild(el('button', 'btn-ferramenta', c, () => {
-            $('guia-fundo').textContent = c;
-            this.limpar();
-            Voz.falar(c);
-        })));
-    },
-
-    ajustar(forcar) {
-        const caixa = $('container-canvas');
-        if (!caixa.clientWidth || (!forcar && caixa.clientWidth === this.tela.width)) return;
-        this.tela.width = caixa.clientWidth;
-        this.tela.height = caixa.clientHeight;
-        Object.assign(this.ctx, { lineWidth: 14, lineCap: 'round', lineJoin: 'round', strokeStyle: '#007AFF' });
-    },
-
-    limpar() { this.ctx.clearRect(0, 0, this.tela.width, this.tela.height); }
-};
-
-/* ========== 8. MONTAGEM DAS TELAS ========== */
-const Montagem = {
-    alfabeto() {
-        const grade = $('container-grid-alfabeto');
-        LETRAS.forEach(([letra]) => grade.appendChild(el('button', 'btn-letra', letra, () => InterfaceModal.abrir(letra))));
-    },
-    vogaisEConsoantes() {
-        VOGAIS.forEach((l) => $('box-vogais').appendChild(el('button', 'btn-grande', l, () => Voz.falar(l), 'var(--cor-destaque)')));
-        CONSOANTES.forEach((l) => $('box-consoantes').appendChild(el('button', 'btn-grande', l, () => Voz.falar(l), 'var(--cor-primaria)')));
-    },
-    familias() {
-        CONSOANTES.forEach((c) => $('botoes-familias').appendChild(el('button', 'btn-grande', c, () => InteracaoApp.escolherFamilia(c), 'var(--cor-primaria)')));
-        InteracaoApp.escolherFamilia('B');
-    },
-    silabas() {
-        const area = $('container-silabas');
-        SILABAS_EXEMPLO.forEach(([c, v]) => {
-            const linha = el('div', 'linha-silaba');
-            linha.append(
-                el('span', 'bloco', c), el('span', 'sinal-matematico', '+'), el('span', 'bloco', v), el('span', 'sinal-matematico', '='),
-                el('button', 'bloco bloco-resultado', `🔊 ${c}${v}`, () => Voz.falar(c + v))
-            );
-            area.appendChild(linha);
-        });
-    },
-    cores() {
-        CORES.forEach(([nome, hex]) => {
-            const botao = el('button', 'btn-letra', nome, () => Voz.falar(nome), hex);
-            botao.style.fontSize = '1.1rem';
-            botao.style.color = ['AMARELO', 'BRANCO'].includes(nome) ? '#000' : '#FFF';
-            if (nome === 'BRANCO') botao.style.border = '3px solid #CCC';
-            $('container-cores').appendChild(botao);
-        });
-    },
-    cartoes(idContainer, lista) {
-        const caixa = $(idContainer);
-        lista.forEach(([icone, titulo, frase]) => {
-            const cartao = el('div', 'card-interativo');
-            cartao.tabIndex = 0;
-            cartao.setAttribute('role', 'button');
-            const falar = () => Voz.falar(frase || titulo);
-            cartao.onclick = falar;
-            cartao.onkeydown = (e) => { if (e.key === 'Enter' || e.key === ' ') { e.preventDefault(); falar(); } };
-            cartao.append(el('div', 'icone-card', icone), el('h3', '', titulo));
-            if (frase) cartao.appendChild(el('p', '', frase));
-            caixa.appendChild(cartao);
-        });
-    },
-    numeros() {
-        for (let n = 1; n <= 100; n++) {
-            const botao = el('button', 'btn-grande', String(n), () => Voz.falar(String(n)), 'var(--cor-primaria)');
-            botao.style.fontSize = '1.6rem';
-            botao.style.padding = '10px';
-            $('container-numeros').appendChild(botao);
         }
+    };
+
+    const InterfaceModal = {
+        mostrarVideo: function(item) {
+            document.getElementById('letra-display').innerText = item.letra;
+            document.getElementById('modal-icone-palavra').innerText = item.icone;
+            document.getElementById('modal-texto-palavra').innerText = item.palavra;
+            document.getElementById('player-youtube').src = "https://www.youtube.com/embed/" + item.youtubeId + "?autoplay=1";
+            document.getElementById('modal-letras').style.display = 'flex';
+            Voz.falar(`A letra ${item.letra} forma a palavra ${item.palavra}.`);
+        },
+        fechar: function() {
+            document.getElementById('modal-letras').style.display = 'none';
+            document.getElementById('player-youtube').src = "";
+            Voz.parar();
+        }
+    };
+
+    class CanvasCaligrafia {
+        constructor() {
+            this.canvas = document.getElementById('canvas-caligrafia');
+            this.ctx = this.canvas.getContext('2d');
+            this.container = document.getElementById('container-canvas');
+            this.desenhando = false;
+            this.canvas.addEventListener('mousedown', (e) => this.iniciar(e));
+            this.canvas.addEventListener('mousemove', (e) => this.desenhar(e));
+            this.canvas.addEventListener('mouseup', () => this.parar());
+            this.canvas.addEventListener('touchstart', (e) => this.iniciar(e), {passive:false});
+            this.canvas.addEventListener('touchmove', (e) => this.desenhar(e), {passive:false});
+            this.canvas.addEventListener('touchend', () => this.parar());
+        }
+        redimensionar() {
+            if(!this.container || !this.canvas) return;
+            this.canvas.width = this.container.clientWidth;
+            this.canvas.height = this.container.clientHeight;
+            this.ctx.lineWidth = 25; 
+            this.ctx.lineCap = 'round';
+            this.ctx.strokeStyle = '#007AFF';
+        }
+        obterPos(e) {
+            const rect = this.canvas.getBoundingClientRect();
+            if (e.touches) return { x: e.touches[0].clientX - rect.left, y: e.touches[0].clientY - rect.top };
+            return { x: e.clientX - rect.left, y: e.clientY - rect.top };
+        }
+        iniciar(e) { e.preventDefault(); this.desenhando = true; const p = this.obterPos(e); this.ctx.beginPath(); this.ctx.moveTo(p.x, p.y); }
+        desenhar(e) { if(!this.desenhando) return; e.preventDefault(); const p = this.obterPos(e); this.ctx.lineTo(p.x, p.y); this.ctx.stroke(); this.ctx.beginPath(); this.ctx.moveTo(p.x, p.y); }
+        parar() { this.desenhando = false; this.ctx.beginPath(); setTimeout(() => this.ctx.clearRect(0,0,this.canvas.width,this.canvas.height), 2500); }
+        limpar() { this.ctx.clearRect(0,0,this.canvas.width,this.canvas.height); }
     }
-};
+    let QuadroInterativo;
 
-/* ========== 9. INICIALIZAÇÃO ========== */
-function iniciar() {
-    // Primeiro o que garante a navegação, para nada travar a tela de perfil
-    document.querySelectorAll('.btn-tab').forEach((b) => { b.onclick = () => Navegacao.ir(b.dataset.target); });
-    document.addEventListener('keydown', (e) => { if (e.key === 'Escape') InterfaceModal.fechar(); });
-    $('modal-letras').addEventListener('click', (e) => { if (e.target === $('modal-letras')) InterfaceModal.fechar(); });
+    const InteracaoApp = {
+        idInicial: 0, idPalavra: 0, silabasOk: 0,
+        verificarNome: function() {
+            const nome = document.getElementById('input-nome').value.trim();
+            if(nome) {
+                document.getElementById('mensagem-boas-vindas').innerText = `OLÁ, ${nome}!`;
+                Voz.falar(`Parabéns, ${nome}! Nome salvo.`);
+            }
+        },
+        carregarInicial: function() {
+            const ct = document.getElementById('opcoes-iniciais'); ct.innerHTML = '';
+            const item = BancoDados.iniciais[this.idInicial];
+            document.getElementById('imagem-inicial').innerText = item.img;
+            document.getElementById('nome-inicial-dica').innerText = "_ " + item.nome.substring(1).split('').join(' ');
+            item.ops.forEach(op => {
+                let btn = document.createElement('button'); btn.className='btn-grande'; btn.style.background='var(--cor-secundaria)'; btn.innerText=op;
+                btn.onclick = () => {
+                    if(op === item.certa) {
+                        document.getElementById('nome-inicial-dica').innerText = item.nome.split('').join(' ');
+                        Voz.falar('Certo!');
+                        this.idInicial = (this.idInicial + 1) % BancoDados.iniciais.length;
+                        setTimeout(() => this.carregarInicial(), 2000);
+                    } else Voz.falar('Tente outra vez.');
+                };
+                ct.appendChild(btn);
+            });
+        },
+        carregarPalavra: function() {
+            const item = BancoDados.palavrasJogo[this.idPalavra]; this.silabasOk = 0;
+            document.getElementById('dica-palavra').innerText = item.p;
+            const slots = document.getElementById('slots-palavra'); slots.innerHTML = '';
+            item.s.forEach((sil, i) => { slots.innerHTML += `<div class="btn-grande" style="background:#eee; color:#333;" id="slot-${i}">_</div>`; });
+            
+            const soltas = document.getElementById('silabas-soltas'); soltas.innerHTML = '';
+            let misturadas = [...item.s].sort(() => Math.random() - 0.5);
+            misturadas.forEach(sil => {
+                let btn = document.createElement('button'); btn.className='btn-grande'; btn.style.background='var(--cor-secundaria)'; btn.innerText=sil;
+                btn.onclick = (e) => {
+                    if(sil === item.s[this.silabasOk]) {
+                        document.getElementById(`slot-${this.silabasOk}`).innerText = sil;
+                        document.getElementById(`slot-${this.silabasOk}`).style.background = 'var(--cor-sucesso)';
+                        document.getElementById(`slot-${this.silabasOk}`).style.color = 'white';
+                        e.target.style.display = 'none';
+                        this.silabasOk++;
+                        if(this.silabasOk === item.s.length) Voz.falar(`Você formou ${item.p}`);
+                    } else Voz.falar('Sílaba errada.');
+                };
+                soltas.appendChild(btn);
+            });
+        },
+        proximaPalavra: function() { this.idPalavra = (this.idPalavra + 1) % BancoDados.palavrasJogo.length; this.carregarPalavra(); }
+    };
 
-    const nomeSalvo = Armazem.ler('nome');
-    if (nomeSalvo) { $('input-nome').value = nomeSalvo; mostrarBoasVindas(nomeSalvo); }
-    if (Armazem.ler('contraste') === '1') AppConfig.alternarAltoContraste();
+    const AppConfig = {
+        tam: 100,
+        alterarTamanhoFonte: function(inc) {
+            this.tam += inc; if(this.tam>=80 && this.tam<=150) document.documentElement.style.fontSize = this.tam + '%';
+        },
+        alternarAltoContraste: function() { document.body.classList.toggle('alto-contraste'); }
+    };
 
-    // Cada módulo é montado isoladamente: um erro não derruba os demais
-    [
-        () => Montagem.alfabeto(), () => Montagem.vogaisEConsoantes(), () => InteracaoApp.proximaInicial(),
-        () => Montagem.familias(), () => Montagem.silabas(), () => InteracaoApp.proximaPalavra(),
-        () => { Tracado.iniciar(); }, () => Montagem.cores(), () => Montagem.cartoes('container-dia-a-dia', DIA_A_DIA),
-        () => Montagem.cartoes('container-animais', VOCABULARIO), () => Montagem.numeros()
-    ].forEach((montar) => { try { montar(); } catch (erro) { console.error('Falha ao montar módulo:', erro); } });
+    function renderizarTudo() {
+        // Alfabeto
+        const ca = document.getElementById('container-grid-alfabeto');
+        BancoDados.alfabeto.forEach(i => { let b=document.createElement('button'); b.className='btn-letra'; b.innerText=i.letra; b.onclick=()=>InterfaceModal.mostrarVideo(i); ca.appendChild(b); });
+        
+        // Vogais e Cons
+        const v = document.getElementById('box-vogais'); const c = document.getElementById('box-consoantes');
+        BancoDados.vogais.forEach(l => { let b=document.createElement('button'); b.className='btn-grande'; b.style.background='var(--cor-destaque)'; b.innerText=l; b.onclick=()=>Voz.falar(l); v.appendChild(b); });
+        BancoDados.consoantes.forEach(l => { let b=document.createElement('button'); b.className='btn-letra'; b.style.width='80px'; b.innerText=l; b.onclick=()=>Voz.falar(l); c.appendChild(b); });
+        
+        // Familias
+        const bf = document.getElementById('botoes-familias');
+        BancoDados.consoantes.forEach(l => {
+            let b=document.createElement('button'); b.className='btn-letra'; b.style.width='60px'; b.innerText=l;
+            b.onclick = () => {
+                document.getElementById('resultado-familia').innerHTML = '';
+                BancoDados.vogais.forEach(vg => {
+                    let r=document.createElement('button'); r.className='btn-grande'; r.style.background='var(--cor-sucesso)'; r.innerText=l+vg;
+                    r.onclick=()=>Voz.falar(l+vg); document.getElementById('resultado-familia').appendChild(r);
+                });
+            };
+            bf.appendChild(b);
+        });
 
-    if ('serviceWorker' in navigator && location.protocol !== 'file:') {
-        navigator.serviceWorker.register('./sw.js').catch((erro) => console.warn('Service worker não registrado:', erro));
+        // Abas Navegação
+        document.querySelectorAll('.btn-tab').forEach(btn => {
+            btn.addEventListener('click', (e) => {
+                document.querySelectorAll('.btn-tab').forEach(b => b.classList.remove('active'));
+                document.querySelectorAll('.aba-conteudo').forEach(c => c.classList.remove('active'));
+                e.currentTarget.classList.add('active');
+                document.getElementById(e.currentTarget.getAttribute('data-target')).classList.add('active');
+                if(e.currentTarget.getAttribute('data-target') === 'aba-escrever' && QuadroInterativo) QuadroInterativo.redimensionar();
+                document.getElementById('menu-principal').classList.remove('aberto');
+            });
+        });
+
+        // Cores, Numeros, Dia-a-dia etc...
+        BancoDados.cores.forEach(cor => { let b=document.createElement('button'); b.className='btn-letra'; b.innerText=cor.n; b.style.background=cor.c; b.style.color=cor.txt; b.style.fontSize='1.5rem'; b.onclick=()=>Voz.falar(cor.n); document.getElementById('container-cores').appendChild(b); });
+        for(let i=1; i<=100; i++){ let b=document.createElement('button'); b.className='btn-letra'; b.style.height='80px'; b.style.fontSize='2.5rem'; b.innerText=i; b.onclick=()=>Voz.falar(i.toString()); document.getElementById('container-numeros').appendChild(b); }
+        
+        BancoDados.vidaPratica.forEach(i => {
+            let d = document.createElement('div'); d.className='cartao centralizado'; d.style.cursor='pointer'; d.innerHTML=`<div style="font-size:5rem;">${i.icone}</div><h2>${i.titulo}</h2>`;
+            d.onclick=()=>Voz.falar(i.textoFala); document.getElementById('container-dia-a-dia').appendChild(d);
+        });
+        
+        BancoDados.animais.forEach(i => {
+            let d = document.createElement('div'); d.className='cartao centralizado'; d.style.cursor='pointer'; d.innerHTML=`<div style="font-size:5rem;">${i.icone}</div><h2>${i.nome}</h2>`;
+            d.onclick=()=>Voz.falar(i.nome); document.getElementById('container-animais').appendChild(d);
+        });
+
+        // Botoes Desenho
+        let cd = document.getElementById('botoes-desenho');
+        ['A','B','C','D','E','F','?','~'].forEach(s => { let b=document.createElement('button'); b.className='btn-ferramenta'; b.innerText=s; b.onclick=()=>{document.getElementById('guia-fundo').innerText=s; QuadroInterativo.limpar();}; cd.appendChild(b); });
+        
+        InteracaoApp.carregarInicial();
+        InteracaoApp.carregarPalavra();
+        QuadroInterativo = new CanvasCaligrafia();
     }
-}
 
-Object.assign(window, { AppConfig, Voz, GerenciadorPerfil, InteracaoApp, InterfaceModal, toggleMenuMobile });
-if (document.readyState === 'loading') document.addEventListener('DOMContentLoaded', iniciar); else iniciar();
+    // Inicialização da Página
+    document.addEventListener('DOMContentLoaded', () => {
+        renderizarTudo();
+        GerenciadorPerfil.abrirModalSelecao(); // Garante que o modal abre na largada
+    });
+
+    // Torna as funções globais para o HTML acessá-las sem problemas
+    window.toggleMenuMobile = toggleMenuMobile;
+    window.GerenciadorPerfil = GerenciadorPerfil;
+    window.AppConfig = AppConfig;
+    window.Voz = Voz;
+    window.InterfaceModal = InterfaceModal;
+    window.InteracaoApp = InteracaoApp;
+})();
