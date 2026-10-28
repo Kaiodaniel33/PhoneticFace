@@ -1,5 +1,6 @@
-.css-guard { display: block; }
-
+/* ==========================================================================
+   1. VARIÁVEIS DO SISTEMA E CONFIGURAÇÕES GERAIS
+   ========================================================================== */
 :root {
     --cor-bg-principal: #F4F7F6;
     --cor-bg-secundario: #FFFFFF;
@@ -21,6 +22,8 @@
 
 * { margin: 0; padding: 0; box-sizing: border-box; }
 html { font-size: 100%; scroll-behavior: smooth; }
+
+/* CORRIGIDO (PROBLEMA 1): text-transform: none no body para leitura natural de relatórios */
 body {
     font-family: var(--fonte-principal);
     background: linear-gradient(135deg, #F4F7F6 0%, #E2E8F0 100%);
@@ -30,6 +33,14 @@ body {
     display: flex;
     flex-direction: column;
     overflow-x: hidden;
+    text-transform: none;
+}
+
+/* Letras maiúsculas aplicadas apenas aos componentes pedagógicos de alfabetização e títulos */
+h1, h2, h3,
+.btn-letra, .btn-grande, .btn-tab, .btn-acao, .btn-instrucao,
+.dica-inicial-box, .palavra-jogo-titulo, .slot-silaba, .bloco,
+.barra-status-tracado, input {
     text-transform: uppercase;
 }
 
@@ -38,8 +49,13 @@ button:focus-visible, input:focus-visible {
     outline-offset: 2px;
 }
 
-/* ALTO CONTRASTE */
-body.alto-contraste { background: #000000 !important; color: #FFFF00 !important; }
+/* ==========================================================================
+   2. ALTO CONTRASTE CORRIGIDO (PROBLEMA 3)
+   ========================================================================== */
+body.alto-contraste {
+    background: #000000 !important;
+    color: #FFFF00 !important;
+}
 body.alto-contraste .cabecalho-app,
 body.alto-contraste .cartao,
 body.alto-contraste .rodape-app,
@@ -74,14 +90,28 @@ body.alto-contraste .slot-silaba {
     border: 3px solid #FFFF00 !important;
     box-shadow: none !important;
 }
+
+/* Preserva texto preto sobre fundo amarelo nos botões ativos */
 body.alto-contraste .btn-tab.active,
 body.alto-contraste .btn-filtro.active {
     background: #FFFF00 !important;
     color: #000000 !important;
 }
-body.alto-contraste #guia-fundo { color: rgba(255, 255, 0, 0.28) !important; }
+body.alto-contraste .btn-tab.active *,
+body.alto-contraste .btn-filtro.active * {
+    color: #000000 !important;
+}
+body.alto-contraste input::placeholder {
+    color: #FFFF00 !important;
+    opacity: 1;
+}
+body.alto-contraste #guia-fundo {
+    color: rgba(255, 255, 0, 0.28) !important;
+}
 
-/* BARRA SUPERIOR E CABEÇALHO */
+/* ==========================================================================
+   3. BARRA SUPERIOR E CABEÇALHO
+   ========================================================================== */
 .barra-acessibilidade {
     background: #0F172A;
     color: #FFF;
@@ -139,7 +169,7 @@ header.cabecalho-app {
 .logo-container { display: flex; align-items: center; justify-content: center; gap: 22px; flex-wrap: wrap; margin-bottom: 0.8rem; }
 .logo-img { max-height: 86px; border-radius: 16px; background: #FFF; padding: 5px; box-shadow: 0 8px 15px rgba(0,0,0,0.2); }
 .cabecalho-app h1 { font-size: 3.2rem; font-weight: 900; text-shadow: 2px 4px 8px rgba(0,0,0,0.2); margin: 0; }
-.cabecalho-app p { font-size: 1.15rem; font-weight: 800; opacity: 0.95; }
+.subtitulo-topo { font-size: 1.15rem; font-weight: 800; opacity: 0.95; }
 .tag-boas-vindas { margin-top: 6px; color: var(--cor-alerta); font-size: 1.1rem; font-weight: 900; display: none; }
 
 /* MENU DO ALUNO */
@@ -178,7 +208,9 @@ nav.menu-principal { display: flex; justify-content: center; flex-wrap: wrap; ga
 }
 .btn-tab.tab-equipe { background: var(--cor-roxo); border-color: var(--cor-roxo); }
 
-/* CONTEÚDO E JOGOS */
+/* ==========================================================================
+   4. CONTEÚDO E JOGOS DO ALUNO
+   ========================================================================== */
 main.conteudo-app { flex: 1; width: 100%; max-width: 1300px; margin: 2rem auto; padding: 0 15px; }
 .aba-conteudo { display: none; }
 .aba-conteudo.active { display: block; }
@@ -239,7 +271,7 @@ main.conteudo-app { flex: 1; width: 100%; max-width: 1300px; margin: 2rem auto; 
 
 .btn-grande { font-size: 2rem; font-weight: 900; padding: 14px 28px; border-radius: 18px; border: none; cursor: pointer; color: #FFF; box-shadow: var(--sombra-botao); }
 .btn-grande:active { transform: translateY(5px); box-shadow: none; }
-.btn-acao { background: var(--cor-destaque); color: #FFF; border: none; padding: 18px 34px; font-size: 1.35rem; font-weight: 900; border-radius: 18px; cursor: pointer; width: 100%; box-shadow: 0 7px 0 #C93427; text-transform: uppercase; }
+.btn-acao { background: var(--cor-destaque); color: #FFF; border: none; padding: 18px 34px; font-size: 1.35rem; font-weight: 900; border-radius: 18px; cursor: pointer; width: 100%; box-shadow: 0 7px 0 #C93427; }
 .btn-ouvir-aux { background: #E2E8F0; color: #0F172A; border: 2px solid #94A3B8; padding: 10px 22px; font-size: 1.05rem; font-weight: 900; border-radius: 25px; cursor: pointer; }
 
 .dica-inicial-box { font-size: 3.2rem; color: var(--cor-primaria); letter-spacing: 8px; margin-top: 15px; background: #F8FAFC; padding: 14px 28px; border-radius: 18px; display: inline-block; border: 2px solid #E2E8F0; }
@@ -256,7 +288,9 @@ main.conteudo-app { flex: 1; width: 100%; max-width: 1300px; margin: 2rem auto; 
 .icone-card { font-size: 5.5rem; margin-bottom: 12px; }
 .slot-silaba { min-width: 90px; height: 86px; padding: 0 12px; border: 4px dashed #94A3B8; border-radius: 15px; display: flex; justify-content: center; align-items: center; font-size: 2.2rem; font-weight: 900; background: #F8FAFC; }
 
-/* CALIGRAFIA */
+/* ==========================================================================
+   5. CALIGRAFIA E TRAÇADO
+   ========================================================================== */
 .barra-status-tracado { text-align: center; padding: 14px; border-radius: 14px; font-weight: 900; font-size: 1.15rem; margin-bottom: 14px; background: #EFF6FF; color: var(--cor-primaria-escura); border: 2px solid #BFDBFE; }
 .barra-status-tracado.erro { background: #FEF2F2; color: #DC2626; border-color: #FECACA; }
 .barra-status-tracado.sucesso { background: #F0FDF4; color: #16A34A; border-color: #BBF7D0; }
@@ -270,7 +304,9 @@ main.conteudo-app { flex: 1; width: 100%; max-width: 1300px; margin: 2rem auto; 
 .card-docente { background: #F8FAFC; padding: 20px; border-radius: 20px; box-shadow: 0 4px 15px rgba(0,0,0,0.08); max-width: 250px; width: 100%; border: 1px solid #E2E8F0; }
 .card-docente img { width: 100%; height: 250px; object-fit: cover; border-radius: 14px; margin-bottom: 12px; }
 
-/* PAINEL DO PROFESSOR */
+/* ==========================================================================
+   6. PAINEL DO PROFESSOR
+   ========================================================================== */
 .painel-professor-topo { border-top: 8px solid var(--cor-roxo); }
 .cabecalho-painel-flex { display: flex; justify-content: space-between; align-items: center; flex-wrap: wrap; gap: 15px; }
 .tag-institucional { background: #EDE9FE; color: #6D28D9; padding: 6px 14px; border-radius: 10px; font-weight: 900; font-size: 0.8rem; display: inline-block; }
@@ -290,16 +326,18 @@ main.conteudo-app { flex: 1; width: 100%; max-width: 1300px; margin: 2rem auto; 
 .tabela-container { overflow-x: auto; border-radius: 14px; border: 1px solid #E2E8F0; }
 .tabela-professor { width: 100%; border-collapse: collapse; text-align: left; font-size: 0.92rem; }
 .tabela-professor th { background: #0F172A; color: #FFF; padding: 14px; font-size: 0.82rem; }
-.tabela-professor td { padding: 14px; border-bottom: 1px solid #E2E8F0; text-transform: none; font-weight: 600; vertical-align: middle; }
+.tabela-professor td { padding: 14px; border-bottom: 1px solid #E2E8F0; font-weight: 600; vertical-align: middle; }
 .barra-progresso-bg { width: 100%; background: #E2E8F0; height: 16px; border-radius: 8px; overflow: hidden; }
 .barra-progresso-fill { height: 100%; color: #FFF; font-size: 0.72rem; font-weight: 900; display: flex; align-items: center; justify-content: flex-end; padding-right: 6px; }
 .fill-verde { background: var(--cor-sucesso); } .fill-amarelo { background: #D97706; } .fill-vermelho { background: var(--cor-destaque); }
 .badge-status-prof { padding: 6px 10px; border-radius: 8px; font-weight: 900; font-size: 0.76rem; color: #FFF; display: inline-block; text-transform: uppercase; }
 .btn-ver-ficha { background: #EFF6FF; color: var(--cor-primaria-escura); border: 1px solid #93C5FD; padding: 8px 12px; border-radius: 8px; font-weight: 900; cursor: pointer; }
-.ficha-detalhes-box { display: flex; flex-direction: column; gap: 12px; text-transform: none; }
+.ficha-detalhes-box { display: flex; flex-direction: column; gap: 12px; }
 .ficha-item { background: #F8FAFC; padding: 14px; border-radius: 12px; border-left: 5px solid var(--cor-primaria); }
 
-/* MODAIS E RODAPÉ */
+/* ==========================================================================
+   7. MODAIS E RODAPÉ
+   ========================================================================== */
 .modal-overlay {
     position: fixed; top: 0; left: 0; width: 100%; height: 100%; background: rgba(15, 23, 42, 0.92);
     display: none; justify-content: center; align-items: center; z-index: 99999; padding: 15px; backdrop-filter: blur(5px);
@@ -311,7 +349,7 @@ main.conteudo-app { flex: 1; width: 100%; max-width: 1300px; margin: 2rem auto; 
 .card-escolha-perfil { background: #F8FAFC; border: 3px solid #E2E8F0; border-radius: 20px; padding: 26px 20px; display: flex; flex-direction: column; justify-content: space-between; align-items: center; }
 .icone-escolha { font-size: 4.5rem; margin-bottom: 8px; }
 .card-escolha-perfil h3 { font-size: 1.65rem; margin-bottom: 8px; }
-.card-escolha-perfil p { font-size: 0.95rem; color: var(--cor-texto-secundario); text-transform: none; font-weight: 600; margin-bottom: 20px; }
+.card-escolha-perfil p { font-size: 0.95rem; color: var(--cor-texto-secundario); font-weight: 600; margin-bottom: 20px; }
 .btn-entrar-sistema { width: 100%; border: none; padding: 16px; border-radius: 14px; font-size: 1.1rem; font-weight: 900; color: #FFF; cursor: pointer; box-shadow: 0 5px 0 rgba(0,0,0,0.2); }
 .btn-entrar-sistema.azul { background: var(--cor-primaria); }
 .btn-entrar-sistema.roxo { background: var(--cor-roxo); }
@@ -321,18 +359,24 @@ main.conteudo-app { flex: 1; width: 100%; max-width: 1300px; margin: 2rem auto; 
 .modal-info-palavra { display: flex; align-items: center; justify-content: center; gap: 14px; margin: 12px 0; }
 #modal-icone-palavra { font-size: 3.2rem; }
 #modal-texto-palavra { font-size: 2.3rem; font-weight: 900; }
+.link-reserva-video { display: inline-block; font-weight: 800; color: var(--cor-primaria); text-decoration: underline; font-size: 0.95rem; }
+
 .confete { position: fixed; width: 14px; height: 14px; z-index: 100000; animation: cair 3s linear forwards; border-radius: 3px; pointer-events: none; }
 @keyframes cair { to { transform: translateY(100vh) rotate(720deg); opacity: 0; } }
+
 .rodape-app { background: #0F172A; color: #E2E8F0; padding: 3rem 20px; margin-top: auto; border-top: 8px solid var(--cor-sucesso); }
 .container-creditos { max-width: 1200px; margin: 0 auto; display: grid; grid-template-columns: repeat(auto-fit, minmax(250px, 1fr)); gap: 28px; }
 .coluna-creditos h3 { color: var(--cor-alerta); border-bottom: 2px solid rgba(255,255,255,0.12); padding-bottom: 8px; margin-bottom: 12px; font-size: 1.05rem; }
-.rodape-legal { text-align: center; margin-top: 35px; padding-top: 18px; border-top: 1px solid rgba(255,255,255,0.18); font-size: 0.82rem; color: #94A3B8; text-transform: none; }
+.rodape-legal { text-align: center; margin-top: 35px; padding-top: 18px; border-top: 1px solid rgba(255,255,255,0.18); font-size: 0.82rem; color: #94A3B8; }
 
-/* RESPONSIVIDADE AUTOMÁTICA: COMPUTADOR, TABLET E CELULAR */
+/* ==========================================================================
+   8. RESPONSIVIDADE AUTOMÁTICA: COMPUTADOR, TABLET E CELULAR
+   ========================================================================== */
 @media (max-width: 1024px) {
     .cabecalho-app h1 { font-size: 2.6rem; }
     .grid-alfabeto { grid-template-columns: repeat(auto-fill, minmax(100px, 1fr)); }
 }
+
 @media (max-width: 768px) {
     html { font-size: 88%; }
     .barra-acessibilidade { justify-content: center; padding: 10px; }
