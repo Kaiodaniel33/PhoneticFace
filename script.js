@@ -1,9 +1,7 @@
 (function () {
     'use strict';
 
-    if (window.__PHONETICFACE_LOADED__) return;
-    window.__PHONETICFACE_LOADED__ = true;
-
+    /* Remove caches antigos de Service Worker que possam travar atualizações */
     if ('serviceWorker' in navigator) {
         navigator.serviceWorker.getRegistrations().then(function (regs) {
             for (let reg of regs) reg.unregister();
@@ -25,12 +23,16 @@
         } catch (e) {}
     }
 
+    /* CORRIGIDO (PROBLEMA 2): Sincronizado com #menu-principal e .menu-toggle */
     function toggleMenuMobile() {
         const menu = document.getElementById('menu-principal');
         const btn = document.querySelector('.menu-toggle');
+
         if (menu) {
             const aberto = menu.classList.toggle('aberto');
-            if (btn) btn.setAttribute('aria-expanded', String(aberto));
+            if (btn) {
+                btn.setAttribute('aria-expanded', String(aberto));
+            }
         }
     }
 
@@ -231,15 +233,21 @@
     };
 
     class GerenciadorVoz {
-        constructor() { this.synth = window.speechSynthesis; }
+        constructor() { this.synth = window.speechSynthesis || null; }
         falar(texto) {
             if (!this.synth) return;
-            this.synth.cancel(); 
-            const declaracao = new SpeechSynthesisUtterance(String(texto).toUpperCase());
-            declaracao.lang = 'pt-BR';
-            this.synth.speak(declaracao);
+            try {
+                this.synth.cancel(); 
+                const declaracao = new SpeechSynthesisUtterance(String(texto).toUpperCase());
+                declaracao.lang = 'pt-BR';
+                this.synth.speak(declaracao);
+            } catch (e) {}
         }
-        parar() { if (this.synth) this.synth.cancel(); }
+        parar() {
+            if (this.synth) {
+                try { this.synth.cancel(); } catch (e) {}
+            }
+        }
     }
     const Voz = new GerenciadorVoz();
 
@@ -250,7 +258,8 @@
             if (novo >= 80 && novo <= 150) {
                 this.tamanhoAtual = novo;
                 this.html.style.fontSize = `${this.tamanhoAtual}%`;
-                if (QuadroInterativo && document.getElementById('aba-escrever').classList.contains('active')) {
+                const abaEscrever = document.getElementById('aba-escrever');
+                if (QuadroInterativo && abaEscrever && abaEscrever.classList.contains('active')) {
                     setTimeout(() => QuadroInterativo.redimensionar(), 50);
                 }
             }
@@ -264,39 +273,50 @@
     }
     const AppConfig = new ConfiguracaoAcessibilidade();
 
+    /* CORRIGIDO (PROBLEMA 5): URL limpa + link reserva caso o navegador bloqueie autoplay */
     class GerenciadorModal {
         constructor() {
             this.modal = document.getElementById('modal-letras');
             this.titulo = document.getElementById('letra-display'); 
             this.icone = document.getElementById('modal-icone-palavra');
             this.texto = document.getElementById('modal-texto-palavra');
-            this.iframe = document.getElementById('player-youtube'); 
+            this.iframe = document.getElementById('player-youtube');
+            this.linkDireto = document.getElementById('link-youtube-direto');
         }
         mostrarVideo(item) {
-            this.titulo.innerText = item.letra.toUpperCase();
-            this.icone.innerText = item.icone;
-            this.texto.innerText = item.palavra;
-            this.iframe.src = "https://www.youtube.com/embed/" + item.youtubeId + "?vq=hd1080&autoplay=1";
+            if (!this.modal) return;
+            if (this.titulo) this.titulo.innerText = item.letra.toUpperCase();
+            if (this.icone) this.icone.innerText = item.icone;
+            if (this.texto) this.texto.innerText = item.palavra;
+            if (this.iframe) {
+                this.iframe.src = "https://www.youtube.com/embed/" + item.youtubeId + "?rel=0&autoplay=1";
+            }
+            if (this.linkDireto) {
+                this.linkDireto.href = "https://www.youtube.com/watch?v=" + item.youtubeId;
+            }
             this.modal.classList.add('visivel');
             Voz.falar(`O som da letra ${item.letra} forma a palavra ${item.palavra}.`);
             GerenciadorPerfil.registrarAcaoAluno(`Assistiu ao vídeo fônico da letra ${item.letra} (${item.palavra}).`);
         }
         fechar() {
+            if (!this.modal) return;
             this.modal.classList.remove('visivel');
             Voz.parar();
-            this.iframe.src = ""; 
+            if (this.iframe) this.iframe.src = ""; 
         }
     }
     const InterfaceModal = new GerenciadorModal();
 
+    /* CORRIGIDO (PROBLEMA 4): Preserva o desenho ao redimensionar e valida contra o molde */
     class CanvasCaligrafia {
         constructor(idCanvas, idContainer, idGuia) {
             this.canvas = document.getElementById(idCanvas);
-            this.ctx = this.canvas.getContext('2d', { willReadFrequently: true });
             this.container = document.getElementById(idContainer);
             this.guiaFundo = document.getElementById(idGuia);
             this.barraStatus = document.getElementById('aviso-tracado');
+            if (!this.canvas || !this.container) return;
 
+            this.ctx = this.canvas.getContext('2d', { willReadFrequently: true });
             this.canvasMolde = document.createElement('canvas');
             this.ctxMolde = this.canvasMolde.getContext('2d', { willReadFrequently: true });
 
@@ -312,19 +332,41 @@
         }
 
         redimensionar() {
-            if (!this.container || !this.canvas) return;
-            const w = this.container.clientWidth || 600;
-            const h = this.container.clientHeight || 420;
-            this.canvas.width = w;
-            this.canvas.height = h;
-            this.ctx.lineWidth = 26; 
+            if (!this.container || !this.canvas || !this.ctx) return;
+
+            const largura = this.container.clientWidth || 600;
+            const altura = this.container.clientHeight || 420;
+
+            /* Guarda o desenho anterior antes de alterar as dimensões do canvas */
+            const anterior = document.createElement('canvas');
+            anterior.width = this.canvas.width;
+            anterior.height = this.canvas.height;
+
+            if (anterior.width > 0 && anterior.height > 0) {
+                anterior.getContext('2d').drawImage(this.canvas, 0, 0);
+            }
+
+            this.canvas.width = largura;
+            this.canvas.height = altura;
+
+            this.ctx.lineWidth = 26;
             this.ctx.lineCap = 'round';
             this.ctx.lineJoin = 'round';
+
             this.atualizarCorTraco();
             this.desenharMoldeLetra();
+
+            if (anterior.width > 0 && anterior.height > 0) {
+                this.ctx.drawImage(
+                    anterior,
+                    0, 0, anterior.width, anterior.height,
+                    0, 0, largura, altura
+                );
+            }
         }
 
         desenharMoldeLetra() {
+            if (!this.canvas) return;
             const w = this.canvas.width;
             const h = this.canvas.height;
             if (!w || !h) return;
@@ -389,10 +431,12 @@
         }
 
         validarDesenho() {
+            if (!this.canvas) return;
             const w = this.canvas.width;
             const h = this.canvas.height;
             if (!w || !h) return;
 
+            this.desenharMoldeLetra();
             const dadosAluno = this.ctx.getImageData(0, 0, w, h).data;
             const dadosMolde = this.ctxMolde.getImageData(0, 0, w, h).data;
 
@@ -445,7 +489,7 @@
 
         definirGuia(letra) {
             this.letraAtual = letra;
-            this.guiaFundo.innerText = letra;
+            if (this.guiaFundo) this.guiaFundo.innerText = letra;
             this.limparSilencioso();
             this.desenharMoldeLetra();
             this.atualizarAviso(`PASSE O DEDO OU O MOUSE EXATAMENTE EM CIMA DA LETRA ${letra}`, '');
@@ -462,7 +506,7 @@
             this.canvas.addEventListener('touchend', () => this.finalizarTraco());
         }
     }
-    let QuadroInterativo;
+    let QuadroInterativo = null;
 
     class InteracoesDiversas {
         static idInicial = 0;
@@ -472,12 +516,15 @@
 
         static verificarNome() {
             const input = document.getElementById('input-nome');
+            if (!input) return;
             const nome = input.value.trim().toUpperCase();
             if (nome.length > 0) {
                 salvarStorage('phoneticface_aluno', nome);
                 const boasVindas = document.getElementById('mensagem-boas-vindas');
-                boasVindas.innerText = `👋 OLÁ, ${nome}!`;
-                boasVindas.style.display = 'block';
+                if (boasVindas) {
+                    boasVindas.innerText = `👋 OLÁ, ${nome}!`;
+                    boasVindas.style.display = 'block';
+                }
                 Voz.falar(`MUITO BEM, ${nome}! PARABÉNS POR ESCREVER SEU NOME.`);
                 this.gerarConfetes();
                 GerenciadorPerfil.registrarAcaoAluno(`Cadastrou e treinou a escrita do nome (${nome}).`);
@@ -490,9 +537,12 @@
             const nomeSalvo = lerStorage('phoneticface_aluno', '');
             if (nomeSalvo) {
                 const boasVindas = document.getElementById('mensagem-boas-vindas');
-                boasVindas.innerText = `👋 BEM-VINDO DE VOLTA, ${nomeSalvo}!`;
-                boasVindas.style.display = 'block';
-                document.getElementById('input-nome').value = nomeSalvo;
+                const input = document.getElementById('input-nome');
+                if (boasVindas) {
+                    boasVindas.innerText = `👋 BEM-VINDO DE VOLTA, ${nomeSalvo}!`;
+                    boasVindas.style.display = 'block';
+                }
+                if (input) input.value = nomeSalvo;
             }
         }
 
@@ -516,13 +566,16 @@
         }
 
         static carregarInicial() {
-            let item = BancoDados.iniciais[this.idInicial];
-            document.getElementById('imagem-inicial').innerText = item.img;
-            let nomeDica = "_ " + item.nome.substring(1).split('').join(' ');
-            document.getElementById('nome-inicial-dica').innerText = nomeDica;
-
+            const elImg = document.getElementById('imagem-inicial');
+            const elDica = document.getElementById('nome-inicial-dica');
             const ct = document.getElementById('opcoes-iniciais');
+            if (!elImg || !elDica || !ct) return;
+
+            let item = BancoDados.iniciais[this.idInicial];
+            elImg.innerText = item.img;
+            elDica.innerText = "_ " + item.nome.substring(1).split('').join(' ');
             ct.innerHTML = '';
+
             item.ops.forEach(op => {
                 let b = document.createElement('button'); 
                 b.type = 'button';
@@ -531,7 +584,7 @@
                 b.innerText = op;
                 b.onclick = () => {
                     if (op === item.certa) {
-                        document.getElementById('nome-inicial-dica').innerText = item.nome.split('').join(' ');
+                        elDica.innerText = item.nome.split('').join(' ');
                         Voz.falar(`MUITO BEM! O SOM INICIAL DE ${item.nome} É REPRESENTADO PELA LETRA ${item.certa}.`);
                         this.gerarConfetes();
                         GerenciadorPerfil.registrarAcaoAluno(`Identificou a letra inicial da palavra ${item.nome}.`);
@@ -547,12 +600,17 @@
         }
 
         static carregarPalavra() {
+            const elDica = document.getElementById('dica-palavra');
+            const slots = document.getElementById('slots-palavra');
+            const soltas = document.getElementById('silabas-soltas');
+            if (!elDica || !slots || !soltas) return;
+
             this.palavraAtual = BancoDados.palavrasJogo[this.idPalavra];
             this.silabasPreenchidas = 0;
-            document.getElementById('dica-palavra').innerText = this.palavraAtual.p;
-            
-            const slots = document.getElementById('slots-palavra');
+            elDica.innerText = this.palavraAtual.p;
             slots.innerHTML = '';
+            soltas.innerHTML = '';
+
             this.palavraAtual.s.forEach((_, i) => {
                 let slot = document.createElement('div'); 
                 slot.className = 'slot-silaba'; 
@@ -560,8 +618,6 @@
                 slots.appendChild(slot);
             });
 
-            const soltas = document.getElementById('silabas-soltas');
-            soltas.innerHTML = '';
             let embaralhadas = [...this.palavraAtual.s].sort(() => Math.random() - 0.5);
             embaralhadas.forEach(silaba => {
                 let b = document.createElement('button'); 
@@ -574,10 +630,12 @@
                     if (silaba === silabaCorreta) {
                         Voz.falar(silaba);
                         let sl = document.getElementById(`slot-${this.silabasPreenchidas}`);
-                        sl.innerText = silaba;
-                        sl.style.backgroundColor = 'var(--cor-sucesso)';
-                        sl.style.color = 'white';
-                        sl.style.borderColor = 'var(--cor-sucesso)';
+                        if (sl) {
+                            sl.innerText = silaba;
+                            sl.style.backgroundColor = 'var(--cor-sucesso)';
+                            sl.style.color = 'white';
+                            sl.style.borderColor = 'var(--cor-sucesso)';
+                        }
                         e.currentTarget.style.visibility = 'hidden';
                         this.silabasPreenchidas++;
                         if (this.silabasPreenchidas === this.palavraAtual.s.length) {
@@ -625,29 +683,33 @@
 
         abrirModal: function () {
             Voz.parar();
-            document.getElementById('modal-selecao-perfil').classList.add('visivel');
+            const m = document.getElementById('modal-selecao-perfil');
+            if (m) m.classList.add('visivel');
         },
 
         selecionar: function (perfil) {
-            document.getElementById('modal-selecao-perfil').classList.remove('visivel');
+            const m = document.getElementById('modal-selecao-perfil');
+            if (m) m.classList.remove('visivel');
+
             const viewAluno = document.getElementById('view-aluno');
             const viewProf = document.getElementById('view-professor');
             const navAluno = document.getElementById('container-navegacao-aluno');
             const badge = document.getElementById('label-perfil-atual');
 
             if (perfil === 'professor') {
-                viewAluno.style.display = 'none';
-                navAluno.style.display = 'none';
-                viewProf.style.display = 'block';
-                badge.innerText = '👨‍🏫 MODO: PROFESSOR';
+                if (viewAluno) viewAluno.style.display = 'none';
+                if (navAluno) navAluno.style.display = 'none';
+                if (viewProf) viewProf.style.display = 'block';
+                if (badge) badge.innerText = '👨‍🏫 MODO: PROFESSOR';
                 this.renderizarTabela('todos');
                 Voz.falar('Painel do professor aberto.');
             } else {
-                viewProf.style.display = 'none';
-                viewAluno.style.display = 'block';
-                navAluno.style.display = 'block';
-                badge.innerText = '🎓 MODO: ALUNO';
-                if (QuadroInterativo && document.getElementById('aba-escrever').classList.contains('active')) {
+                if (viewProf) viewProf.style.display = 'none';
+                if (viewAluno) viewAluno.style.display = 'block';
+                if (navAluno) navAluno.style.display = 'block';
+                if (badge) badge.innerText = '🎓 MODO: ALUNO';
+                const abaEscrever = document.getElementById('aba-escrever');
+                if (QuadroInterativo && abaEscrever && abaEscrever.classList.contains('active')) {
                     setTimeout(() => QuadroInterativo.redimensionar(), 60);
                 }
                 Voz.falar('Modo aluno aberto. Bons estudos.');
@@ -709,27 +771,34 @@
             const aluno = this.obterAlunosCombinados()[indice];
             if (!aluno) return;
 
-            document.getElementById('ficha-nome-aluno').innerText = aluno.nome;
-            document.getElementById('ficha-resumo-aluno').innerText = `Produção Hoje: ${aluno.tarefas} | Evolução Fônica: ${aluno.pct}%`;
+            const elNome = document.getElementById('ficha-nome-aluno');
+            const elResumo = document.getElementById('ficha-resumo-aluno');
+            const elCorpo = document.getElementById('ficha-corpo-detalhes');
+            const modalFicha = document.getElementById('modal-ficha-aluno');
+
+            if (elNome) elNome.innerText = aluno.nome;
+            if (elResumo) elResumo.innerText = `Produção Hoje: ${aluno.tarefas} | Evolução Fônica: ${aluno.pct}%`;
 
             const listaHtml = aluno.historico.map(h => `<li style="margin-bottom: 6px;">${h}</li>`).join('');
-            document.getElementById('ficha-corpo-detalhes').innerHTML = `
-                <div class="ficha-item">
-                    <h4>Diagnóstico Pedagógico e Uso da Plataforma</h4>
-                    <p>${aluno.relatorio}</p>
-                </div>
-                <div class="ficha-item" style="border-left-color: var(--cor-sucesso);">
-                    <h4>Atividades Registradas</h4>
-                    <ul style="padding-left: 20px; margin-top: 6px;">${listaHtml}</ul>
-                </div>
-                <div class="ficha-item" style="border-left-color: var(--cor-roxo);">
-                    <h4>Orientação ao Professor</h4>
-                    <p>${aluno.orientacao}</p>
-                </div>
-            `;
+            if (elCorpo) {
+                elCorpo.innerHTML = `
+                    <div class="ficha-item">
+                        <h4>Diagnóstico Pedagógico e Uso da Plataforma</h4>
+                        <p>${aluno.relatorio}</p>
+                    </div>
+                    <div class="ficha-item" style="border-left-color: var(--cor-sucesso);">
+                        <h4>Atividades Registradas</h4>
+                        <ul style="padding-left: 20px; margin-top: 6px;">${listaHtml}</ul>
+                    </div>
+                    <div class="ficha-item" style="border-left-color: var(--cor-roxo);">
+                        <h4>Orientação ao Professor</h4>
+                        <p>${aluno.orientacao}</p>
+                    </div>
+                `;
+            }
 
             this.fichaTextoAtual = `Ficha de ${aluno.nome}. Fez ${aluno.tarefas}. Diagnóstico: ${aluno.relatorio}. Orientação: ${aluno.orientacao}.`;
-            document.getElementById('modal-ficha-aluno').classList.add('visivel');
+            if (modalFicha) modalFicha.classList.add('visivel');
         },
 
         ouvirFichaAtual: function () {
@@ -738,13 +807,15 @@
 
         fecharFicha: function () {
             Voz.parar();
-            document.getElementById('modal-ficha-aluno').classList.remove('visivel');
+            const modalFicha = document.getElementById('modal-ficha-aluno');
+            if (modalFicha) modalFicha.classList.remove('visivel');
         }
     };
 
     class ConstrutorInterface {
         static renderizarAlfabeto() {
             const container = document.getElementById('container-grid-alfabeto');
+            if (!container) return;
             container.innerHTML = '';
             BancoDados.alfabeto.forEach(item => {
                 const btn = document.createElement('button');
@@ -759,6 +830,7 @@
         static renderizarVogaisConsoantes() {
             const v = document.getElementById('box-vogais');
             const c = document.getElementById('box-consoantes');
+            if (!v || !c) return;
             v.innerHTML = '';
             c.innerHTML = '';
             BancoDados.vogais.forEach(l => {
@@ -783,10 +855,13 @@
 
         static renderizarFamilias() {
             const bts = document.getElementById('botoes-familias');
+            const res = document.getElementById('resultado-familia');
+            const titulo = document.getElementById('titulo-familia-atual');
+            if (!bts || !res || !titulo) return;
+
             bts.innerHTML = '';
             const mostrarUniao = (c, falar) => {
-                document.getElementById('titulo-familia-atual').innerText = `UNIÕES COM A LETRA ${c}:`;
-                const res = document.getElementById('resultado-familia');
+                titulo.innerText = `UNIÕES COM A LETRA ${c}:`;
                 res.innerHTML = '';
                 BancoDados.vogais.forEach(v => {
                     let f = c + v;
@@ -814,6 +889,7 @@
 
         static renderizarSilabas() {
             const container = document.getElementById('container-silabas');
+            if (!container) return;
             container.innerHTML = '';
             BancoDados.silabas.forEach(item => {
                 const silaba = item.consoante + item.vogal;
@@ -835,13 +911,14 @@
 
         static renderizarBotoesDesenho() {
             const container = document.getElementById('botoes-desenho');
+            if (!container) return;
             container.innerHTML = '';
             BancoDados.sinaisDesenho.forEach(sinal => {
                 const btn = document.createElement('button');
                 btn.type = 'button';
                 btn.className = 'btn-ferramenta';
                 btn.innerText = sinal;
-                btn.onclick = () => QuadroInterativo.definirGuia(sinal);
+                btn.onclick = () => { if (QuadroInterativo) QuadroInterativo.definirGuia(sinal); };
                 container.appendChild(btn);
             });
             const btnApagar = document.createElement('button');
@@ -849,12 +926,13 @@
             btnApagar.className = 'btn-ferramenta';
             btnApagar.style.backgroundColor = 'var(--cor-destaque)';
             btnApagar.innerText = '🗑️ APAGAR';
-            btnApagar.onclick = () => QuadroInterativo.limpar();
+            btnApagar.onclick = () => { if (QuadroInterativo) QuadroInterativo.limpar(); };
             container.appendChild(btnApagar);
         }
 
         static renderizarCores() {
             const ct = document.getElementById('container-cores');
+            if (!ct) return;
             ct.innerHTML = '';
             BancoDados.cores.forEach(c => {
                 let btn = document.createElement('button');
@@ -872,6 +950,7 @@
 
         static renderizarVidaPratica() {
             const container = document.getElementById('container-dia-a-dia');
+            if (!container) return;
             container.innerHTML = '';
             BancoDados.vidaPratica.forEach(item => {
                 const card = document.createElement('div');
@@ -884,6 +963,7 @@
 
         static renderizarAnimais() {
             const container = document.getElementById('container-animais');
+            if (!container) return;
             container.innerHTML = '';
             BancoDados.animais.forEach(animal => {
                 const card = document.createElement('div');
@@ -896,6 +976,7 @@
 
         static renderizarNumeros() {
             const container = document.getElementById('container-numeros');
+            if (!container) return;
             container.innerHTML = '';
             for (let i = 1; i <= 100; i++) {
                 const btn = document.createElement('button');
@@ -912,6 +993,7 @@
         static configurarNavegacaoAbas() {
             const botoes = document.querySelectorAll('.btn-tab');
             const conteudos = document.querySelectorAll('.aba-conteudo');
+            const menu = document.getElementById('menu-principal');
 
             botoes.forEach(btn => {
                 btn.addEventListener('click', (e) => {
@@ -933,8 +1015,8 @@
                             }
                         }
                     });
-                    if (window.innerWidth <= 768) {
-                        document.getElementById('menu-principal').classList.remove('aberto');
+                    if (window.innerWidth <= 768 && menu) {
+                        menu.classList.remove('aberto');
                     }
                 });
             });
@@ -943,6 +1025,7 @@
 
     function configurarFechamentoModal() {
         const overlayVideo = document.getElementById('modal-letras');
+        if (!overlayVideo) return;
         overlayVideo.addEventListener('click', (e) => {
             if (e.target === overlayVideo) InterfaceModal.fechar();
         });
@@ -951,34 +1034,50 @@
         });
     }
 
+    /* CORRIGIDO (ITEM 3): Inicialização com tratamento de erro isolado por etapa */
     function inicializarAplicacao() {
-        ConstrutorInterface.renderizarAlfabeto();
-        ConstrutorInterface.renderizarVogaisConsoantes();
-        ConstrutorInterface.renderizarFamilias();
-        ConstrutorInterface.renderizarSilabas();
-        ConstrutorInterface.renderizarCores();
-        ConstrutorInterface.renderizarVidaPratica();
-        ConstrutorInterface.renderizarAnimais();
-        ConstrutorInterface.renderizarNumeros();
-        ConstrutorInterface.configurarNavegacaoAbas();
-
-        BancoDados.iniciais.sort(() => Math.random() - 0.5);
-        BancoDados.palavrasJogo.sort(() => Math.random() - 0.5);
-
-        InteracaoApp.carregarInicial();
-        InteracaoApp.carregarPalavra();
-        InteracaoApp.carregarNomeSalvo();
-
-        QuadroInterativo = new CanvasCaligrafia('canvas-caligrafia', 'container-canvas', 'guia-fundo');
-        ConstrutorInterface.renderizarBotoesDesenho();
-        QuadroInterativo.redimensionar();
-
-        configurarFechamentoModal();
-        GerenciadorPerfil.renderizarTabela('todos');
-
-        window.addEventListener('resize', () => {
-            if (document.getElementById('aba-escrever').classList.contains('active') && QuadroInterativo) {
+        const etapas = [
+            () => ConstrutorInterface.renderizarAlfabeto(),
+            () => ConstrutorInterface.renderizarVogaisConsoantes(),
+            () => ConstrutorInterface.renderizarFamilias(),
+            () => ConstrutorInterface.renderizarSilabas(),
+            () => ConstrutorInterface.renderizarCores(),
+            () => ConstrutorInterface.renderizarVidaPratica(),
+            () => ConstrutorInterface.renderizarAnimais(),
+            () => ConstrutorInterface.renderizarNumeros(),
+            () => ConstrutorInterface.configurarNavegacaoAbas(),
+            () => {
+                BancoDados.iniciais.sort(() => Math.random() - 0.5);
+                BancoDados.palavrasJogo.sort(() => Math.random() - 0.5);
+                InteracaoApp.carregarInicial();
+                InteracaoApp.carregarPalavra();
+                InteracaoApp.carregarNomeSalvo();
+            },
+            () => {
+                QuadroInterativo = new CanvasCaligrafia('canvas-caligrafia', 'container-canvas', 'guia-fundo');
+                ConstrutorInterface.renderizarBotoesDesenho();
                 QuadroInterativo.redimensionar();
+            },
+            () => configurarFechamentoModal(),
+            () => GerenciadorPerfil.renderizarTabela('todos')
+        ];
+
+        etapas.forEach((executarEtapa, indice) => {
+            try {
+                executarEtapa();
+            } catch (erro) {
+                console.error(`Aviso na etapa ${indice + 1} da inicialização:`, erro);
+            }
+        });
+
+        let larguraJanelaAnterior = window.innerWidth;
+        window.addEventListener('resize', () => {
+            if (Math.abs(window.innerWidth - larguraJanelaAnterior) > 15) {
+                larguraJanelaAnterior = window.innerWidth;
+                const abaEscrever = document.getElementById('aba-escrever');
+                if (abaEscrever && abaEscrever.classList.contains('active') && QuadroInterativo) {
+                    QuadroInterativo.redimensionar();
+                }
             }
         });
     }
